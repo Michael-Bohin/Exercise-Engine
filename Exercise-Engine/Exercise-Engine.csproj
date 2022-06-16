@@ -7,4 +7,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Exercise\Concrete-factories\" />
+    <Folder Include="Exercise\Concrete-exercises\" />
+    <Folder Include="Json-storage\Exercises\" />
+    <Folder Include="Json-storage\Definitions\" />
+    <Folder Include="View\Definition-view\" />
+    <Folder Include="View\Exercise-view\" />
+  </ItemGroup>
+
 </Project>
