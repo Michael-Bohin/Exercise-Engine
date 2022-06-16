@@ -19,20 +19,27 @@ record Macro : TextElement {
 	public Macro(string Id) { this.Id = Id; }
 }
 
+// json ctor needs to initiliaze the entire dictionary. 
+// The 2nd ctor is used when the exercise is first created,
+// before calling the API of translator to fill other languages..
+// The 3rd ctor is used in exercise definition property initiliaztion.
 record Babylon {
-	[JsonInclude]
-	private readonly Dictionary<Language, List<TextElement>> babylon = new(); // how do we enable private fields to be seializable by json? 
+	public Dictionary<Language, List<TextElement>> Text { get; private set; } = new();
 
 	[JsonConstructor]
-	public Babylon() { }
-
-	public Babylon(List<TextElement> text, Language lang) {
-		babylon.Add(lang, text);
+	public Babylon(Dictionary<Language, List<TextElement>> Text) { 
+		this.Text = Text;	
 	}
 
-	public List<TextElement> GetText(Language lang) => babylon[lang];
-	public void SetText(Language lang, List<TextElement> text) => babylon[lang] = text; 
-	public bool ContainsLanguage(Language lang) => babylon.ContainsKey(lang);
+	public Babylon(List<TextElement> text, Language lang) {
+		Text.Add(lang, text);
+	}
+
+	public Babylon() { }
+
+	public List<TextElement> GetText(Language lang) => Text[lang];
+	public void SetText(Language lang, List<TextElement> text) => Text[lang] = text; 
+	public bool ContainsLanguage(Language lang) => Text.ContainsKey(lang);
 }
 
 // notes:

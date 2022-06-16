@@ -1,12 +1,11 @@
 ﻿namespace Exercise_Engine;
 
-enum JsonVariable { IntRange, IntSet, OperatorSet, StringSet, DoubleSet, FractionSet } // more types are likelly to come in future
+enum JsonVariable { IntRange, IntSet, OperatorSet, StringSet, DoubleSet/*, FractionSet*/ } // more types are likelly to come in future
 enum Operator { Add, Sub, Mul, Div }
 
 abstract class Variable {
 	public string Id { get; } = default!;
-	// protected JsonVariable _JsonId;
-	// abstract public List<T> GetElements();
+	protected Variable(string Id) { this.Id = Id;}
 
 	// more abstract methods will be added as I see the needs for the interpreter to fluently write the necessary code.
 	abstract public string GetValueType();
@@ -18,7 +17,7 @@ class IntRange : Variable {
 	public int Max { get; }
 	public int Increment { get; }
 	
-	public IntRange(int Min, int Max, int Increment) {
+	public IntRange(string Id, int Min, int Max, int Increment) : base(Id) {
 		this.Min = Min;
 		this.Max = Max;	
 		this.Increment = Increment;
@@ -33,11 +32,11 @@ class IntRange : Variable {
 
 abstract class SetVariable<T> : Variable {
 	public List<T> Elements { get; }
-	public SetVariable(List<T> Elements) { this.Elements = Elements; }
+	public SetVariable(string Id, List<T> Elements):base(Id) { this.Elements = Elements; }
 }
 
 class IntSet : SetVariable<int> {
-	public IntSet(List<int> Elements): base(Elements) { }
+	public IntSet(string Id, List<int> Elements): base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.IntSet; }
 	public override string GetValueType() => "int";
@@ -47,7 +46,7 @@ class IntSet : SetVariable<int> {
 }
 
 class OperatorSet : SetVariable<Operator> {
-	public OperatorSet(List<Operator> Elements) : base(Elements) { }
+	public OperatorSet(string Id, List<Operator> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.OperatorSet; }
 	public override string GetValueType() => "Operator";
@@ -57,7 +56,7 @@ class OperatorSet : SetVariable<Operator> {
 }
 
 class StringSet : SetVariable<string> {
-	public StringSet(List<string> Elements) : base(Elements) { }
+	public StringSet(string Id, List<string> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.StringSet; }
 	public override string GetValueType() => "string";
@@ -67,7 +66,7 @@ class StringSet : SetVariable<string> {
 }
 
 class DoubleSet : SetVariable<double> {
-	public DoubleSet(List<double> Elements) : base(Elements) { }
+	public DoubleSet(string Id, List<double> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.DoubleSet; }
 	public override string GetValueType() => "double";
@@ -76,8 +75,8 @@ class DoubleSet : SetVariable<double> {
 	}
 }
 
-
 // !!! fraction must be added...
+/*
 class Fraction {
 	public Fraction() {
 		throw new NotImplementedException();
@@ -85,14 +84,11 @@ class Fraction {
 }
 
 class FractionSet : SetVariable<Fraction> {
-	public FractionSet(List<Fraction> Elements) : base(Elements) { }
+	public FractionSet(string Id, List<Fraction> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.FractionSet; }
 	public override string GetValueType() => "Fraction";
 	public override string PrintForeachDef() {
 		throw new NotImplementedException();
 	}
-}
-
-
-
+}*/
