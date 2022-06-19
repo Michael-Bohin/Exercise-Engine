@@ -72,7 +72,7 @@ Třída Variable je abstraktní třída s n potomky:
 4. ```Link```:```string```
 5. ```Animace```:```???```
 
-Ok, poslední díl do skládanky, jak bude vypadat implementace konkrétní slovní úlohy? 
+Ok, jak bude vypadat implementace konkrétní slovní úlohy? 
 
 ## Implementace kolekce slovní úlohy s 'y' překlady a 'z' variantami:
 
