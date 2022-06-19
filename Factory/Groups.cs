@@ -5,10 +5,6 @@
 // on purpose for the needs of Json deserialization process. The deserializer uses the value in
 // the enum to tell which instance of Exercise to make.
 
-enum Classes { First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eight, Ninth }
-enum Topic { Arithmetic, Addition, Subtraction, Multiplication, Division, Modulo, Fractions, Percentages, Combinatorics, BasicUnits } // and many more..
-enum ExerciseType { WordProblem, Numerical, Geometric }
-
 record Groups {
 	public List<Classes> Classes { get; } = new();
 	public List<Topic> Topics { get; } = new();
