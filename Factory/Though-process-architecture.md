@@ -29,19 +29,19 @@ class WordProblem {
 }
 ```
 
-Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU variantou**. Slovní úloha v této podobě, obsahuje překlady do 'y' různých jazyků. Co kdybychom ale zároveň chtěli mít 'z' variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
+Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU variantou**. Slovní úloha v této podobě, obsahuje překlady do **'y'** různých jazyků. Co kdybychom ale zároveň chtěli mít **'z'** variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
 
 1. Kazdy string bude v bode promennych obsahovat makra -> promenne, ktere se s kazdou variatnou prikladu meni.
 2. Dodat seznam variant prikladu ('varianta prikladu' = 'variation of exercise')
 3. Vyporadat se s cornercasem, kdy promenna je typu string, ktera ma v ruznych jazycich ruznou podobu. (Nebo ruzny pristup k destinne carce/tecce nebo znaku pro deleni napric ruznymi kulturami)
 
-Tedy chceme mít sbirku prikladu, ktera bude mít 'x' slovnich uloh a kazda uloha bude mít 'y' ruznych překladů do 'z' různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
+Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovnich uloh a každá úloha bude mít **'y'** různých překladů do **'z'** různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
 
-## Kolekce slovní úlohy s 'y' překlady 'z' variantami je uspořádaná n-tice:
+## Kolekce slovní úlohy s 'y' překlady a 'z' variantami je uspořádaná n-tice:
 
 1. počítačové jméno
 2. lidské jméno
-3. seznam 'z' variant
+3. seznam **'z'** variant
 4. zadání
 5. otázky
 6. komentované kroky řešení
