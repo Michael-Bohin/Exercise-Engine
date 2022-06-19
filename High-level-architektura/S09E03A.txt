@@ -55,8 +55,21 @@ ua: {
     Questions[0]: "Вычислите, на сколько см отличаются длина и ширина прямоугольника."
 }
 
++ info jako uniqueId, slovnik jmen priklad v ruznych jazycich, a skupiny 
 
 
+1 id 
+2 jmeno
+3 promenne (variaci prikladu)
+4 zadani 
+5 otazky 
+6 spravne odpovedi
+7 komentovane kroky reseni 
+8 obrazky
+9 skupiny (filter info pro ucitelky)
+
+
+ 
 
 
 
