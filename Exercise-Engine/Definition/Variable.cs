@@ -1,4 +1,4 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 enum JsonVariable { IntRange, IntSet, OperatorSet, StringSet, DoubleSet/*, FractionSet*/ } // more types are likelly to come in future
 enum Operator { Add, Sub, Mul, Div }

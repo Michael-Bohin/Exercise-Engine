@@ -1,40 +1,42 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 enum JSONId_ExerciseDefinition { WordProblem, Numerical, Geometric }
 
 abstract record ExerciseDefinition {
-	public ulong id;
-	public Babylon name = new();
-	public List<Variable> variables = new();
-	public List<Constraint> constraints = new();
+	public ulong Id { get; }
+	public Babylon Name { get; set; } = new();
+	public List<Variable> Variables { get; set; } = new();
+	public List<Constraint> Constraints { get; set; } = new();
 	// ----------------------------
-	public List<Babylon> solutionSteps = new(); // this is actually 3.5D : 1st D List<>, 2nd D Dictionary with keys Lang, 3rd D List<TextElement>, 4th D partialy Macros pointing to some variable
-	public Groups groups = new();
+	public List<Babylon> SolutionSteps { get; set; } = new(); // this is actually 3.5D : 1st D List<>, 2nd D Dictionary with keys Lang, 3rd D List<TextElement>, 4th D partialy Macros pointing to some variable
+	public Groups Groups { get; set; } = new();
 
-	public ExerciseDefinition() { }
+	public ExerciseDefinition(ulong Id) { 
+		this.Id = Id; // simplify for now, later it will be interpreters job to know which id is up next	
+	}
 }
 
 abstract record WordProblemDefinition : ExerciseDefinition {
-	public Babylon assignment = new();
-	public List<Babylon> questions = new();
-	public List<string> answers = new(); // once finnished consider types of answers..  how about having answers of concrete type? 
-	public ImageDataTypeToBeDecided image = new(); // btw with dragon rocket this will be list of images.. (from vid, 1 per second of vid)
+	public Babylon Assignment { get; set; } = new();
+	public List<Babylon> Questions { get; set; } = new();
+	public List<string> Answers { get; set; } = new(); // once finnished consider types of answers..  how about having answers of concrete type? 
+	public ImageDataTypeToBeDecided Image { get; set; } = new(); // btw with dragon rocket this will be list of images.. (from vid, 1 per second of vid)
 
 	public const JSONId_ExerciseDefinition PolyJSONid = JSONId_ExerciseDefinition.WordProblem;
-	public WordProblemDefinition() { }
+	public WordProblemDefinition(ulong Id):base(Id) { }
 }
 
 abstract record NumericalExerciseDefinition : ExerciseDefinition {
-	public Babylon equation = new();
-	public string answer = "";
+	public Babylon Question { get; set; } = new(); // expression/equation to solve
+	public string Answer { get; set; } = "";
 
 	public const JSONId_ExerciseDefinition PolyJSONid = JSONId_ExerciseDefinition.Numerical;
-	public NumericalExerciseDefinition() { }
+	public NumericalExerciseDefinition(ulong Id) : base(Id) { }
 }
 
 abstract record GeometricExerciseDefinition : ExerciseDefinition {
 	public const JSONId_ExerciseDefinition PolyJSONid = JSONId_ExerciseDefinition.Geometric;
-	public GeometricExerciseDefinition() {
+	public GeometricExerciseDefinition(ulong Id) : base(Id) {
 		throw new NotImplementedException("Only if people give enough attention to word probemls and numerical exercises...");
 	}
 }

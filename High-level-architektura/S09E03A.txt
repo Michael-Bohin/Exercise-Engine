@@ -1,0 +1,555 @@
+Assignment
+Questions[0]
+Results[0]
+
+Obdelnik ma sirku 5 cm a obsah 2dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+35
+
+Obdelnik ma sirku 5 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+55
+
+Obdelnik ma sirku 5 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+75
+
+Obdelnik ma sirku 5 cm a obsah 5dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+95
+
+
+...
+...
+...
+navic predstava pro n jazyku...
+
+co nejvic light weight pro cestinu samostatne:
+
+popis ruznych instanci:
+
+A: "5", B: "2", Results: [ "35" ]
+A: "5", B: "3", Results: [ "55" ]
+A: "5", B: "4", Results: [ "75" ]
+A: "5", B: "5", Results: [ "95" ]
+..
+..
+..
+n dalsich ciselnych obmen...
+
+spolecne texty pro vsechny instance:
+cs: {
+    Assignment: "Obdelnik ma sirku {A} cm a obsah {B}dm ^ 2.",
+    Questions[0]: "Vypoctete, o kolik cm se lisi delka a sirka obdelniku."
+}, 
+en: {
+    Assignment: "The rectangle has width {A} cm and content {B}dm^2.",
+    Questions[0]: "Calculate by how many cm the length and width of the rectangle differ."
+}, 
+pl: {
+    Assignment: "Prostokąt ma szerokość {A} cm i zawartość {B}dm^2.",
+    Questions[0]: "Oblicz, o ile cm różnią się długości i szerokości prostokąta."
+}, 
+ua: {
+    Assignment: "Прямоугольник имеет ширину {A} см и площадь {B} дм^2.",
+    Questions[0]: "Вычислите, на сколько см отличаются длина и ширина прямоугольника."
+}
+
+
+
+
+
+
+
+Obdelnik ma sirku 5 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 115
+Obdelnik ma sirku 5 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 135
+Obdelnik ma sirku 5 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 155
+Obdelnik ma sirku 5 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 175
+Obdelnik ma sirku 5 cm a obsah 10dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 195
+Obdelnik ma sirku 6 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 44
+Obdelnik ma sirku 6 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 94
+Obdelnik ma sirku 6 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 144
+Obdelnik ma sirku 6 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 194
+Obdelnik ma sirku 7 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 93
+Obdelnik ma sirku 7 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 193
+Obdelnik ma sirku 8 cm a obsah 2dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 17
+Obdelnik ma sirku 8 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 42
+Obdelnik ma sirku 8 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 67
+Obdelnik ma sirku 8 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 92
+Obdelnik ma sirku 8 cm a obsah 10dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 117
+Obdelnik ma sirku 8 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 142
+Obdelnik ma sirku 8 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 167
+Obdelnik ma sirku 8 cm a obsah 16dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 192
+Obdelnik ma sirku 9 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 91
+Obdelnik ma sirku 9 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 191
+Obdelnik ma sirku 10 cm a obsah 2dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 10
+Obdelnik ma sirku 10 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 20
+Obdelnik ma sirku 10 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 30
+Obdelnik ma sirku 10 cm a obsah 5dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 40
+Obdelnik ma sirku 10 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 50
+Obdelnik ma sirku 10 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 60
+Obdelnik ma sirku 10 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 70
+Obdelnik ma sirku 10 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 80
+Obdelnik ma sirku 10 cm a obsah 10dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 90
+Obdelnik ma sirku 10 cm a obsah 11dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 100
+Obdelnik ma sirku 10 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 110
+Obdelnik ma sirku 10 cm a obsah 13dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 120
+Obdelnik ma sirku 10 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 130
+Obdelnik ma sirku 10 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 140
+Obdelnik ma sirku 10 cm a obsah 16dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 150
+Obdelnik ma sirku 10 cm a obsah 17dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 160
+Obdelnik ma sirku 10 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 170
+Obdelnik ma sirku 10 cm a obsah 19dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 180
+Obdelnik ma sirku 10 cm a obsah 20dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 190
+Obdelnik ma sirku 10 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 200
+Obdelnik ma sirku 11 cm a obsah 11dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 89
+Obdelnik ma sirku 11 cm a obsah 22dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 189
+Obdelnik ma sirku 12 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 13
+Obdelnik ma sirku 12 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 38
+Obdelnik ma sirku 12 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 63
+Obdelnik ma sirku 12 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 88
+Obdelnik ma sirku 12 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 113
+Obdelnik ma sirku 12 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 138
+Obdelnik ma sirku 12 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 163
+Obdelnik ma sirku 12 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 188
+Obdelnik ma sirku 13 cm a obsah 13dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 87
+Obdelnik ma sirku 13 cm a obsah 26dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 187
+Obdelnik ma sirku 14 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 36
+Obdelnik ma sirku 14 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 86
+Obdelnik ma sirku 14 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 136
+Obdelnik ma sirku 14 cm a obsah 28dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 186
+Obdelnik ma sirku 15 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 5
+Obdelnik ma sirku 15 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 25
+Obdelnik ma sirku 15 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 45
+Obdelnik ma sirku 15 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 65
+Obdelnik ma sirku 15 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 85
+Obdelnik ma sirku 15 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 105
+Obdelnik ma sirku 15 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 125
+Obdelnik ma sirku 15 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 145
+Obdelnik ma sirku 15 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 165
+Obdelnik ma sirku 15 cm a obsah 30dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 185
+Obdelnik ma sirku 16 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 9
+Obdelnik ma sirku 16 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 34
+Obdelnik ma sirku 16 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 59
+Obdelnik ma sirku 16 cm a obsah 16dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 84
+Obdelnik ma sirku 16 cm a obsah 20dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 109
+Obdelnik ma sirku 16 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 134
+Obdelnik ma sirku 16 cm a obsah 28dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 159
+Obdelnik ma sirku 17 cm a obsah 17dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 83
+Obdelnik ma sirku 18 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 32
+Obdelnik ma sirku 18 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 82
+Obdelnik ma sirku 18 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 132
+Obdelnik ma sirku 19 cm a obsah 19dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 81
+Obdelnik ma sirku 20 cm a obsah 2dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 10
+Obdelnik ma sirku 20 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 5
+Obdelnik ma sirku 20 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 0
+Obdelnik ma sirku 20 cm a obsah 5dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 5
+Obdelnik ma sirku 20 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 10
+Obdelnik ma sirku 20 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 15
+Obdelnik ma sirku 20 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 20
+Obdelnik ma sirku 20 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 25
+Obdelnik ma sirku 20 cm a obsah 10dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 30
+Obdelnik ma sirku 20 cm a obsah 11dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 35
+Obdelnik ma sirku 20 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 40
+Obdelnik ma sirku 20 cm a obsah 13dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 45
+Obdelnik ma sirku 20 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 50
+Obdelnik ma sirku 20 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 55
+Obdelnik ma sirku 20 cm a obsah 16dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 60
+Obdelnik ma sirku 20 cm a obsah 17dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 65
+Obdelnik ma sirku 20 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 70
+Obdelnik ma sirku 20 cm a obsah 19dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 75
+Obdelnik ma sirku 20 cm a obsah 20dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 80
+Obdelnik ma sirku 20 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 85
+Obdelnik ma sirku 20 cm a obsah 22dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 90
+Obdelnik ma sirku 20 cm a obsah 23dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 95
+Obdelnik ma sirku 20 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 100
+Obdelnik ma sirku 20 cm a obsah 25dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 105
+Obdelnik ma sirku 20 cm a obsah 26dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 110
+Obdelnik ma sirku 20 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 115
+Obdelnik ma sirku 20 cm a obsah 28dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 120
+Obdelnik ma sirku 20 cm a obsah 29dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 125
+Obdelnik ma sirku 20 cm a obsah 30dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 130
+Obdelnik ma sirku 21 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 79
+Obdelnik ma sirku 22 cm a obsah 11dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 28
+Obdelnik ma sirku 22 cm a obsah 22dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 78
+Obdelnik ma sirku 23 cm a obsah 23dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 77
+Obdelnik ma sirku 24 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 1
+Obdelnik ma sirku 24 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 26
+Obdelnik ma sirku 24 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 51
+Obdelnik ma sirku 24 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 76
+Obdelnik ma sirku 24 cm a obsah 30dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 101
+Obdelnik ma sirku 25 cm a obsah 2dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 17
+Obdelnik ma sirku 25 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 13
+Obdelnik ma sirku 25 cm a obsah 4dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 9
+Obdelnik ma sirku 25 cm a obsah 5dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 5
+Obdelnik ma sirku 25 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 1
+Obdelnik ma sirku 25 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 3
+Obdelnik ma sirku 25 cm a obsah 8dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 7
+Obdelnik ma sirku 25 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 11
+Obdelnik ma sirku 25 cm a obsah 10dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 15
+Obdelnik ma sirku 25 cm a obsah 11dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 19
+Obdelnik ma sirku 25 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 23
+Obdelnik ma sirku 25 cm a obsah 13dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 27
+Obdelnik ma sirku 25 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 31
+Obdelnik ma sirku 25 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 35
+Obdelnik ma sirku 25 cm a obsah 16dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 39
+Obdelnik ma sirku 25 cm a obsah 17dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 43
+Obdelnik ma sirku 25 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 47
+Obdelnik ma sirku 25 cm a obsah 19dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 51
+Obdelnik ma sirku 25 cm a obsah 20dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 55
+Obdelnik ma sirku 25 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 59
+Obdelnik ma sirku 25 cm a obsah 22dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 63
+Obdelnik ma sirku 25 cm a obsah 23dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 67
+Obdelnik ma sirku 25 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 71
+Obdelnik ma sirku 25 cm a obsah 25dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 75
+Obdelnik ma sirku 25 cm a obsah 26dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 79
+Obdelnik ma sirku 25 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 83
+Obdelnik ma sirku 25 cm a obsah 28dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 87
+Obdelnik ma sirku 25 cm a obsah 29dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 91
+Obdelnik ma sirku 25 cm a obsah 30dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 95
+Obdelnik ma sirku 26 cm a obsah 13dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 24
+Obdelnik ma sirku 26 cm a obsah 26dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 74
+Obdelnik ma sirku 27 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 73
+Obdelnik ma sirku 28 cm a obsah 7dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 3
+Obdelnik ma sirku 28 cm a obsah 14dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 22
+Obdelnik ma sirku 28 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 47
+Obdelnik ma sirku 28 cm a obsah 28dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 72
+Obdelnik ma sirku 29 cm a obsah 29dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 71
+Obdelnik ma sirku 30 cm a obsah 3dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 20
+Obdelnik ma sirku 30 cm a obsah 6dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 10
+Obdelnik ma sirku 30 cm a obsah 9dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 0
+Obdelnik ma sirku 30 cm a obsah 12dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 10
+Obdelnik ma sirku 30 cm a obsah 15dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 20
+Obdelnik ma sirku 30 cm a obsah 18dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 30
+Obdelnik ma sirku 30 cm a obsah 21dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 40
+Obdelnik ma sirku 30 cm a obsah 24dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 50
+Obdelnik ma sirku 30 cm a obsah 27dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 60
+Obdelnik ma sirku 30 cm a obsah 30dm ^ 2.
+Vypoctete, o kolik cm se lisi delka a sirka obdelniku.
+ >>> Answer: 70

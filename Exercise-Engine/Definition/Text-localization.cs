@@ -1,4 +1,4 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 enum Language { en, cs, pl, ua } // english, czech, polish, ukrainian
 enum JsonTextElement { LocalizedString, Macro }

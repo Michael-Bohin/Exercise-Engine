@@ -1,4 +1,4 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 // >>> NOT YET IMPLEMENTED <<<
 record ImageDataTypeToBeDecided {

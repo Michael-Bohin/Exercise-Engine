@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,12 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Definition\Json-storage\" />
     <Folder Include="Exercise\Concrete-factories\" />
     <Folder Include="Exercise\Concrete-exercises\" />
-    <Folder Include="Json-storage\Exercises\" />
-    <Folder Include="Json-storage\Definitions\" />
-    <Folder Include="View\Definition-view\" />
-    <Folder Include="View\Exercise-view\" />
+    <Folder Include="Exercise\Json-storage\" />
   </ItemGroup>
 
 </Project>

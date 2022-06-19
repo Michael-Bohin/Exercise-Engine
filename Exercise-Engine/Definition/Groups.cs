@@ -1,4 +1,4 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 enum Classes { First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eight, Ninth }
 enum Topic { Arithmetic, Addition, Subtraction, Multiplication, Division, Modulo, Fractions, Percentages, Combinatorics, BasicUnits } // and many more..

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exercise_Engine.Interpreter {
+namespace ExerciseEngine.Interpreter {
 	internal class Exercise_interpreter {
 	}
 }

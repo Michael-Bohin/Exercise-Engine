@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Exercise-Engine\__Exercise-Engine.csproj" />
+    <Folder Include="Concrete-factories\" />
+    <Folder Include="Concrete-exercises\" />
+    <Folder Include="Json-storage-exercises\" />
   </ItemGroup>
 
 </Project>

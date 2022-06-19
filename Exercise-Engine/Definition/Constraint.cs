@@ -1,4 +1,4 @@
-﻿namespace Exercise_Engine;
+﻿namespace ExerciseEngine;
 
 enum ParameterType { Int, Operator, String, Double/*, Fraction*/ }
 

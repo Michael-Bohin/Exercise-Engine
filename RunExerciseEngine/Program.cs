@@ -1,3 +1,3 @@
-﻿using Exercise_Engine;
+﻿using ExerciseEngine;
 
 Console.WriteLine("Hello, EE World!");
