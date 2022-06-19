@@ -63,4 +63,3 @@ record GeometricExercise : Exercise {
 		throw new NotImplementedException("No attention = no geometric exercises.");
 	}	
 }
-
