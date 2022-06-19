@@ -31,13 +31,13 @@ class WordProblem {
 
 Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU VARIANTOU**. Slovní úloha v této podobě, obsahuje překlady do **'y'** různých jazyků. Co kdybychom ale zároveň chtěli mít **'z'** variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
 
-1. Každý string bude v bodě proměnných obsahovat makra -> proměnné, které se s každou variatnou příkladu mění.
+1. Každý string bude v bodě proměnných obsahovat makra -> proměnné, které se s každou variantou příkladu mění.
 2. Dodat seznam variant příkladu.
 3. Vypořádat se s cornercasem, kdy proměnná je typu string, která má v různych jazycích různou podobu. (Nebo ruzný přístup k desetinné čárce/tečce nebo znaku pro dělení napříč různými kulturami.)
 
 Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovních úloh a každá úloha bude mít **'y'** různých překladů do **'z'** různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
 
-## Kolekce slovní úlohy s 'y' překlady a 'z' variantami je uspořádaná n-tice:
+## Kolekce slovních úloh s 'y' překlady a 'z' variantami je uspořádaná n-tice:
 
 1. počítačové jméno
 2. lidské jméno
@@ -48,19 +48,12 @@ Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovních úloh a
 7. obrázky
 8. skupiny
 
-Je třeba zadefinovat tři nové objekty: MacroText, Varianta a abstraktní proměnná. 
+Je třeba zadefinovat tři nové objekty: Varianta, abstraktní proměnná a MacroText. 
 
 ### Definice 'Varianta':
 
 1. seznam proměnných 
 2. seznam odpovědí
-
-### Proměnné v textu: 
-
-Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktní třída s potomky:
-
-1. ```Macro```: ```int``` pointer
-2. ```Text```:```string``` constText
 
 ### Proměnná
 
@@ -71,6 +64,15 @@ Třída Variable je abstraktní třída s n potomky:
 3. ```Picture```: ```???```
 4. ```Link```:```string```
 5. ```Animace```:```???```
+
+### Proměnné v textu: 
+
+Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktní třída s potomky:
+
+1. ```Macro```: ```int``` pointer
+2. ```Text```:```string``` constText
+
+Logika uložené kolekce je minimalizování uložených dat, tedy veškeré texty v různých jazycích jsou v kolekci uloženy právě jednou. Proměnné ve kterých se varianty příkladu liší jsou uložené v samostatném seznamu variant. V textu zadání, otázek atd. se na ně odkazujeme 'pointerem' -> číslo indexu pod kterým je najdeme v seznamu nějaké konkrétní varianty.
 
 Ok, jak bude vypadat implementace konkrétní slovní úlohy? 
 
@@ -123,43 +125,48 @@ class Text : TextElement {
 ```
 
 
+## Rozdíl mezi slovní a početní úlohou:
 
-1. uniqueId                 ulong
- 2 name Dict Lang -> string
- 3 seznam variant               List<Variation> // .. vnitrek class Variation nize ..
- 4 zadani Dict Lang -> MacroText
- 5 otazky Dict Lang -> List<MacroText>
- 6 komentovane kroky reseni Dict Lang -> List<MacroText>
- 7 obrazky                  ????? (will solve later)
- 8 skupiny Groups
-   (relevnatni tridy, tema, typ prikladu)
+1. Početní úloha nemá otázky, jen zadaní. (Např. vzoreček, výraz, rovnici, nerovnici atd.) 
+2. Početní úloha má místo seznamu odpovedí jednu odpověď (plural -> singular)
 
- Trida Variation je:
- 1 seznam promennych                List<Variable>				// promenne se stejnou i ruznou string reprezentaci pres ruzne kultury
- 2 seznam spravnych odpovedi List<string>               // za predpokladu, ze forma odpovedi bude ve vsech kulturach stejna (cislo)
+Důsledky pro polymorfní stromeček:
 
+1. Abstraktní předek slovní úlohy i početního příkladu bude mít vše kromě otázek.
+2. Třída ```Variation``` bude také abstraktní.  V případě Variation slovní úlohy bude mít seznam odpovědí, v připadě Variation početního příkladu bude právě jedna odpověď.
 
+## Geometrické úlohy 
 
+Pro ně zatím vytvořím jejich třídy, ale do ctoru příjde vyhození NotYetImplemented výjimky. S použitím System.Drawing určitě půjdou impementovat! Ale jen za předpokladu předchozího zájmu o slovní a početní úlohy, který ufinancuje vývoj geometrických úloh. 
 
+## Reprezentace příkladů při konkrétním zavolání varianty y a jazyku z. 
 
+Poslední díl do skládačky, jak typ bude kolekce vracet pokud jí volající zavolá a řekne chci tuhle variantu v tomhle jazyce?
 
+```c#
+abstract class Exercise {
+	// metadata o uloze:
+	ulong uniqueId;
+	string name;
+	Language lang;
+	int variationId;
+	Groups groups;
 
- Slovni uloha (x, y, z) je:
- 1 uniqueId             ulong
- 2 name                 string
- 3 zadani                   string
- 4 otazky List<string>
- 5 odpovedi List<string>
- 6 kroky reseni         List<string>
- 7 obrazky              ????
- 8 skupiny Groups
+	// vlastni uloha:
+	string assignment;
+	List<string> solutionSteps;
+	// List<Picture> pictures;
 
- poznamka do budoucnosti: Groups bude take nejspis potrebovat slovnik pres kultury, protoze napr. cesko, polsko a nemecko maji jine osnovy a tedy stejne priklady muzou a asi i spadnou do ruznych trid
+}
 
+class WordProblem : Exercise {
+	// vlastni uloha:
+	List<string> questions;
+	List<string> results;
+}
 
- Rozdil mezi slovni a pocetni ulohou:
- 1. Pocetni uloha nema otazky 
- 2. pocetni uloha ma misto seznamu odpovedi jednu odpoved (plural -> singular)
- Tzn.
- 1. abstraktni predek obou bude mit vse krome otazek
- 2. variation bude take abstraktni v pripade slovni ulohy bude list odpovedi, v pripade pocetni jedna odpoved
+class NumericalExercise : Exercise {
+	// vlastni uloha:
+	string result;
+}
+```
