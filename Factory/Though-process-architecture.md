@@ -88,14 +88,12 @@ class WordProblemCollection {
 	Dictionary<Language, Groups> groups;
 }
 
-// 
-
 class Variation {
 	List<Variable> variables;
 	List<MacroText> results;
 }
 
-// 
+// ___________________________________________ //
 
 abstract class Variable { }
 
@@ -107,7 +105,7 @@ class CulturalVariable : Variable {
 	Dictionary<Language, string> dict;
 }
 
-//
+// ___________________________________________ //
 
 class MacroText {
 	List<TextElement> elements;
