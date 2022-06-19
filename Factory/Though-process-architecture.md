@@ -29,7 +29,7 @@ class WordProblem {
 }
 ```
 
-Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU variantou**. Slovní úloha v této podobě, obsahuje překlady do **'y'** různých jazyků. Co kdybychom ale zároveň chtěli mít **'z'** variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
+Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU VARIANTOU**. Slovní úloha v této podobě, obsahuje překlady do **'y'** různých jazyků. Co kdybychom ale zároveň chtěli mít **'z'** variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
 
 1. Každý string bude v bodě proměnných obsahovat makra -> proměnné, které se s každou variatnou příkladu mění.
 2. Dodat seznam variant příkladu.
@@ -88,6 +88,27 @@ class WordProblemCollection {
 	Dictionary<Language, Groups> groups;
 }
 
+// 
+
+class Variation {
+	List<Variable> variables;
+	List<MacroText> results;
+}
+
+// 
+
+abstract class Variable { }
+
+class InvariantVariable : Variable { 
+	string value;
+}
+
+class CulturalVariable : Variable {
+	Dictionary<Language, string> dict;
+}
+
+//
+
 class MacroText {
 	List<TextElement> elements;
 }
@@ -100,16 +121,6 @@ class Macro : TextElement {
 
 class Text : TextElement {
 	string constText;
-}
-
-abstract class Variable { }
-
-class InvariantVariable : Variable { 
-	string value;
-}
-
-class CulturalVariable : Variable {
-	Dictionary<Language, string> dict;
 }
 ```
 
