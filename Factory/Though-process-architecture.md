@@ -32,10 +32,10 @@ class WordProblem {
 Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU variantou**. Slovní úloha v této podobě, obsahuje překlady do **'y'** různých jazyků. Co kdybychom ale zároveň chtěli mít **'z'** variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
 
 1. Každý string bude v bodě proměnných obsahovat makra -> proměnné, které se s každou variatnou příkladu mění.
-2. Dodat seznam variant příkladu
+2. Dodat seznam variant příkladu.
 3. Vypořádat se s cornercasem, kdy proměnná je typu string, která má v různych jazycích různou podobu. (Nebo ruzný přístup k desetinné čárce/tečce nebo znaku pro dělení napříč různými kulturami.)
 
-Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovnich uloh a každá úloha bude mít **'y'** různých překladů do **'z'** různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
+Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovních úloh a každá úloha bude mít **'y'** různých překladů do **'z'** různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
 
 ## Kolekce slovní úlohy s 'y' překlady a 'z' variantami je uspořádaná n-tice:
 
@@ -57,10 +57,10 @@ Je třeba zadefinovat tři nové objekty: MacroText, Varianta a abstraktní prom
 
 ### Proměnné v textu: 
 
-Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktni třída s potomky:
+Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktní třída s potomky:
 
-1. ```Macro```: ```ulong``` pointer
-2. ```Text```:```string```
+1. ```Macro```: ```int``` pointer
+2. ```Text```:```string``` constText
 
 ### Proměnná
 
@@ -72,10 +72,9 @@ Třída Variable je abstraktní třída s n potomky:
 4. ```Link```:```string```
 5. ```Animace```:```???```
 
- Ok, posledni dil do skladanky, jak bude vypadat konkretni slovni uloha? 
- Tj. Slovni uloha 'x' ve variaci 'y' a jazyce 'z' ?
+Ok, poslední díl do skládanky, jak bude vypadat implementace konkrétní slovní úlohy? 
 
-## Možná implementace kolekce slovní úlohy s 'y' překlady a 'z' variantami:
+## Implementace kolekce slovní úlohy s 'y' překlady a 'z' variantami:
 
 ```c#
 class WordProblemCollection {
