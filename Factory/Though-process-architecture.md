@@ -2,31 +2,31 @@
 
 ## Slovní úloha v 'z' jazycích je osmice:
 
-( 
-	1. počítačové jméno
-	2. lidské jméno, 
-	3. zadání, 
-	4. otázky,
-	5. výsledky,
-	6. komentované kroky řešení, 
-	7. obrázky, 
-	8. skupiny
-)
-přičemž kroky [2,6] jsou ve slovníku, kde klíče budou různé jazykové lokalizace. 
+
+1. počítačové jméno
+2. lidské jméno
+3. zadání
+4. otázky
+5. výsledky
+6. komentované kroky řešení
+7. obrázky
+8. skupiny
+
+Přičemž body [2,6] jsou ve slovníku, kde klíče budou různé jazykové lokalizace. S otypováním by třída slovní úloha mohla vypadat následnovně:
 
 
 ```c#
 enum Language { en, pl, ua, cs }
 
-class SlovniUloha {
-	ulong uniqueId; // 1. pocitacove jmeno
-	Dictionary<Language, string> name; // 2. lidske jmeno
-	Dictionary<Language, string> assignment; // 3.
-	Dictionary<Language, List<string>> questions; // 4.
-	Dictionary<Language, List<string>> results; // 5. 
-	Dictionary<Language, List<string>> solutionSteps; // 6.
-	??? pictures; // 7.
-	Groups groups; // 8.
+class WordProblem {
+	ulong uniqueId;
+	Dictionary<Language, string> name;
+	Dictionary<Language, string> assignment;
+	Dictionary<Language, List<string>> questions;
+	Dictionary<Language, List<string>> results;
+	Dictionary<Language, List<string>> solutionSteps;
+	??? pictures;
+	Groups groups;
 }
 ```
 
