@@ -128,7 +128,7 @@ class Text : TextElement {
 ## Rozdíl mezi slovní a početní úlohou:
 
 1. Početní úloha nemá otázky, jen zadaní. (Např. vzoreček, výraz, rovnici, nerovnici atd.) 
-2. Početní úloha má místo seznamu odpovedí jednu odpověď (plural -> singular)
+2. Početní úloha má místo seznamu odpovědí jednu odpověď (plural -> singular)
 
 Důsledky pro polymorfní stromeček:
 
@@ -137,7 +137,7 @@ Důsledky pro polymorfní stromeček:
 
 ## Geometrické úlohy 
 
-Pro ně zatím vytvořím jejich třídy, ale do ctoru příjde vyhození NotYetImplemented výjimky. S použitím System.Drawing určitě půjdou impementovat! Ale jen za předpokladu předchozího zájmu o slovní a početní úlohy, který ufinancuje vývoj geometrických úloh. 
+Pro ně zatím vytvořím jejich třídy, ale do ctoru příjde vyhození NotYetImplemented výjimky. S použitím System.Drawing určitě půjdou implementovat! Ale jen za předpokladu předchozího zájmu o slovní a početní úlohy, který ufinancuje vývoj geometrických úloh. 
 
 ## Reprezentace příkladů při konkrétním zavolání varianty y a jazyku z. 
 
@@ -170,3 +170,10 @@ class NumericalExercise : Exercise {
 	string result;
 }
 ```
+
+TODO: 
+
+1. Projit not minimized vypis vsech variant a prikladu nejake slovni a nejake pocetni ulohy. Whats the file size? 
+2. Komprimovat JSON serializaci kolekce. How much has the file size dropped?
+3. Ukazat priklady jak se z komprimovane kolekce postavi cely priklad pri volani konkretni varianty a konkretniho jazyka. 
+4. Napsat factory, ktera vygeneruje ExerciseCollection z bodu 2. 
