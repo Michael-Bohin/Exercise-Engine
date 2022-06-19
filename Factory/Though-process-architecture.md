@@ -1,7 +1,6 @@
 ﻿# Some theory front up:
 
-## Slovní úloha v 'z' jazycích je osmice:
-
+## Slovní úloha v 'y' jazycích je uspořádaná osmice:
 
 1. počítačové jméno
 2. lidské jméno
@@ -12,11 +11,11 @@
 7. obrázky
 8. skupiny
 
-Přičemž body [2,6] jsou ve slovníku, kde klíče budou různé jazykové lokalizace. S otypováním by třída slovní úloha mohla vypadat následnovně:
+Body [2,6] jsou ve slovníku, kde klíče budou různé jazykové lokalizace. S otypováním by třída slovní úloha mohla vypadat následovně:
 
 
 ```c#
-enum Language { en, pl, ua, cs }
+enum Language { en, pl, ua, cs, ... }
 
 class WordProblem {
 	ulong uniqueId;
@@ -25,28 +24,45 @@ class WordProblem {
 	Dictionary<Language, List<string>> questions;
 	Dictionary<Language, List<string>> results;
 	Dictionary<Language, List<string>> solutionSteps;
-	??? pictures;
+	??? pictures; // dev in future, today type is unknown
 	Groups groups;
 }
 ```
 
+Dobře, tohle je v případě jedné slovní ulohy **S PRÁVĚ JEDNOU variantou**. Slovní úloha v této podobě, obsahuje překlady do 'y' různých jazyků. Co kdybychom ale zároveň chtěli mít 'z' variant? Tj. stejná úloha, ale jiná vstupní čísla a výsledek. Pak musíme návrh výše rozšířit o:
 
- Dobre, tohle je v pripade jedne slovni ulohy S PRAVE JEDNOU variantou.
- Slovni uloha v teto podobe jiz obsahuje ruzne preklady do 'z' jazyku.
- Co kdybychom ale zaroven chteli mit 'y' variant? Tj.stejna uloha, jine vstupni cisla a vysledek.
- Pak musime navrh vyse rozsirit o:
-		1. Kazdy string bude v bode promennych obsahovat makra -> promenne, ktere se s kazdou
-		   variatnou prikladu meni.
-		2. Dodat seznam variant prikladu ('varianta prikladu' = 'variation of exercise')
-		3. Vyporadat se s cornercasem, kdy promenna je typu string, ktera ma v ruznych jazycich ruznou podobu.
-		   (Nebo ruzny pristup k destinne carce/tecce nebo znaku pro deleni napric ruznymi kulturami)
+1. Kazdy string bude v bode promennych obsahovat makra -> promenne, ktere se s kazdou variatnou prikladu meni.
+2. Dodat seznam variant prikladu ('varianta prikladu' = 'variation of exercise')
+3. Vyporadat se s cornercasem, kdy promenna je typu string, ktera ma v ruznych jazycich ruznou podobu. (Nebo ruzny pristup k destinne carce/tecce nebo znaku pro deleni napric ruznymi kulturami)
 
- Tj.chceme mit sbirku prikladu, ktera bude mit: 
- 'x' slovnich uloh, kazda uloha v 'y' ruznych variantach prelozenych do 'z' ruznych jazyku.
+Tedy chceme mít sbirku prikladu, ktera bude mít 'x' slovnich uloh a kazda uloha bude mít 'y' ruznych překladů do 'z' různých variant. Říkejme takovému objektu 'Kolekce slovních úloh'.
+
+## Kolekce slovní úlohy s 'y' překlady 'z' variantami je uspořádaná n-tice:
+
+1. počítačové jméno
+2. lidské jméno
+3. seznam 'z' variant
+4. zadání
+5. otázky
+6. komentované kroky řešení
+7. obrázky
+8. skupiny
+
+Je třeba zadefinovat tři nové objekty: Varianta a abstraktní MacroText a abstraktní proměnná. 
+
+### Definice 'Varianta':
+
+1. seznam proměnných 
+2. seznam odpovědí
+
+### Proměnné v textu: 
+
+Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktni třída s dvěma potomky. 
+```Macro```: ```ulong``` pointer, ```bool``` multiCultural
+```Text```:```string```
 
 
- Kolekce slovni ulohy s 'y' variantami a 'z' ruznych jazyku je:
- 1 uniqueId                 ulong
+1. uniqueId                 ulong
  2 name Dict Lang -> string
  3 seznam variant               List<Variation> // .. vnitrek class Variation nize ..
  4 zadani Dict Lang -> MacroText
@@ -63,10 +79,6 @@ class WordProblem {
  Trida Variable je abstraktni trida s dvema potomky:
  InvariantVariable: string
  LocalizedVariable: Dict Lang -> string
-
- Trida MacroText drzi List<TextElement>, kde TextElement je abstraktni trida s dvema potmky:
- Macro: ulong pointer, bool multiCultural
- Text: string
 
 
  Ok, posledni dil do skladanky, jak bude vypadat konkretni slovni uloha? 
