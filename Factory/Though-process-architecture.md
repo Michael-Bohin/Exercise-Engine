@@ -11,7 +11,7 @@
 7. obrázky
 8. skupiny
 
-Body [2,6] jsou ve slovníku, kde klíče budou různé jazykové lokalizace. S otypováním by třída slovní úloha mohla vypadat následovně:
+Body [2,6] a 8 jsou ve slovníku, kde klíče budou různé jazykové lokalizace. S otypováním by třída slovní úloha mohla vypadat následovně:
 
 
 ```c#
@@ -24,8 +24,8 @@ class WordProblem {
 	Dictionary<Language, List<string>> questions;
 	Dictionary<Language, List<string>> results;
 	Dictionary<Language, List<string>> solutionSteps;
-	??? pictures; // dev in future, today type is unknown
-	Groups groups;
+	// ??? pictures; dev in future, today type is unknown
+	Dictionary<Language, Groups> groups;
 }
 ```
 
@@ -48,7 +48,7 @@ Tedy chceme mít sbírku příkladů, která bude mít **'x'** slovnich uloh a k
 7. obrázky
 8. skupiny
 
-Je třeba zadefinovat tři nové objekty: Varianta a abstraktní MacroText a abstraktní proměnná. 
+Je třeba zadefinovat tři nové objekty: MacroText, Varianta a abstraktní proměnná. 
 
 ### Definice 'Varianta':
 
@@ -57,9 +57,63 @@ Je třeba zadefinovat tři nové objekty: Varianta a abstraktní MacroText a abs
 
 ### Proměnné v textu: 
 
-Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktni třída s dvěma potomky. 
-```Macro```: ```ulong``` pointer, ```bool``` multiCultural
-```Text```:```string```
+Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je abstraktni třída s potomky:
+
+1. ```Macro```: ```ulong``` pointer
+2. ```Text```:```string```
+
+### Proměnná
+
+Třída Variable je abstraktní třída s n potomky:
+
+1. ```InvariantVariable```: ```string```
+2. ```LocalizedVariable```: ```Dict Lang -> string```
+3. ```Picture```: ```???```
+4. ```Link```:```string```
+5. ```Animace```:```???```
+
+ Ok, posledni dil do skladanky, jak bude vypadat konkretni slovni uloha? 
+ Tj. Slovni uloha 'x' ve variaci 'y' a jazyce 'z' ?
+
+## Možná implementace kolekce slovní úlohy s 'y' překlady a 'z' variantami:
+
+```c#
+class WordProblemCollection {
+	ulong uniqueId;
+	Dictionary<Language, string> name;
+	List<Variation> variants;
+	Dictionary<Language, MacroText> assignment;
+	Dictionary<Language, List<MacroText>> questions;
+	Dictionary<Language, List<MacroText>> solutionSteps;
+	// ??? pictures; dev in future, today type is unknown
+	Dictionary<Language, Groups> groups;
+}
+
+class MacroText {
+	List<TextElement> elements;
+}
+
+abstract class TextElement {}
+
+class Macro : TextElement { 
+	int pointer;
+}
+
+class Text : TextElement {
+	string constText;
+}
+
+abstract class Variable { }
+
+class InvariantVariable : Variable { 
+	string value;
+}
+
+class CulturalVariable : Variable {
+	Dictionary<Language, string> dict;
+}
+```
+
 
 
 1. uniqueId                 ulong
@@ -76,13 +130,10 @@ Třída ```MacroText``` drží ```List<TextElement>```, kde ```TextElement``` je
  1 seznam promennych                List<Variable>				// promenne se stejnou i ruznou string reprezentaci pres ruzne kultury
  2 seznam spravnych odpovedi List<string>               // za predpokladu, ze forma odpovedi bude ve vsech kulturach stejna (cislo)
 
- Trida Variable je abstraktni trida s dvema potomky:
- InvariantVariable: string
- LocalizedVariable: Dict Lang -> string
 
 
- Ok, posledni dil do skladanky, jak bude vypadat konkretni slovni uloha? 
- Tj.Slovni uloha 'x' ve variaci 'y' a jazyce 'z' ?
+
+
 
 
  Slovni uloha (x, y, z) je:
