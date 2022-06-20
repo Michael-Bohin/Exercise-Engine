@@ -1,32 +1,9 @@
 ﻿namespace ExerciseEngine.Factory;
 using System.Text;
 
-abstract class Variation {
-	public List<Variable> Variables { get; } = new();
-}
-
-sealed class WordProblemVariation : Variation {
-	public List<MacroText> Results { get; } = new();
-}
-
-sealed class NumericalExerciseVariation : Variation {
-	public MacroText Result { get; } = new();
-}
-
-abstract class Variable { 
-	abstract public string GetValue(Language lang);	
-}
-
-sealed class InvariantVariable : Variable {
-	public string Value { get;} = default!;
-
-	override public string GetValue(Language lang) => Value;
-}
-
-sealed class CulturalVariable : Variable {
-	public Dictionary<Language, string> Dict { get; } = new();
-
-	override public string GetValue(Language lang) => Dict[lang];
+class Variation {
+	public List<string> Inv { get;} = new(); // invariant variables, shortified to minimize json
+	public List<Dictionary<Language, string>> Cul { get; } = new(); // cultural variables, shortified to minimize json
 }
 
 class MacroText {
@@ -46,14 +23,31 @@ abstract class TextElement {
 }
 
 sealed class Macro : TextElement {
-	public int Pointer { get; }
+	public int Pointer { get; private set;}
+	public VariableDiscriminator Type { get; private set; }
+	public Macro() { } // json serializer ctor
+	public Macro(int Pointer, VariableDiscriminator Type) {
+		this.Pointer = Pointer; this.Type = Type;
+	}
+
+	public void SerializerSetPointer(int p) => Pointer = p;
+	public void SerializerSetDiscriminator(VariableDiscriminator vd) => Type = vd;
+
 	override public string GetValue(Language lang, Variation v) {
-		return v.Variables[Pointer].GetValue(lang);
+		if(Type == VariableDiscriminator.Invariant)
+			return v.Inv[Pointer];
+
+		return v.Cul[Pointer][lang];
 	}
 }
 
 sealed class Text : TextElement {
-	public string ConstText { get; } = default!;
-	override public string GetValue(Language lang, Variation v) => ConstText; // ignoring language here is actually correct 
+	public string ConstText { get; private set;} = default!;
+	public Text() { }
+	public Text(string ConstText) {
+		this.ConstText = ConstText;
+	}
 
+	public void SerializerSetText(string t) => ConstText = t;
+	override public string GetValue(Language lang, Variation v) => ConstText;
 }

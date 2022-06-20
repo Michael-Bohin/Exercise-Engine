@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine.Factory;
 
-record MetaData {
+class MetaData {
 	public ulong UniqueId { get; }
 	public string Name { get;} 
 	public Language Lang { get; }
@@ -16,11 +16,8 @@ record MetaData {
 	}
 }
 
-abstract record Exercise {
-	// metadata o uloze:
+abstract class Exercise {
 	public MetaData MetaData { get; }
-
-	// vlastni uloha: 
 	public string Assignment { get; }
 	public List<string> SolutionSteps { get; }
 	// List<Picture> pictures;
@@ -32,31 +29,27 @@ abstract record Exercise {
 	}
 }
 
-record WordProblem : Exercise {
-	// vlastni uloha:
+class WordProblem : Exercise {
 	public List<string> Questions { get; }
 	public List<string> Results { get; }
 
-	public WordProblem(	
-		MetaData MetaData, string Assignment, List<string> Questions, List<string> Results, List<string> SolutionSteps)
+	public WordProblem(MetaData MetaData, string Assignment, List<string> Questions, List<string> Results, List<string> SolutionSteps)
 		: base(MetaData, Assignment, SolutionSteps) {
 		this.Questions = Questions;
 		this.Results = Results;
 	}
 }
 
-record NumericalExercise : Exercise {
-	// vlastni uloha:
+class NumericalExercise : Exercise {
 	public string Result { get; }
 
-	public NumericalExercise(
-		MetaData MetaData, string Assignment, string Result, List<string> SolutionSteps)
-		:base(MetaData, Assignment, SolutionSteps) {
+	public NumericalExercise(MetaData MetaData, string Assignment, string Result, List<string> SolutionSteps) 
+		: base(MetaData, Assignment, SolutionSteps) {
 		this.Result = Result;
 	}
 }
 
-record GeometricExercise : Exercise {	
+class GeometricExercise : Exercise {	
 	public GeometricExercise(
 		MetaData MetaData, string Assignment, List<string> SolutionSteps) 
 		:base(MetaData, Assignment, SolutionSteps) {

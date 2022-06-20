@@ -6,14 +6,10 @@
 // the enum to tell which instance of Exercise to make.
 
 record Groups {
-	public List<Classes> Classes { get; } = new();
-	public List<Topic> Topics { get; } = new();
-	public ExerciseType ExerciseType { get; }
+	public List<Classes> Classes { get; } 
+	public List<Topic> Topics { get; } 
+	public ExerciseType ExerciseType { get; } 
 	public Groups(List<Classes> Classes, List<Topic> Topics, ExerciseType ExerciseType) {
-		this.Classes = Classes;
-		this.Topics = Topics;
-		this.ExerciseType = ExerciseType;
+		this.Classes = Classes;	this.Topics = Topics; this.ExerciseType = ExerciseType;
 	}
-
-	public Groups() { }
 }
