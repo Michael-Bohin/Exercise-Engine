@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine.Factory;
 
-class PersonConverterWithTypeDiscriminator : JsonConverter<TextElement> {
+class TextElementConverterWithTypeDiscriminator : JsonConverter<TextElement> {
     enum TypeDiscriminator {
         Macro = 1,
         Text = 2

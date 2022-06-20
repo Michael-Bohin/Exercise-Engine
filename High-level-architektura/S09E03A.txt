@@ -37,10 +37,13 @@ A: "5", B: "5", Results: [ "95" ]
 ..
 n dalsich ciselnych obmen...
 
+Obdélník má šířku {A} cm a obsah {B}dm ^ 2.
+Vypočtěte, o kolik cm se liší délka a šířka obdélníku.
+
 spolecne texty pro vsechny instance:
 cs: {
-    Assignment: "Obdelnik ma sirku {A} cm a obsah {B}dm ^ 2.",
-    Questions[0]: "Vypoctete, o kolik cm se lisi delka a sirka obdelniku."
+    Assignment: "Obdélník má šířku {A} cm a obsah {B}dm ^ 2.",
+    Questions[0]: "Vypočtěte, o kolik cm se liší délka a šířka obdélníku."
 }, 
 en: {
     Assignment: "The rectangle has width {A} cm and content {B}dm^2.",

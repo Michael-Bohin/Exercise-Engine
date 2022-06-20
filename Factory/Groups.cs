@@ -9,6 +9,10 @@ record Groups {
 	public List<Classes> Classes { get; } 
 	public List<Topic> Topics { get; } 
 	public ExerciseType ExerciseType { get; } 
+	public Groups() { // json seriliazer ctor
+		Classes = new(); Topics = new();
+	}
+	
 	public Groups(List<Classes> Classes, List<Topic> Topics, ExerciseType ExerciseType) {
 		this.Classes = Classes;	this.Topics = Topics; this.ExerciseType = ExerciseType;
 	}
