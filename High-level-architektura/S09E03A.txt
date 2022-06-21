@@ -40,6 +40,15 @@ n dalsich ciselnych obmen...
 Obdélník má šířku {A} cm a obsah {B}dm ^ 2.
 Vypočtěte, o kolik cm se liší délka a šířka obdélníku.
 
+Prostokąt ma szerokość {A} cm i zawartość {B}dm^2.
+Oblicz, o ile cm różnią się długości i szerokości prostokąta.
+
+The rectangle has width {A} cm and content {B}dm^2.
+Calculate by how many cm the length and width of the rectangle differ.
+
+Прямоугольник имеет ширину {A} см и площадь {B} дм^2.
+Вычислите, на сколько см отличаются длина и ширина прямоугольника.
+
 spolecne texty pro vsechny instance:
 cs: {
     Assignment: "Obdélník má šířku {A} cm a obsah {B}dm ^ 2.",

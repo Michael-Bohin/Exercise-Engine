@@ -32,6 +32,36 @@ class Program {
 			sw.WriteLine(json);
 		}
 
+		List<Exercise> czechDeserialized = JsonSerializer.Deserialize<List<Exercise>>(json, options)!;
+
+		WriteLine(czechDeserialized[1].Assignment);
+
+		WordProblem wp = (WordProblem)czechDeserialized[1];
+		WriteLine("classes");
+		foreach(var c in wp.Classes)
+			WriteLine(c);
+
+		WriteLine("topics");
+		foreach (var t in wp.Topics)
+			WriteLine(t);
+
+		// unit test by comparing serialized output...
+		// provide word problem and numerical exercise some elaborate tostring method and also compare that ... 
+
+		// 1. make instance of excercise collection
+		// 2. foreach language do:
+		//		i.		GetEntireCollection(lang) to listA
+		//		ii.		serialize List<exericse> to jsonA
+		//		iii.	deserialize into List<exe> to listB
+		//		iv.		serialize listB List<exercise> to jsonB
+		//		v.		assert listA == listB
+		//		vi.		assert jsonA == jsonB
+		//
+		// notes: 
+		// 1. do this for some elaborate word problem and numerical exercise as well so that both structures are tested well enough 
+		// 2. create instance with different lengths of List<T> properties..
+		// 3. test serialization and deserialization of exercise collection in same approach..
+
 	}
 
 	static List<Variation> BuildTestVariations() {
