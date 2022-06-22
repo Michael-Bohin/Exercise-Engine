@@ -18,7 +18,10 @@ class ExerciseLocalization {
 	public List<MacroText> Questions { get; }
 	public List<MacroText> Results { get; } 
 	public List<MacroText> SolutionSteps { get; } 
-	public Groups Groups { get; } 
+	public Groups Groups { get; }
+
+	static readonly string endl = Environment.NewLine;
+	static readonly string endl2x = endl + endl;
 
 	public ExerciseLocalization(Language Lang, string Name, MacroText Assignment, List<MacroText> Questions, List<MacroText> Results, List<MacroText> SolutionSteps, Groups Groups) {
 		this.Lang = Lang; this.Name = Name;	this.Assignment = Assignment; this.Questions=Questions; this.Results=Results; this.SolutionSteps=SolutionSteps;	this.Groups=Groups;
@@ -38,13 +41,37 @@ class ExerciseLocalization {
 			result.Add(step.ConstructText(lang, v));
 		return result;
 	}
+
+	override public string ToString() {
+		StringBuilder sb = new();
+		sb.Append($"Name              -> {Name}{endl}");
+		sb.Append($"Assignment        -> {Assignment}{endl}");
+		StringifyList(sb, Questions, "Questions", 17);
+		StringifyList(sb, Results, "Results", 17);
+		StringifyList(sb, SolutionSteps, "SolutionSteps", 17);
+		return sb.ToString();
+	}
+
+	static void StringifyList(StringBuilder sb, List<MacroText> list, string name, int colAllign) {
+		sb.Append(name);
+		colAllign -= name.Length;
+		for(int i = colAllign; i > -1; i--) 
+			sb.Append(' ');
+		sb.Append("-> ");
+		foreach(var item in list)
+			sb.Append(item.ToString() + ' ');
+		sb.Append(endl);
+	}
 }
 
 class ExerciseCollection {
 	public ulong UniqueId { get; }
 	public List<Variation> Variants { get; } = new();
 	public Dictionary<Language, ExerciseLocalization> Localizations { get; } = new();
+	
 	readonly Random rand = new();
+	static readonly string endl = Environment.NewLine;
+	static readonly string endl2x = endl + endl;
 
 	public ExerciseCollection(  ulong UniqueId, List<Variation> Variants, Dictionary<Language, ExerciseLocalization> Localizations) {
 		this.UniqueId = UniqueId; this.Variants = Variants;	this.Localizations = Localizations;
@@ -65,7 +92,7 @@ class ExerciseCollection {
 
 	// this implementation will likely be doing a lot of instructions repetitively
 	// likely may be sped up by identifying those parts and doing them just once
-	public List<Exercise> GetEntireCollection(Language lang) {
+	public List<Exercise> GetLocalizedCollection(Language lang) {
 		List<Exercise> collection = new();
 		for(int i= 0; i < Variants.Count;i++)
 			collection.Add(GetExercise(lang, i));
@@ -81,5 +108,21 @@ class ExerciseCollection {
 
 		NumericalExercise ne = new(metaData, er.Assignment, er.Results[0], er.SolutionSteps);
 		return ne;
+	}
+
+	override public string ToString() {
+		
+		StringBuilder sb = new();
+		sb.Append($"Unique id: {UniqueId}{endl2x}");
+		sb.Append($"Variations:{endl}");
+		foreach(var v in Variants)
+			sb.Append(v.ToString());
+		sb.Append($"{endl2x}Localizations:{endl}");
+		foreach(var localization in Localizations) {
+			sb.Append($"{endl}   >>> Excercise localization: {localization.Key} <<< {endl2x}");
+			sb.Append(localization.Value.ToString());
+		}
+		sb.Append($"{endl2x}");
+		return sb.ToString();
 	}
 }

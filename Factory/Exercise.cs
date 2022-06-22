@@ -14,10 +14,8 @@ class MetaData {
 
 abstract class Exercise {
 	// meta data of exercise:
-	public ulong UniqueId { get; private set; }
+	public (ulong exerciseId, Language language, int variationId) Id { get; private set; }
 	public string Name { get; private set; }
-	public Language Lang { get; private set; }
-	public int VariationId { get; private set; }
 	public List<Classes> Classes { get; }
 	public List<Topic> Topics { get; }
 	public ExerciseType ExerciseType { get; private set; }
@@ -32,8 +30,8 @@ abstract class Exercise {
 	}
 
 	protected Exercise(MetaData md, string Assignment, List<string> SolutionSteps) {
-		UniqueId = md.UniqueId; Name = md.Name;
-		Lang = md.Lang; VariationId = md.VariationId;
+		Id = (md.UniqueId, md.Lang, md.VariationId);
+		Name = md.Name;
 		Classes = md.Groups.Classes;
 		Topics = md.Groups.Topics;
 		ExerciseType = md.Groups.ExerciseType;
@@ -41,13 +39,45 @@ abstract class Exercise {
 		this.SolutionSteps = SolutionSteps;
 	}
 
-	public void SerializerSetUniqueId(ulong ui) { UniqueId = ui; }
+	public void SerializerSetId(ulong exId, Language l, int varId) => Id = (exId, l, varId);
 	public void SerializerSetName(string n) { Name = n; }
-	public void SerializerSetLang(Language l) { Lang = l; }
-	public void SerializerSetVariationId(int vi) { VariationId = vi; }
 	public void SerializerSetExerciseType(ExerciseType et) { ExerciseType = et; }
 
 	public void SerializerSetAssignment(string s) => Assignment = s;
+
+	override public string ToString() {
+		StringBuilder sb = new();
+		AddDiscriminator(sb);
+		sb.Append("\n    >>> Meta data of exercise <<<\n");
+		sb.Append($"Name: {Name}\n");
+		sb.Append($"Id: {Id.exerciseId}, Language: {Id.language}, Variation id: {Id.variationId}\n");
+		sb.Append($"Classes: ");
+		foreach(var c in Classes)
+			sb.Append($"{c} ");
+		sb.Append('\n');
+		sb.Append($"Topics: ");
+		foreach (var t in Topics)
+			sb.Append($"{t} ");
+		sb.Append('\n');
+		sb.Append($"ExerciseType: {ExerciseType}\n");
+
+		sb.Append("\n    >>> Representation of exercise <<<\n");
+		sb.Append($"Assignment: {Assignment}\n");
+		AppendListString("Solution steps", SolutionSteps, sb);
+
+		AddPolymorphicProperties(sb);
+		return sb.ToString();
+	}
+
+	abstract protected void AddDiscriminator(StringBuilder sb);
+	abstract protected void AddPolymorphicProperties(StringBuilder sb);
+
+	protected void AppendListString(string propertyName, List<string> list, StringBuilder sb) {
+		sb.Append(propertyName + ":\n");
+		foreach (var item in list)
+			sb.Append(item + '\n');
+		sb.Append('\n');
+	}
 }
 
 class WordProblem : Exercise {
@@ -64,6 +94,12 @@ class WordProblem : Exercise {
 		this.Questions = Questions;
 		this.Results = Results;
 	}
+
+	override protected void AddDiscriminator(StringBuilder sb) => sb.Append("Type discriminator: 1\n");
+	override protected void AddPolymorphicProperties(StringBuilder sb) {
+		AppendListString("Questions", Questions, sb);
+		AppendListString("Results", Results, sb);
+	}
 }
 
 class NumericalExercise : Exercise {
@@ -79,6 +115,9 @@ class NumericalExercise : Exercise {
 	}
 
 	public void SerializerSetResult(string s) => Result = s;
+
+	override protected void AddDiscriminator(StringBuilder sb) => sb.Append("Type discriminator: 2\n");
+	override protected void AddPolymorphicProperties(StringBuilder sb) => sb.Append($"Result: {Result}\n");
 }
 
 class GeometricExercise : Exercise {	
@@ -86,5 +125,13 @@ class GeometricExercise : Exercise {
 		MetaData MetaData, string Assignment, List<string> SolutionSteps) 
 		:base(MetaData, Assignment, SolutionSteps) {
 		throw new NotImplementedException("No attention = no geometric exercises.");
-	}	
+	}
+
+	protected override void AddDiscriminator(StringBuilder sb) {
+		throw new NotImplementedException();
+	}
+
+	protected override void AddPolymorphicProperties(StringBuilder sb) {
+		throw new NotImplementedException();
+	}
 }
