@@ -1,4 +1,5 @@
 ﻿namespace ExerciseEngine.Factory;
+#pragma warning disable IDE0060 // Remove unused parameter
 
 class ExerciseConverter : JsonConverter<Exercise> {
     enum TypeDiscriminator {
@@ -7,11 +8,75 @@ class ExerciseConverter : JsonConverter<Exercise> {
     }
 
     public override bool CanConvert(Type typeToConvert) => typeof(Exercise).IsAssignableFrom(typeToConvert);
+    //
+    //      >>> Serialization <<<
+    //
+    public override void Write(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
+        // WriteLine("Called Exercise serializer");
+        writer.WriteStartObject();
+
+        WriteTypeDiscriminator(writer, exercise, options);
+        WriteExerciseProperties(writer, exercise, options);
+        WritePolymorphicChildrenProperties(writer, exercise, options);
+
+        writer.WriteEndObject();
+    }
+
+
+    static void WriteTypeDiscriminator(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
+        if (exercise is WordProblem)
+            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.WordProblem);
+        else if (exercise is NumericalExercise)
+            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.NumericalExercise);
+        else
+            throw new JsonException();
+    }
+
+    static void WriteExerciseProperties(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
+        writer.WritePropertyName("id");
+        writer.WriteStartArray();
+        writer.WriteNumberValue(exercise.metaData.uniqueId.id);
+        writer.WriteNumberValue((int)exercise.metaData.uniqueId.language);
+        writer.WriteNumberValue(exercise.metaData.uniqueId.variant);
+        writer.WriteEndArray();
+        writer.WriteString("na", exercise.metaData.name);
+        WriteEnumArray(writer, "cl", exercise.metaData.classes, options); // List<Classes> Classes
+        WriteEnumArray(writer, "to", exercise.metaData.topics, options); // List<Topics> Topics
+        writer.WriteNumber("exT", (int)exercise.metaData.type);
+        writer.WriteString("as", exercise.assignment);
+        WriteStringArray(writer, "ss", exercise.solutionSteps, options); // List<string> SolutionSteps
+    }
+
+    static void WriteEnumArray<T>(Utf8JsonWriter writer, string propertyName, List<T> list, JsonSerializerOptions options) where T : struct, IConvertible {
+        writer.WriteStartArray(propertyName);
+        foreach (IConvertible t in list)
+            writer.WriteNumberValue((int)t);
+        writer.WriteEndArray();
+    }
+
+    static void WriteStringArray(Utf8JsonWriter writer, string propertyName, List<string> list, JsonSerializerOptions options) {
+        writer.WriteStartArray(propertyName);
+        foreach (string s in list)
+            writer.WriteStringValue(s);
+        writer.WriteEndArray();
+    }
+
+    static void WritePolymorphicChildrenProperties(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
+        if (exercise is WordProblem wp) {
+            WriteStringArray(writer, "qs", wp.questions, options); // List<string> Questions
+            WriteStringArray(writer, "rs", wp.results, options); // List<string> Results
+        } else if (exercise is NumericalExercise ne) {
+            writer.WriteString("re", ne.result);
+        } else {
+            throw new JsonException();
+        }
+    }
 
     //
     //      >>> Deserialization <<<
     //
     public override Exercise Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+        // WriteLine("Called Exercise DESERILIZER");
         if (reader.TokenType != JsonTokenType.StartObject) 
             throw new JsonException();
 
@@ -53,51 +118,41 @@ class ExerciseConverter : JsonConverter<Exercise> {
         string? propertyName = reader.GetString();
         reader.Read();
         switch (propertyName) {
-            case "Id":
+            case "id":
                 ReadIdTupleArray(ref reader, exercise, options);
-                //ulong id = reader.GetUInt64();
-                //exercise.SerializerSetUniqueId(id);
                 break;
-            case "Name":
+            case "na":
                 string? name = reader.GetString();
                 if (name == null)
                     throw new JsonException();
                 exercise.SerializerSetName(name);
                 break;
-            /*case "Lang":
-                Language lang = (Language)reader.GetInt32();
-                exercise.SerializerSetLang(lang);
+            case "cl":
+                ReadEnumArray(ref reader, exercise.metaData.classes, options);
                 break;
-            case "VariationId":
-                int variation = reader.GetInt32();
-                exercise.SerializerSetVariationId(variation);
-                break;*/
-            case "Classes":
-                ReadEnumArray(ref reader, exercise.Classes, options);
+            case "to":
+                ReadEnumArray(ref reader, exercise.metaData.topics, options);
                 break;
-            case "Topics":
-                ReadEnumArray(ref reader, exercise.Topics, options);
-                break;
-            case "ExerciseType":
+            case "exT":
                 ExerciseType type = (ExerciseType)reader.GetInt32();
                 exercise.SerializerSetExerciseType(type);
                 break;
-            case "Assignment":
+            case "as":
                 string? ass = reader.GetString();
                 if (ass == null)
                     throw new JsonException();
                 exercise.SerializerSetAssignment(ass);
                 break;
-            case "SolutionSteps":
-                ReadStringArray(ref reader, exercise.SolutionSteps, options);
+            case "ss":
+                ReadStringArray(ref reader, exercise.solutionSteps, options);
                 break;
-            case "Questions":
-                ReadStringArray(ref reader, ((WordProblem)exercise).Questions, options);
+            case "qs":
+                ReadStringArray(ref reader, ((WordProblem)exercise).questions, options);
                 break;
-            case "Results":
-                ReadStringArray(ref reader, ((WordProblem)exercise).Results, options);
+            case "rs":
+                ReadStringArray(ref reader, ((WordProblem)exercise).results, options);
                 break;
-            case "Result":
+            case "re":
                 string? result = reader.GetString();
                 if (result == null)
                     throw new JsonException();
@@ -114,24 +169,21 @@ class ExerciseConverter : JsonConverter<Exercise> {
                                        // expects array of size exactly 3, on any other number fails!
 
         reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-        ulong exId = reader.GetUInt64();
-        // exercise.SerializerSetUniqueId(id);
+        int exId = reader.GetInt32();
 
         reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
         Language lang = (Language)reader.GetInt32();
-        // exercise.SerializerSetLang(lang);
 
         reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-        int variationId = reader.GetInt32();
+        int variantId = reader.GetInt32();
         
-        exercise.SerializerSetId(exId, lang, variationId );
+        exercise.SerializerSetId(exId, lang, variantId);
 
         reader.Read();
         if (reader.TokenType != JsonTokenType.EndArray)
             throw new JsonException();
     }
 
-    #pragma warning disable IDE0060 // Remove unused parameter
     static void ReadEnumArray<T>(ref Utf8JsonReader reader, List<T> list, JsonSerializerOptions options) where T : struct, IConvertible {
         if (reader.TokenType != JsonTokenType.StartArray)
             throw new JsonException(); // strict json validation -> must change on change of code repr in model
@@ -164,69 +216,6 @@ class ExerciseConverter : JsonConverter<Exercise> {
             throw new JsonException();
     }
 
-    //
-    //      >>> Serialization <<<
-    //
-    public override void Write(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
-        writer.WriteStartObject();
-        
-        WriteTypeDiscriminator(writer, exercise, options);
-        WriteExerciseProperties(writer, exercise, options);
-        WritePolymorphicChildrenProperties(writer, exercise, options);
-
-        writer.WriteEndObject();
-    }
-
     
-    static void WriteTypeDiscriminator(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
-        if (exercise is WordProblem)
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.WordProblem);
-        else if (exercise is NumericalExercise)
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.NumericalExercise);
-        else
-            throw new JsonException();
-    }
-
-    static void WriteExerciseProperties(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
-        writer.WritePropertyName("Id");
-        writer.WriteStartArray();
-        writer.WriteNumberValue(exercise.Id.exerciseId);
-        writer.WriteNumberValue((int)exercise.Id.language);
-        writer.WriteNumberValue(exercise.Id.variationId);
-        writer.WriteEndArray();
-        writer.WriteString("Name", exercise.Name);
-        //writer.WriteNumber("Lang", (int)exercise.Lang);
-        //writer.WriteNumber("VariationId", exercise.VariationId);
-		WriteEnumArray(writer, "Classes", exercise.Classes, options); // List<Classes> Classes
-        WriteEnumArray(writer, "Topics", exercise.Topics, options); // List<Topics> Topics
-        writer.WriteNumber("ExerciseType", (int)exercise.ExerciseType);
-        writer.WriteString("Assignment", exercise.Assignment);
-        WriteStringArray(writer, "SolutionSteps", exercise.SolutionSteps, options); // List<string> SolutionSteps
-    }
-
-    static void WriteEnumArray<T>(Utf8JsonWriter writer, string propertyName, List<T> list, JsonSerializerOptions options) where T : struct, IConvertible {
-         writer.WriteStartArray(propertyName);
-        foreach (IConvertible t in list)
-            writer.WriteNumberValue((int)t);
-        writer.WriteEndArray();
-	}
-
-    static void WriteStringArray(Utf8JsonWriter writer, string propertyName, List<string> list, JsonSerializerOptions options) {
-        writer.WriteStartArray(propertyName);
-        foreach (string s in list)
-            writer.WriteStringValue(s);
-        writer.WriteEndArray();
-    }
-
-    static void WritePolymorphicChildrenProperties(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
-		if (exercise is WordProblem wp) {
-            WriteStringArray(writer, "Questions", wp.Questions, options); // List<string> Questions
-            WriteStringArray(writer, "Results", wp.Results, options); // List<string> Results
-        } else if (exercise is NumericalExercise ne) {
-            writer.WriteString("Result", ne.Result);
-        } else {
-            throw new JsonException();
-        }
-    }
-    #pragma warning restore IDE0060 // Remove unused parameter
 }
+#pragma warning restore IDE0060 // Remove unused parameter

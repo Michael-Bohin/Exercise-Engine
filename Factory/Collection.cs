@@ -1,54 +1,104 @@
 ﻿namespace ExerciseEngine.Factory;
 
-class ExerciseRepresentation {
-	public string Assignment { get; } = default!;
-	public List<string> Questions { get; }
-	public List<string> Results { get; }
-	public List<string> SolutionSteps { get; }
+class ExerciseCollection {
+	public int uniqueId;
+	public List<Variant> variants;
+	public Dictionary<Language, ExerciseLocalization> localizations;
 
-	public ExerciseRepresentation(string Assignment, List<string> Questions, List<string> Results, List<string> SolutionSteps) {
-		this.Assignment = Assignment; this.Questions = Questions; this.Results = Results; this.SolutionSteps = SolutionSteps;
-	}
-}
-
-class ExerciseLocalization {
-	public Language Lang { get; }
-	public string Name { get; } 
-	public MacroText Assignment { get; }
-	public List<MacroText> Questions { get; }
-	public List<MacroText> Results { get; } 
-	public List<MacroText> SolutionSteps { get; } 
-	public Groups Groups { get; }
-
+	readonly Random rand = new();
 	static readonly string endl = Environment.NewLine;
 	static readonly string endl2x = endl + endl;
 
-	public ExerciseLocalization(Language Lang, string Name, MacroText Assignment, List<MacroText> Questions, List<MacroText> Results, List<MacroText> SolutionSteps, Groups Groups) {
-		this.Lang = Lang; this.Name = Name;	this.Assignment = Assignment; this.Questions=Questions; this.Results=Results; this.SolutionSteps=SolutionSteps;	this.Groups=Groups;
+	public ExerciseCollection(int uniqueId, List<Variant> variants, Dictionary<Language, ExerciseLocalization> localizations) {
+		this.uniqueId = uniqueId; this.variants = variants; this.localizations = localizations;
 	}
 
-	public ExerciseRepresentation ConstructVariation(Variation v) {
-		string _assignment = Assignment.ConstructText(Lang, v);
-		var _questions = Construct2DText(Questions, Lang, v);
-		var _results = Construct2DText(Results, Lang, v);
-		var _solutionSteps = Construct2DText(SolutionSteps, Lang, v);
-		return new(_assignment, _questions, _results, _solutionSteps);
+	public Exercise GetExercise(Language lang, int index) {
+		ExerciseMetaData emd = new(localizations[lang].metaData, index);
+		ExerciseRepresentation exRepr = localizations[lang].ConstructVariation(variants[index]);
+		return CreateExerciseInstance(emd, exRepr);
 	}
 
-	private static List<string> Construct2DText(List<MacroText> template, Language lang, Variation v) {
-		List<string> result = new();
-		foreach (var step in template)
-			result.Add(step.ConstructText(lang, v));
-		return result;
+	public Exercise GetRandomExercise(Language lang) {
+		int pick = rand.Next(0, variants.Count);
+		return GetExercise(lang, pick);
+	}
+
+	public List<Exercise> GetLocalizedCollection(Language lang) {
+		List<Exercise> collection = new();
+		for (int i = 0; i < variants.Count; i++)
+			collection.Add(GetExercise(lang, i));
+		return collection;
+	}
+
+	private static Exercise CreateExerciseInstance(ExerciseMetaData md, ExerciseRepresentation er) {
+		ExerciseType type = md.type;
+		if (type == ExerciseType.WordProblem) {
+			WordProblem wp = new(md, er.assignment, er.questions, er.results, er.solutionSteps);
+			return wp;
+		}
+
+		NumericalExercise ne = new(md, er.assignment, er.results[0], er.solutionSteps);
+		return ne;
 	}
 
 	override public string ToString() {
 		StringBuilder sb = new();
-		sb.Append($"Name              -> {Name}{endl}");
-		sb.Append($"Assignment        -> {Assignment}{endl}");
-		StringifyList(sb, Questions, "Questions", 17);
-		StringifyList(sb, Results, "Results", 17);
-		StringifyList(sb, SolutionSteps, "SolutionSteps", 17);
+		sb.Append($"Unique id: {uniqueId}{endl2x}");
+		sb.Append($"Variations:{endl}");
+		foreach (var v in variants)
+			sb.Append(v.ToString());
+		sb.Append($"{endl2x}Localizations:{endl}");
+		foreach (var localization in localizations) {
+			sb.Append($"{endl}   >>> Excercise localization: {localization.Key} <<< {endl2x}");
+			sb.Append(localization.Value.ToString());
+		}
+		sb.Append($"{endl2x}");
+		return sb.ToString();
+	}
+
+	public void SerializerSetId(int id) => uniqueId = id;
+	public void SerializerSetVariations(List<Variant> vs) => variants = vs;
+}
+
+class ExerciseLocalization {
+	public readonly LocalizationMetaData metaData;
+	public readonly MacroText assignment;
+	public readonly List<MacroText> questions;
+	public readonly List<MacroText> results;
+	public readonly List<MacroText> solutionSteps;
+	
+	static readonly string endl = Environment.NewLine;
+	static readonly string endl2x = endl + endl;
+
+	public ExerciseLocalization(LocalizationMetaData metaData, MacroText assignment, List<MacroText> questions, List<MacroText> results, List<MacroText> solutionSteps) {
+		this.metaData = metaData; this.assignment = assignment; this.questions = questions; this.results = results; this.solutionSteps = solutionSteps;
+	}
+
+	public ExerciseRepresentation ConstructVariation(Variant v) {
+		Language l = metaData.uniqueId.language;
+		string _assignment = assignment.ToString(l, v);
+		List<string> _questions = Construct2DText(questions, l, v);
+		List<string> _results = Construct2DText(results, l, v);
+		List<string> _solutionSteps = Construct2DText(solutionSteps, l, v);
+		return new(_assignment, _questions, _results, _solutionSteps);
+	}
+
+	private static List<string> Construct2DText(List<MacroText> template, Language l, Variant v) {
+		List<string> result = new();
+		foreach (var step in template)
+			result.Add(step.ToString(l, v));
+		return result;
+	}
+
+	// more readable version for humans relative to json:
+	override public string ToString() { 
+		StringBuilder sb = new();
+		sb.Append($"Name              -> {metaData.name}{endl}");
+		sb.Append($"Assignment        -> {assignment}{endl}");
+		StringifyList(sb, questions, "Questions", 17);
+		StringifyList(sb, results, "Results", 17);
+		StringifyList(sb, solutionSteps, "SolutionSteps", 17);
 		return sb.ToString();
 	}
 
@@ -64,65 +114,3 @@ class ExerciseLocalization {
 	}
 }
 
-class ExerciseCollection {
-	public ulong UniqueId { get; }
-	public List<Variation> Variants { get; } = new();
-	public Dictionary<Language, ExerciseLocalization> Localizations { get; } = new();
-	
-	readonly Random rand = new();
-	static readonly string endl = Environment.NewLine;
-	static readonly string endl2x = endl + endl;
-
-	public ExerciseCollection(  ulong UniqueId, List<Variation> Variants, Dictionary<Language, ExerciseLocalization> Localizations) {
-		this.UniqueId = UniqueId; this.Variants = Variants;	this.Localizations = Localizations;
-	}
-	
-	public Exercise GetRandomExercise(Language lang) {
-		int pick = rand.Next(0,Variants.Count); 
-		return GetExercise(lang, pick);
-	}
-
-	public Exercise GetExercise(Language lang, int index) {
-		Variation v = Variants[index];
-		// gather metaData and exercise representation:
-		MetaData metaData = new(UniqueId, Localizations[lang].Name, lang, index, Localizations[lang].Groups);
-		ExerciseRepresentation exRepr = Localizations[lang].ConstructVariation(v);
-		return CreateExerciseInstance(metaData, exRepr);
-	}
-
-	// this implementation will likely be doing a lot of instructions repetitively
-	// likely may be sped up by identifying those parts and doing them just once
-	public List<Exercise> GetLocalizedCollection(Language lang) {
-		List<Exercise> collection = new();
-		for(int i= 0; i < Variants.Count;i++)
-			collection.Add(GetExercise(lang, i));
-		return collection;
-	}
-
-	private static Exercise CreateExerciseInstance(MetaData metaData, ExerciseRepresentation er) {
-		ExerciseType et = metaData.Groups.ExerciseType;
-		if (et == ExerciseType.WordProblem) {
-			WordProblem wp = new(metaData, er.Assignment, er.Questions, er.Results, er.SolutionSteps);
-			return wp;
-		}
-
-		NumericalExercise ne = new(metaData, er.Assignment, er.Results[0], er.SolutionSteps);
-		return ne;
-	}
-
-	override public string ToString() {
-		
-		StringBuilder sb = new();
-		sb.Append($"Unique id: {UniqueId}{endl2x}");
-		sb.Append($"Variations:{endl}");
-		foreach(var v in Variants)
-			sb.Append(v.ToString());
-		sb.Append($"{endl2x}Localizations:{endl}");
-		foreach(var localization in Localizations) {
-			sb.Append($"{endl}   >>> Excercise localization: {localization.Key} <<< {endl2x}");
-			sb.Append(localization.Value.ToString());
-		}
-		sb.Append($"{endl2x}");
-		return sb.ToString();
-	}
-}

@@ -1,5 +1,6 @@
 ﻿namespace ExerciseEngine.Factory;
 
+/* .. Not used at the moment ..
 class TextElementConverter : JsonConverter<TextElement> {
     enum TypeDiscriminator {
         Macro = 1,
@@ -8,8 +9,32 @@ class TextElementConverter : JsonConverter<TextElement> {
 
     public override bool CanConvert(Type typeToConvert) => typeof(TextElement).IsAssignableFrom(typeToConvert);
 
+    // Serialization:
+    public override void Write(
+        Utf8JsonWriter writer, TextElement textElement, JsonSerializerOptions options) {
+        writer.WriteStartObject();
+
+        WriteLine("Called TextElement serializer");
+
+        if (textElement is Macro macro) {
+            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Macro);
+            writer.WriteNumber("Pointer", macro.pointer);
+            writer.WriteNumber("VariableDiscriminator", (int)macro.type);
+        } else if (textElement is Text text) {
+            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Text);
+            writer.WriteString("ConstText", text.constText);
+        } else {
+            throw new JsonException();
+        }
+
+        writer.WriteEndObject();
+    }
+
     // Deserialization:
     public override TextElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+
+        WriteLine("Called TextElement DESERILIAZER");
+
         if (reader.TokenType != JsonTokenType.StartObject) 
             throw new JsonException();
 
@@ -60,25 +85,5 @@ class TextElementConverter : JsonConverter<TextElement> {
          
         throw new JsonException();
     }
-
-    // Serialization:
-    public override void Write(
-        Utf8JsonWriter writer, TextElement textElement, JsonSerializerOptions options) {
-        writer.WriteStartObject();
-
-        if (textElement is Macro macro) {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Macro);
-            writer.WriteNumber("Pointer", macro.Pointer);
-            writer.WriteNumber("VariableDiscriminator", (int)macro.Type);
-        } else if (textElement is Text text) {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Text);
-            writer.WriteString("ConstText", text.ConstText);
-        } else {
-            throw new JsonException();
-        }
-
-        // writer.WriteString("Name", person.Name);
-
-        writer.WriteEndObject();
-    }
 }
+*/

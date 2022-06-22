@@ -23,14 +23,14 @@ class UnitTestSerialization {
 	}
 
 	void Run_Collection(ExerciseCollection ec) {
-		WriteLine($"   ... serializing collection {ec.UniqueId}...");
+		WriteLine($"   ... serializing collection {ec.uniqueId}...");
 		SerializationManager unitTest = new();
 		Strings = unitTest.BuildStrings(ec);
 		if (SaveFiles)
-			_SaveFiles_Collections(ec.UniqueId);
+			SaveFiles_Collections(ec.uniqueId);
 	}
 
-	void _SaveFiles_Collections(ulong ecId) {
+	void SaveFiles_Collections(int ecId) {
 		using StreamWriter sw = new($"Collection-id-{ecId}-original.txt");
 		sw.WriteLine(Strings.original);
 
@@ -52,17 +52,17 @@ class UnitTestSerialization {
 	}
 
 	void RunList_Exercise(ExerciseCollection ec, Language lang) {
-		WriteLine($"   ... serializing List of exercises: {ec.UniqueId} in {lang} lang...");
+		WriteLine($"   ... serializing List of exercises: {ec.uniqueId} in {lang} lang...");
 		// Get list of localized exercises:
 		List<Exercise> localizedExercises = ec.GetLocalizedCollection(lang);
 		SerializationManager unitTest = new();
 		Strings = unitTest.BuildStrings(localizedExercises);
 
 		if (SaveFiles)
-			_SaveFiles_ListEx(ec.UniqueId, lang);
+			SaveFiles_ListEx(ec.uniqueId, lang);
 	}
 
-	void _SaveFiles_ListEx(ulong ecId, Language lang) {
+	void SaveFiles_ListEx(int ecId, Language lang) {
 		using StreamWriter sw = new($"List-Exercise-id-{ecId}-{lang}-original.txt"); 
 		sw.WriteLine(Strings.original);
 		
@@ -78,21 +78,21 @@ class UnitTestSerialization {
 }
 
 class SerializationManager {
-	readonly JsonSerializerOptions options = new() { WriteIndented = true };
-
-	public SerializationManager() {
-		options.Converters.Add(new TextElementConverter());
-		options.Converters.Add(new ExerciseConverter());
-	}
+	public SerializationManager() {	}
 
 #pragma warning disable CA1822 // Mark members as static
 	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(ExerciseCollection collection) {
+		JsonSerializerOptions options = new() { WriteIndented = true };
+		options.Converters.Add(new ExerciseConverter());
+		options.Converters.Add(new ExerciseCollectionConverter());
 		// 1. to string original
 		string original = collection.ToString();
 		
 		// 2. serialize original
 		string jsonA = JsonSerializer.Serialize(collection, options);
 
+
+		
 		// 3. deserialize serialized original and ToString it
 		ExerciseCollection? collectionDeserialized = JsonSerializer.Deserialize<ExerciseCollection>(jsonA, options);
 		if (collectionDeserialized == null)
@@ -100,13 +100,15 @@ class SerializationManager {
 		string deserialized = collectionDeserialized.ToString();
 
 		// 4. serialize last time:
-		string jsonB = JsonSerializer.Serialize(deserialized, options);
+		string jsonB = JsonSerializer.Serialize(collectionDeserialized, options);
 
 		return (jsonA, jsonB, original, deserialized);
 	}
 
 	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(List<Exercise> localizedListOfExercises) {
-#pragma warning restore CA1822
+		JsonSerializerOptions options = new() { WriteIndented = true };
+		options.Converters.Add(new ExerciseConverter());
+		options.Converters.Add(new ExerciseConverter());
 		// 1. to string original
 		StringBuilder original = new();
 		foreach (Exercise e in localizedListOfExercises)
@@ -129,3 +131,4 @@ class SerializationManager {
 		return (jsonA, jsonB, original.ToString(), deserialized.ToString());
 	}
 }
+#pragma warning restore CA1822
