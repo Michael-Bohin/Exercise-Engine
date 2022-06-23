@@ -91,8 +91,6 @@ class SerializationManager {
 		// 2. serialize original
 		string jsonA = JsonSerializer.Serialize(collection, options);
 
-
-		
 		// 3. deserialize serialized original and ToString it
 		ExerciseCollection? collectionDeserialized = JsonSerializer.Deserialize<ExerciseCollection>(jsonA, options);
 		if (collectionDeserialized == null)

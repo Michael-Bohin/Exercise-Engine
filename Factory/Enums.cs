@@ -10,3 +10,4 @@ enum ExerciseType { WordProblem, Numerical, Geometric }
 
 // Json polymorphic serialization handlers:
 enum VariableDiscriminator { Invariant, Cultural }
+enum TextElementDiscriminator { Macro, Text }

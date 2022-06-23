@@ -33,9 +33,9 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
         writer.WritePropertyName("lo");
         writer.WriteStartObject();
         WriteLocalizations(writer, collection.localizations, options);
-        writer.WriteEndObject();
+        writer.WriteEndObject(); // end localizations
 
-        writer.WriteEndObject();
+        writer.WriteEndObject(); // end json
     }
 
     static void WriteVariants(Utf8JsonWriter writer, List<Variant> variations, JsonSerializerOptions options) {
@@ -67,8 +67,79 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
 	}
 
     static void WriteLocalizations(Utf8JsonWriter writer, Dictionary<Language, ExerciseLocalization> localizations, JsonSerializerOptions options) {
-
+        foreach(var kvp in localizations) {
+            writer.WritePropertyName(kvp.Key.ToString());
+            WriteLocalization(writer, kvp.Value, options);
+		}
     }
+
+    static void WriteLocalization(Utf8JsonWriter writer, ExerciseLocalization localization, JsonSerializerOptions options) {
+        writer.WriteStartObject();
+        WriteMetaData(writer, "meta", localization.metaData, options);
+		writer.WritePropertyName("as"); 
+        WriteMacroText(writer, localization.assignment, options);
+        writer.WritePropertyName("qs");
+        Write_List_MacroText(writer, localization.questions, options);
+        writer.WritePropertyName("rs");
+        Write_List_MacroText(writer, localization.results, options);
+        writer.WritePropertyName("ss");
+        Write_List_MacroText(writer, localization.solutionSteps, options);
+        writer.WriteEndObject();
+	}
+
+    static void WriteMetaData(Utf8JsonWriter writer, string properyName, LocalizationMetaData metaData, JsonSerializerOptions options) {
+        writer.WritePropertyName(properyName);
+        writer.WriteStartObject();
+
+        writer.WriteNumber("id", metaData.uniqueId.id);
+        writer.WriteNumber("lang", (int)metaData.uniqueId.language);
+        writer.WriteString("name", metaData.name);
+        writer.WriteNumber("type", (int)metaData.type);
+
+        WriteEnumArray(writer, "topics", metaData.topics, options);
+        WriteEnumArray(writer, "classes", metaData.classes, options);
+
+        writer.WriteEndObject();
+    }
+
+    static void Write_List_MacroText(Utf8JsonWriter writer, List<MacroText> list, JsonSerializerOptions options) {
+        writer.WriteStartArray();
+        foreach (MacroText mt in list)
+            WriteMacroText(writer, mt, options);
+        writer.WriteEndArray();
+    }
+
+    static void WriteMacroText(Utf8JsonWriter writer, MacroText macroText, JsonSerializerOptions options) {
+        writer.WriteStartArray();
+        foreach (var textElement in macroText.elements) 
+            WriteTextElement(writer, textElement, options);
+        writer.WriteEndArray();
+    }
+
+    static void WriteTextElement(Utf8JsonWriter writer, TextElement textElement, JsonSerializerOptions options) {
+        writer.WriteStartArray();
+        // expects to write discriminator and based on value appropriate number of following elements..
+        // on Macro follows int Point and VariableDiscriminator type (not this, but the of the variable the pointer is pointing to...)
+        // on ConsText follows string different from null
+        if(textElement is Macro m) {
+            writer.WriteNumberValue((int)TextElementDiscriminator.Macro);
+            writer.WriteNumberValue(m.pointer);
+            writer.WriteNumberValue((int)m.type);
+		} else if(textElement is Text t) {
+            writer.WriteNumberValue((int)TextElementDiscriminator.Text);
+            writer.WriteStringValue(t.constText);
+		} else {
+            throw new JsonException("WriteTextElement hit unknown TextElement child");
+		}
+
+        writer.WriteEndArray();
+    }
+
+    
+
+    
+
+
     /*
     static void WriteCollectionProperties(Utf8JsonWriter writer, ExerciseCollection exercise, JsonSerializerOptions options) {
         writer.WritePropertyName("Id");
@@ -109,6 +180,7 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
         ExerciseCollection collection = new(0, new(), new());
 
         while (reader.Read()) {
+            WriteLine(reader.TokenType);
             if (reader.TokenType == JsonTokenType.EndObject)
                 break;
             if (reader.TokenType != JsonTokenType.PropertyName)
@@ -253,139 +325,12 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
         
         return dict;
 	}
-        /*reader.Read();
-        if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException();
-
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.EndObject)
-            throw new JsonException();
-        */
-
-    /*reader.Read();
-    if (reader.TokenType != JsonTokenType.StartArray)
-        throw new JsonException();
-
-    List<string> result = new();
-
-    reader.Read();
-    while (reader.TokenType == JsonTokenType.String) {
-        string? s = reader.GetString();
-        if (s == null)
-            throw new JsonException();
-        result.Add(s);
-        reader.Read();
-    }
-
-    if (reader.TokenType != JsonTokenType.EndArray)
-        throw new JsonException();*/
 
     static void  ReadLocalizations(ref Utf8JsonReader reader, Dictionary<Language, ExerciseLocalization> localizations, JsonSerializerOptions options) {
-        reader.Read();
+        reader.Skip();
+        /*reader.Read();
         if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException();
+            throw new JsonException();*/
     }
-    /*
-    static void GiantSwitchStatement(ref Utf8JsonReader reader, Exercise exercise, JsonSerializerOptions options) {
-        string? propertyName = reader.GetString();
-        reader.Read();
-        switch (propertyName) {
-            case "Id":
-                ReadIdTupleArray(ref reader, exercise, options);
-                break;
-            case "Name":
-                string? name = reader.GetString();
-                if (name == null)
-                    throw new JsonException();
-                exercise.SerializerSetName(name);
-                break;
-            case "Classes":
-                ReadEnumArray(ref reader, exercise.Classes, options);
-                break;
-            case "Topics":
-                ReadEnumArray(ref reader, exercise.Topics, options);
-                break;
-            case "ExerciseType":
-                ExerciseType type = (ExerciseType)reader.GetInt32();
-                exercise.SerializerSetExerciseType(type);
-                break;
-            case "Assignment":
-                string? ass = reader.GetString();
-                if (ass == null)
-                    throw new JsonException();
-                exercise.SerializerSetAssignment(ass);
-                break;
-            case "SolutionSteps":
-                ReadStringArray(ref reader, exercise.SolutionSteps, options);
-                break;
-            case "Questions":
-                ReadStringArray(ref reader, ((WordProblem)exercise).Questions, options);
-                break;
-            case "Results":
-                ReadStringArray(ref reader, ((WordProblem)exercise).Results, options);
-                break;
-            case "Result":
-                string? result = reader.GetString();
-                if (result == null)
-                    throw new JsonException();
-                ((NumericalExercise)exercise).SerializerSetResult(result);
-                break;
-            default:
-                throw new JsonException($"\nswitch recieved unknown property name: {propertyName}\n");
-        }
-    }
-
-    static void ReadIdTupleArray(ref Utf8JsonReader reader, Exercise exercise, JsonSerializerOptions options) {
-        if (reader.TokenType != JsonTokenType.StartArray)
-            throw new JsonException(); // strict json validation -> must change on change of code repr in model
-                                        // expects array of size exactly 3, on any other number fails!
-
-        reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-        ulong exId = reader.GetUInt64();
-
-        reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-        Language lang = (Language)reader.GetInt32();
-
-        reader.Read(); if (reader.TokenType != JsonTokenType.Number) throw new JsonException();
-        int variationId = reader.GetInt32();
-
-        exercise.SerializerSetId(exId, lang, variationId);
-
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.EndArray)
-            throw new JsonException();
-    }
-
-    static void ReadEnumArray<T>(ref Utf8JsonReader reader, List<T> list, JsonSerializerOptions options) where T : struct, IConvertible {
-        if (reader.TokenType != JsonTokenType.StartArray)
-            throw new JsonException(); // strict json validation -> must change on change of code repr in model
-
-        reader.Read();
-        while (reader.TokenType == JsonTokenType.Number) {
-            IConvertible number = reader.GetInt32();
-            list.Add((T)number);
-            reader.Read();
-        }
-
-        if (reader.TokenType != JsonTokenType.EndArray)
-            throw new JsonException();
-    }
-
-    static void ReadStringArray(ref Utf8JsonReader reader, List<string> list, JsonSerializerOptions options) {
-        if (reader.TokenType != JsonTokenType.StartArray)
-            throw new JsonException(); // strict json validation -> must change on change of code repr in model
-
-        reader.Read();
-        while (reader.TokenType == JsonTokenType.String) {
-            string? s = reader.GetString();
-            if (s == null)
-                throw new JsonException();
-            list.Add(s);
-            reader.Read();
-        }
-
-        if (reader.TokenType != JsonTokenType.EndArray)
-            throw new JsonException();
-    }*/
 }
 #pragma warning restore IDE0060 // Remove unused parameter
