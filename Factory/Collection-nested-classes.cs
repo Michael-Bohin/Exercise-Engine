@@ -59,7 +59,7 @@ class ExerciseRepresentation {
 
 class Variant {
 	public readonly List<string> invariant; // invariant variables
-	public readonly List<Dictionary<Language, string>> cultural; // cultural variables
+	public List<Dictionary<Language, string>> cultural; // cultural variables
 
 	public Variant(List<string> invariant, List<Dictionary<Language, string>> cultural) {
 		this.invariant = invariant; this.cultural = cultural;	

@@ -89,6 +89,17 @@ class ManualCollectionBuilderA : ManualCollectionBuilder{
 		localizations.Add(Language.pl, BuildLocalization(pl));
 		localizations.Add(Language.en, BuildLocalization(en));
 		localizations.Add(Language.ua, BuildLocalization(ua));
+
+		MacroText mt = new();
+		mt.elements.Add(new Text("Je to sport. Ve předu útočíš. Vzádu bráníš."));
+		mt.elements.Add(new Text("Na středu hřiště si přihráváš."));
+		mt.elements.Add(new Text("Je to sport."));
+
+		MacroText mtPl = new();
+		mtPl.elements.Add(new Text("To jest sport. Atakujesz z przodu.Z tyłu bronisz.Podajesz piłkę na środek boiska.To jest sport."));
+		
+		localizations[Language.cs].solutionSteps.Add(mt);
+		localizations[Language.pl].solutionSteps.Add(mtPl);
 		return localizations;
 	}
 	

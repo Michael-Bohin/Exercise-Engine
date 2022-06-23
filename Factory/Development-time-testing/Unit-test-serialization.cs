@@ -82,9 +82,14 @@ class SerializationManager {
 
 #pragma warning disable CA1822 // Mark members as static
 	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(ExerciseCollection collection) {
-		JsonSerializerOptions options = new() { WriteIndented = true };
-		options.Converters.Add(new ExerciseConverter());
+		JsonSerializerOptions options = new() { WriteIndented = false };
+		options.Converters.Add(new VariantConverter());
+		options.Converters.Add(new TextElementConverter());
+		options.Converters.Add(new MacroTextConverter());
+		options.Converters.Add(new LocalizationMetaDataConverter());
+		options.Converters.Add(new ExerciseLocalizationConverter());
 		options.Converters.Add(new ExerciseCollectionConverter());
+		
 		// 1. to string original
 		string original = collection.ToString();
 		
@@ -104,8 +109,7 @@ class SerializationManager {
 	}
 
 	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(List<Exercise> localizedListOfExercises) {
-		JsonSerializerOptions options = new() { WriteIndented = true };
-		options.Converters.Add(new ExerciseConverter());
+		JsonSerializerOptions options = new() { WriteIndented = false };
 		options.Converters.Add(new ExerciseConverter());
 		// 1. to string original
 		StringBuilder original = new();

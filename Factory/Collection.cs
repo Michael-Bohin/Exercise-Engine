@@ -75,6 +75,14 @@ class ExerciseLocalization {
 		this.metaData = metaData; this.assignment = assignment; this.questions = questions; this.results = results; this.solutionSteps = solutionSteps;
 	}
 
+	public ExerciseLocalization() {
+		metaData = new();
+		assignment = new();
+		questions = new();
+		results = new();
+		solutionSteps = new();
+	}
+
 	public ExerciseRepresentation ConstructVariation(Variant v) {
 		Language l = metaData.uniqueId.language;
 		string _assignment = assignment.ToString(l, v);

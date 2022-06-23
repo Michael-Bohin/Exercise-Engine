@@ -1,89 +1,68 @@
 ﻿namespace ExerciseEngine.Factory;
+#pragma warning disable IDE0060 // Remove unused parameter
 
-/* .. Not used at the moment ..
 class TextElementConverter : JsonConverter<TextElement> {
-    enum TypeDiscriminator {
-        Macro = 1,
-        Text = 2
-    }
 
     public override bool CanConvert(Type typeToConvert) => typeof(TextElement).IsAssignableFrom(typeToConvert);
-
-    // Serialization:
-    public override void Write(
-        Utf8JsonWriter writer, TextElement textElement, JsonSerializerOptions options) {
-        writer.WriteStartObject();
-
-        WriteLine("Called TextElement serializer");
-
-        if (textElement is Macro macro) {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Macro);
-            writer.WriteNumber("Pointer", macro.pointer);
-            writer.WriteNumber("VariableDiscriminator", (int)macro.type);
-        } else if (textElement is Text text) {
-            writer.WriteNumber("TypeDiscriminator", (int)TypeDiscriminator.Text);
-            writer.WriteString("ConstText", text.constText);
+    //
+    //      >>> Serialization <<<
+    //
+    public override void Write(Utf8JsonWriter writer, TextElement textElement, JsonSerializerOptions options) {
+        writer.WriteStartArray();
+        if (textElement is Macro m) {
+            writer.WriteNumberValue((int)TextElementDiscriminator.Macro);
+            writer.WriteNumberValue(m.pointer);
+            writer.WriteNumberValue((int)m.type);
+        } else if (textElement is Text t) {
+            writer.WriteNumberValue((int)TextElementDiscriminator.Text);
+            writer.WriteStringValue(t.constText);
         } else {
-            throw new JsonException();
+            throw new JsonException("WriteTextElement hit unknown TextElement child");
         }
-
-        writer.WriteEndObject();
+        writer.WriteEndArray();
     }
 
-    // Deserialization:
+    //
+    //      >>> Deserialization <<<
+    //
     public override TextElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+		// first item is type discriminator, follow two or one based on Macro/Text instance
 
-        WriteLine("Called TextElement DESERILIAZER");
+		if (reader.TokenType != JsonTokenType.StartArray)
+			throw new JsonException();
+		reader.Read();
+		var typeDisc = (TextElementDiscriminator)reader.GetInt32();
+		TextElement result;
 
-        if (reader.TokenType != JsonTokenType.StartObject) 
-            throw new JsonException();
+		if (typeDisc == TextElementDiscriminator.Macro) {
+			reader.Read();
+			if (reader.TokenType != JsonTokenType.Number)
+				throw new JsonException();
+			int pointer = reader.GetInt32();
+			reader.Read();
+			if (reader.TokenType != JsonTokenType.Number)
+				throw new JsonException();
+			var varDisc = (VariableDiscriminator)reader.GetInt32();
+			result = new Macro(pointer, varDisc);
 
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.PropertyName) 
-            throw new JsonException();
+		} else if (typeDisc == TextElementDiscriminator.Text) {
+			reader.Read();
+			if (reader.TokenType != JsonTokenType.String)
+				throw new JsonException();
+			string? constText = reader.GetString();
+			if (constText == null)
+				throw new JsonException();
+			result = new Text(constText);
 
-        string? propertyName = reader.GetString();
-        if (propertyName != "TypeDiscriminator") 
-            throw new JsonException();
+		} else {
+			throw new JsonException();
+		}
+		reader.Read();
+		if (reader.TokenType != JsonTokenType.EndArray)
+			throw new JsonException();
 
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.Number) 
-            throw new JsonException();
-
-        TypeDiscriminator typeDiscriminator = (TypeDiscriminator)reader.GetInt32();
-        TextElement textElement = typeDiscriminator switch {
-            TypeDiscriminator.Macro => new Macro(),
-            TypeDiscriminator.Text => new Text(),
-            _ => throw new JsonException()
-        };
-
-        while (reader.Read()) {
-            if (reader.TokenType == JsonTokenType.EndObject)
-                return textElement;
-            
-            if (reader.TokenType == JsonTokenType.PropertyName) {
-                propertyName = reader.GetString();
-                reader.Read();
-                switch (propertyName) {
-                    case "Pointer":
-                        int value = reader.GetInt32();
-                        ((Macro)textElement).SerializerSetPointer(value);
-                        break;
-                    case "Type":
-                        VariableDiscriminator type = (VariableDiscriminator)reader.GetInt32();
-                        ((Macro)textElement).SerializerSetDiscriminator(type);
-                        break;
-                    case "ConstText":
-                        string? constText = reader.GetString();
-                        if(constText == null)
-                            throw new JsonException();
-                        ((Text)textElement).SerializerSetText(constText);
-                        break;
-                }
-            }
-        }
-         
-        throw new JsonException();
-    }
+		return result;
+	}
 }
-*/
+
+#pragma warning restore IDE0060 // Remove unused parameter
