@@ -62,11 +62,16 @@ class ExerciseCollection {
 }
 
 class ExerciseLocalization {
-	public readonly LocalizationMetaData metaData;
-	public readonly MacroText assignment;
-	public readonly List<MacroText> questions;
-	public readonly List<MacroText> results;
-	public readonly List<MacroText> solutionSteps;
+	[JsonPropertyName("meta")]
+	public LocalizationMetaData metaData;
+	[JsonPropertyName("a")]
+	public MacroText assignment;
+	[JsonPropertyName("q")]
+	public List<MacroText> questions;
+	[JsonPropertyName("r")]
+	public List<MacroText> results;
+	[JsonPropertyName("s")]
+	public List<MacroText> solutionSteps;
 	
 	static readonly string endl = Environment.NewLine;
 	static readonly string endl2x = endl + endl;

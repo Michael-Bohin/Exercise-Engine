@@ -1,14 +1,24 @@
 ﻿namespace ExerciseEngine.Factory;
-using System.Text;
+
+
 
 #region MetaData
 
+[JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
+[JsonDerivedType(typeof(MetaData), typeDiscriminator: 0)]
+[JsonDerivedType(typeof(LocalizationMetaData), typeDiscriminator: 1)]
+[JsonDerivedType(typeof(ExerciseMetaData), typeDiscriminator: 2)]
 class MetaData {
+	[JsonPropertyName("n")]
 	public string name;
+	[JsonPropertyName("to")]
 	public List<Topic> topics;
+	[JsonPropertyName("c")]
 	public List<Classes> classes;
+	[JsonPropertyName("ty")]
 	public ExerciseType type;
 
+	[JsonConstructor]
 	public MetaData() { // json serializer ctor
 		name = default!;
 		topics = new();
@@ -21,8 +31,10 @@ class MetaData {
 }
 
 class LocalizationMetaData : MetaData {
+	[JsonPropertyName("uId")]
 	public (int id, Language language) uniqueId;
 
+	[JsonConstructor]
 	public LocalizationMetaData() { } // json serializer ctor
 
 	public LocalizationMetaData((int id, Language language) uniqueId, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
@@ -31,8 +43,10 @@ class LocalizationMetaData : MetaData {
 }
 
 class ExerciseMetaData : MetaData {
+	[JsonPropertyName("uId")]
 	public (int id, Language language, int variant) uniqueId;
 
+	[JsonConstructor]
 	public ExerciseMetaData() { } // json serializer ctor
 
 	public ExerciseMetaData((int id, Language language, int variant) uniqueId, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
@@ -58,12 +72,17 @@ class ExerciseRepresentation {
 }
 
 class Variant {
-	public readonly List<string> invariant; // invariant variables
+	[JsonPropertyName("i")]
+	public List<string> invariant; // invariant variables
+	[JsonPropertyName("c")]
 	public List<Dictionary<Language, string>> cultural; // cultural variables
+
+
 
 	public Variant(List<string> invariant, List<Dictionary<Language, string>> cultural) {
 		this.invariant = invariant; this.cultural = cultural;	
 	}
+
 
 	public Variant() { 
 		invariant =  new();
@@ -85,7 +104,9 @@ class Variant {
 }
 
 class MacroText {
-	public readonly List<TextElement> elements = new();
+	public MacroText() { elements = new(); }
+	[JsonPropertyName("e")]
+	public List<TextElement> elements;
 
 	public string ToString(Language lang, Variant v) {
 		StringBuilder sb = new();
@@ -102,15 +123,27 @@ class MacroText {
 	}
 }
 
-abstract class TextElement { 
-	abstract public string GetValue(Language lang, Variant v);
-	override abstract public string ToString();
+[JsonPolymorphic(
+	UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor,
+	TypeDiscriminatorPropertyName = "$dt")
+]
+[JsonDerivedType(typeof(TextElement), typeDiscriminator: 0)]
+[JsonDerivedType(typeof(Macro), typeDiscriminator: 1)]
+[JsonDerivedType(typeof(Text), typeDiscriminator: 2)]
+class TextElement { 
+	virtual public string GetValue(Language lang, Variant v) { return "Do not instantiate this class."; }
+	override public string ToString() { return "Do not instantiate this class."; }
+	[JsonConstructor]
+	public TextElement() { }
 }
 
 sealed class Macro : TextElement {
+	[JsonPropertyName("p")]
 	public int pointer;
+	[JsonPropertyName("t")]
 	public VariableDiscriminator type;
 
+	[JsonConstructor]
 	public Macro() { } // json serializer ctor
 	public Macro(int pointer, VariableDiscriminator type) {
 		this.pointer = pointer; this.type = type;
@@ -130,7 +163,9 @@ sealed class Macro : TextElement {
 }
 
 sealed class Text : TextElement {
+	[JsonPropertyName("c")]
 	public string constText = default!;
+	[JsonConstructor]
 	public Text() { }
 	public Text(string constText) => this.constText = constText;
 

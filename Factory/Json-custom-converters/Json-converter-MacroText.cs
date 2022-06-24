@@ -60,12 +60,12 @@ class MacroTextConverter : JsonConverter<MacroText> {
 			reader.Read();
 			JsonTokenType second = reader.TokenType;
 
-			if(first != JsonTokenType.EndArray)
+			if(first != JsonTokenType.EndObject) // change back to end arraqy!
 				throw new JsonException();
 
 			if(second == JsonTokenType.EndArray) {
 				break;
-			} else if(second == JsonTokenType.StartArray) {
+			} else if(second == JsonTokenType.StartObject) { // change back to start arraqy!
 				// continue with next iteration of while loop
 			} else {
 				throw new JsonException();
