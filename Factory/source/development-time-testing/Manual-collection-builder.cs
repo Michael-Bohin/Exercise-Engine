@@ -2,13 +2,13 @@
 
 namespace ExerciseEngine.Factory;
 
-abstract class ManualCollectionBuilder { 
-	abstract public ExerciseCollection BuildCollection();
+abstract class ManualCollection2DBuilder { 
+	abstract public ExerciseCollection2D BuildCollection();
 }
 
 #region  BuilderA
 
-class ManualCollectionBuilderA : ManualCollectionBuilder{
+class ManualCollectionBuilderA : ManualCollection2DBuilder {
 	readonly List<List<int>> variations = new() {
 		new() { 5, 2, 35 },
 		new() { 5, 3, 55 },
@@ -27,11 +27,11 @@ class ManualCollectionBuilderA : ManualCollectionBuilder{
 		new() { 7, 14, 193 }
 	};
 
-	override public ExerciseCollection BuildCollection() {
+	override public ExerciseCollection2D BuildCollection() {
 		int id = 38;
 		var variants = BuildTestVariations();
 		var localizations = BuildTestLocalizations();
-		ExerciseCollection ec = new(id, variants, localizations);
+		ExerciseCollection2D ec = new(id, variants, localizations);
 		return ec;
 	}
 

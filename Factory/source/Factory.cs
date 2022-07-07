@@ -83,21 +83,9 @@ class LocalizationsCorrector
 // (program, almost instant)           4. LocalizationApproximator fills Mono with translations from some AI, yielding 'ApproximatedExerciseCollection'
 // ('n' correctors as native speakers) 5. LocalizationsCorrector mediates the correcting process from teachers around the world, once done, saving the resulting ExerciseCollection
 
-
-
-
-
-
-
-
-
-
-
-
-
 interface IFactory
 {
-    ExerciseCollection CreateExerciseCollection();
+    ExerciseCollection2D CreateExerciseCollection2D();
 }
 
 // class 9, exercise number 1, factory
@@ -107,7 +95,7 @@ class C09_E001_Factory : IFactory
 
     // based on exercise definition write code that will enumarate all legit assignments 
     // factory can have a lot of shared code and so it will be practical to 
-    public ExerciseCollection CreateExerciseCollection()
+    public ExerciseCollection2D CreateExerciseCollection2D()
     {
         int uniqueId = 1;
         List<Variant> variants = new();

@@ -2,7 +2,7 @@
 namespace ExerciseEngine.source;
 
 
-interface IExerciseCollection
+interface IExerciseCollection2D
 {
     Exercise GetExercise(Language lang, int index);
     Exercise GetRandomExercise(Language lang);
@@ -14,7 +14,7 @@ interface IExerciseLocalization
     ExerciseRepresentation ConstructVariant(Variant v);
 }
 
-class ExerciseCollection : IExerciseCollection
+class ExerciseCollection2D : IExerciseCollection2D
 {
     public int uniqueId;
     public List<Variant> variants;
@@ -24,7 +24,7 @@ class ExerciseCollection : IExerciseCollection
     static readonly string endl = NewLine;
     static readonly string endl2x = endl + endl;
 
-    public ExerciseCollection(int uniqueId, List<Variant> variants, Dictionary<Language, ExerciseLocalization> localizations)
+    public ExerciseCollection2D(int uniqueId, List<Variant> variants, Dictionary<Language, ExerciseLocalization> localizations)
     {
         this.uniqueId = uniqueId; this.variants = variants; this.localizations = localizations;
     }

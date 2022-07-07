@@ -18,11 +18,11 @@ class Program {
 		};
 
 		ManualCollectionBuilderA builder = new();
-		ExerciseCollection ec = builder.BuildCollection();
+		ExerciseCollection2D ec = builder.BuildCollection();
 
 		string jsonA = JsonSerializer.Serialize(ec, options);
 
-		ExerciseCollection? deserializedVersion = JsonSerializer.Deserialize<ExerciseCollection>(jsonA, options);
+		ExerciseCollection2D? deserializedVersion = JsonSerializer.Deserialize<ExerciseCollection2D>(jsonA, options);
 
 		if (deserializedVersion == null)
 			throw new JsonException();

@@ -3,14 +3,14 @@
 namespace ExerciseEngine.Factory;
 
 class UnitTestSerialization {
-	readonly List<ExerciseCollection> ecList = new();
+	readonly List<ExerciseCollection2D> ecList = new();
 	public (string jsonA, string jsonB, string original, string deserialized) Strings { get; set;}
 	public bool SaveFiles { get; set;} = true; // disable to not print them..
 
 	public UnitTestSerialization() {
 		WriteLine($"   ... constructing collections ...");
 
-		List<ManualCollectionBuilder> collectionBuilders = new();
+		List<ManualCollection2DBuilder> collectionBuilders = new();
 		// A:
 		ManualCollectionBuilderA builderA = new();
 		collectionBuilders.Add(builderA);
@@ -24,7 +24,7 @@ class UnitTestSerialization {
 			Run_Collection(ec);
 	}
 
-	void Run_Collection(ExerciseCollection ec) {
+	void Run_Collection(ExerciseCollection2D ec) {
 		WriteLine($"   ... serializing collection {ec.uniqueId}...");
 		SerializationManager unitTest = new();
 		Strings = unitTest.BuildStrings(ec);
@@ -53,7 +53,7 @@ class UnitTestSerialization {
 				RunList_Exercise(ec, lang);
 	}
 
-	void RunList_Exercise(ExerciseCollection ec, Language lang) {
+	void RunList_Exercise(ExerciseCollection2D ec, Language lang) {
 		WriteLine($"   ... serializing List of exercises: {ec.uniqueId} in {lang} lang...");
 		// Get list of localized exercises:
 		List<Exercise> localizedExercises = ec.GetLocalizedExercises(lang);
@@ -83,7 +83,7 @@ class SerializationManager {
 	public SerializationManager() {	}
 
 #pragma warning disable CA1822 // Mark members as static
-	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(ExerciseCollection collection) {
+	public (string jsonA, string jsonB, string original, string deserialized) BuildStrings(ExerciseCollection2D collection) {
 		JsonSerializerOptions options = new() { WriteIndented = false };
 		options.Converters.Add(new VariantConverter());
 		options.Converters.Add(new TextElementConverter());
@@ -99,7 +99,7 @@ class SerializationManager {
 		string jsonA = JsonSerializer.Serialize(collection, options);
 
 		// 3. deserialize serialized original and ToString it
-		ExerciseCollection? collectionDeserialized = JsonSerializer.Deserialize<ExerciseCollection>(jsonA, options);
+		ExerciseCollection2D? collectionDeserialized = JsonSerializer.Deserialize<ExerciseCollection2D>(jsonA, options);
 		if (collectionDeserialized == null)
 			throw new Exception();
 		string deserialized = collectionDeserialized.ToString();

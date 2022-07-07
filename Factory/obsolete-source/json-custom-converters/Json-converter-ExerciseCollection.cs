@@ -3,9 +3,9 @@
 namespace ExerciseEngine.Factory;
 #pragma warning disable IDE0060 // Remove unused parameter
 
-class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
+class ExerciseCollectionConverter : JsonConverter<ExerciseCollection2D> {
 
-    public override bool CanConvert(Type typeToConvert) => typeof(ExerciseCollection).IsAssignableFrom(typeToConvert);
+    public override bool CanConvert(Type typeToConvert) => typeof(ExerciseCollection2D).IsAssignableFrom(typeToConvert);
 
     static readonly Dictionary<string, Language> StringToLanguage = new() {
         { "pl", Language.pl },
@@ -16,7 +16,7 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
 
     //      >>> Serialization <<<
     //
-    public override void Write(Utf8JsonWriter writer, ExerciseCollection collection, JsonSerializerOptions options) {
+    public override void Write(Utf8JsonWriter writer, ExerciseCollection2D collection, JsonSerializerOptions options) {
         writer.WriteStartObject();
 
         writer.WriteNumber("id", collection.uniqueId);
@@ -35,11 +35,11 @@ class ExerciseCollectionConverter : JsonConverter<ExerciseCollection> {
     //
     //      >>> Deserialization <<<
     //
-    public override ExerciseCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+    public override ExerciseCollection2D Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException();
 
-        ExerciseCollection collection = new(0, new(), new());
+        ExerciseCollection2D collection = new(0, new(), new());
 
         while (reader.Read()) {
             if(reader.TokenType == JsonTokenType.PropertyName) {
