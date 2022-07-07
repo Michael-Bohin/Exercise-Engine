@@ -1,4 +1,6 @@
-﻿namespace ExerciseEngine.Factory;
+﻿using ExerciseEngine.source;
+
+namespace ExerciseEngine.Factory;
 
 class UnitTestSerialization {
 	readonly List<ExerciseCollection> ecList = new();

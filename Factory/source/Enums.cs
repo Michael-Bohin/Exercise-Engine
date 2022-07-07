@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.Factory;
+﻿namespace ExerciseEngine.source;
 
 // Exercise collection:
 enum Language { en, pl, ua, cs }

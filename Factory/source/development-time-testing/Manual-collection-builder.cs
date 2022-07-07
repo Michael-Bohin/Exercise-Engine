@@ -1,4 +1,6 @@
-﻿namespace ExerciseEngine.Factory;
+﻿using ExerciseEngine.source;
+
+namespace ExerciseEngine.Factory;
 
 abstract class ManualCollectionBuilder { 
 	abstract public ExerciseCollection BuildCollection();

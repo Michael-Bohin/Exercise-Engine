@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.Factory;
+﻿namespace ExerciseEngine.source;
 
 // ukol factories:
 // 1. vygenervat mnozinu vsech variant
@@ -33,30 +33,35 @@ class KonkretniPriklad : WordProblem { }
 class JinyKonkretniPriklad : WordProblem { }
 
 
-interface IExerciseCollection__ {
-	// those already provided:
-	Exercise GetExercise(Language lang, int variant);
+interface IExerciseCollection__
+{
+    // those already provided:
+    Exercise GetExercise(Language lang, int variant);
 }
 
 // exercise factory vyprdne jedno jazykovou mnozinu variant stejneho prikladu:
-class MonolingualExerciseVariants { 
-	
+class MonolingualExerciseVariants
+{
+
 }
 
 // takes MonolingualExerciseVariants at input and outputs ExerciseCollectionPrecursor
-class LocalizationsApproximator { 
-	
-	
-} 
+class LocalizationsApproximator
+{
+
+
+}
 
 // contains all localizations approximated, they still need to be corrected by individual language correctors..
 // alternativne ApproximatedExerciseCollection
-class ExerciseCollectionPrecursor {
+class ExerciseCollectionPrecursor
+{
 
 }
 
 // provides all APIs of server nesseccary  to finalize translation aproximations into finnished product: ExerciseCollection
-class LocalizationsCorrector {
+class LocalizationsCorrector
+{
 
 }
 
@@ -90,20 +95,23 @@ class LocalizationsCorrector {
 
 
 
-interface IFactory {
-	ExerciseCollection CreateExerciseCollection();
+interface IFactory
+{
+    ExerciseCollection CreateExerciseCollection();
 }
 
 // class 9, exercise number 1, factory
 
-class C09_E001_Factory : IFactory{
+class C09_E001_Factory : IFactory
+{
 
-	// based on exercise definition write code that will enumarate all legit assignments 
-	// factory can have a lot of shared code and so it will be practical to 
-	public ExerciseCollection CreateExerciseCollection(){
-		int uniqueId  = 1;
-		List< Variant > variants = new();
-		Dictionary<Language, ExerciseLocalization> localizations = new();
-		return new(uniqueId, variants, localizations); 
-	}
+    // based on exercise definition write code that will enumarate all legit assignments 
+    // factory can have a lot of shared code and so it will be practical to 
+    public ExerciseCollection CreateExerciseCollection()
+    {
+        int uniqueId = 1;
+        List<Variant> variants = new();
+        Dictionary<Language, ExerciseLocalization> localizations = new();
+        return new(uniqueId, variants, localizations);
+    }
 }

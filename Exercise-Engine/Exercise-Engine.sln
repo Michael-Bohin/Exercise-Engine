@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xxxx__Exercise-Engine", "xxxx__Exercise-Engine.csproj", "{36422E43-30C3-4A68-8ECD-F10C3EDF237B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Factory", "..\Factory\Factory.csproj", "{FE33F3E3-C882-4FC7-8E09-D25D1C767807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExerciseEngine", "..\Factory\ExerciseEngine.csproj", "{FE33F3E3-C882-4FC7-8E09-D25D1C767807}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,6 @@
-﻿namespace ExerciseEngine.Factory;
+﻿using ExerciseEngine.source;
+
+namespace ExerciseEngine.Factory;
 #pragma warning disable IDE0060 // Remove unused parameter
 
 class MacroTextConverter : JsonConverter<MacroText> {

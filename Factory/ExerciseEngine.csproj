@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Concrete-factories\" />
-    <Folder Include="Concrete-exercises\" />
-    <Folder Include="Json-storage-exercises\" />
+    <Folder Include="storage\" />
   </ItemGroup>
 
 </Project>
