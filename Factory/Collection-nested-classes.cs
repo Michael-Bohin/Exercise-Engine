@@ -1,8 +1,40 @@
 ﻿namespace ExerciseEngine.Factory;
 
-
-
 #region MetaData
+
+struct ExerciseUniqueId {
+	[JsonPropertyName("i")]
+	public readonly int id;
+	[JsonPropertyName("l")]
+	public readonly Language language;
+	[JsonPropertyName("v")]
+	public readonly int variant;
+
+	public ExerciseUniqueId(LocalizationUniqueId lui, int variant) {
+		id = lui.id;
+		language = lui.language;
+		this.variant = variant;
+	}
+
+	[JsonConstructor]
+	public ExerciseUniqueId(int id, Language language, int variant) {
+		this.id = id;
+		this.language = language;
+		this.variant = variant;
+	}
+}
+
+struct LocalizationUniqueId {
+	[JsonPropertyName("i")]
+	public readonly int id;
+	[JsonPropertyName("l")]
+	public readonly Language language;
+
+	public LocalizationUniqueId(int id, Language language) {
+		this.id = id;
+		this.language = language;
+	}
+}
 
 [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
 [JsonDerivedType(typeof(MetaData), typeDiscriminator: 0)]
@@ -31,30 +63,31 @@ class MetaData {
 }
 
 class LocalizationMetaData : MetaData {
-	[JsonPropertyName("uId")]
-	public (int id, Language language) uniqueId;
+	[JsonPropertyName("id")]
+	public LocalizationUniqueId id;
 
 	[JsonConstructor]
 	public LocalizationMetaData() { } // json serializer ctor
 
-	public LocalizationMetaData((int id, Language language) uniqueId, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
-		this.uniqueId = uniqueId; 
+	public LocalizationMetaData(LocalizationUniqueId id, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
+		this.id = id; 
 	}
 }
 
 class ExerciseMetaData : MetaData {
-	[JsonPropertyName("uId")]
-	public (int id, Language language, int variant) uniqueId;
+	[JsonPropertyName("id")]
+	public ExerciseUniqueId id;
 
-	[JsonConstructor]
+	// does json seriliazer realy need this ctor? 
 	public ExerciseMetaData() { } // json serializer ctor
 
-	public ExerciseMetaData((int id, Language language, int variant) uniqueId, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
-		this.uniqueId = uniqueId;
+	[JsonConstructor]
+	public ExerciseMetaData(ExerciseUniqueId id, string name, List<Topic> topics, List<Classes> classes, ExerciseType type) : base(name, topics, classes, type) {
+		this.id = id;
 	}
 
 	public ExerciseMetaData(LocalizationMetaData lmd, int variant): base(lmd.name, lmd.topics, lmd.classes, lmd.type) {
-		uniqueId = (lmd.uniqueId.id, lmd.uniqueId.language, variant);
+		id = new(lmd.id, variant);
 	}
 }
 
@@ -77,12 +110,9 @@ class Variant {
 	[JsonPropertyName("c")]
 	public List<Dictionary<Language, string>> cultural; // cultural variables
 
-
-
 	public Variant(List<string> invariant, List<Dictionary<Language, string>> cultural) {
 		this.invariant = invariant; this.cultural = cultural;	
 	}
-
 
 	public Variant() { 
 		invariant =  new();
@@ -125,16 +155,13 @@ class MacroText {
 
 [JsonPolymorphic(
 	UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor,
-	TypeDiscriminatorPropertyName = "$dt")
+	TypeDiscriminatorPropertyName = "$type")
 ]
 [JsonDerivedType(typeof(TextElement), typeDiscriminator: 0)]
 [JsonDerivedType(typeof(Macro), typeDiscriminator: 1)]
 [JsonDerivedType(typeof(Text), typeDiscriminator: 2)]
-class TextElement { 
-	virtual public string GetValue(Language lang, Variant v) { return "Do not instantiate this class."; }
-	override public string ToString() { return "Do not instantiate this class."; }
-	[JsonConstructor]
-	public TextElement() { }
+abstract class TextElement { 
+	abstract public string GetValue(Language lang, Variant v);
 }
 
 sealed class Macro : TextElement {

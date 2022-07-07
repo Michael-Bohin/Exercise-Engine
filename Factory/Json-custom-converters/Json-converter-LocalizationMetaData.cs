@@ -12,8 +12,8 @@ class LocalizationMetaDataConverter : JsonConverter<LocalizationMetaData> {
 
         writer.WritePropertyName("ids");
         writer.WriteStartArray();
-        writer.WriteNumberValue( metaData.uniqueId.id);
-        writer.WriteNumberValue( (int)metaData.uniqueId.language);
+        writer.WriteNumberValue( metaData.id.id);
+        writer.WriteNumberValue( (int)metaData.id.language);
         writer.WriteNumberValue( (int)metaData.type);
         writer.WriteStringValue( metaData.name);
         writer.WriteEndArray();
@@ -53,12 +53,12 @@ class LocalizationMetaDataConverter : JsonConverter<LocalizationMetaData> {
 			throw new JsonException();
 
 
-		metaData.uniqueId.id = reader.GetInt32();
+		int id = reader.GetInt32();
 
 		reader.Read();
 		if (reader.TokenType != JsonTokenType.Number)
 			throw new JsonException();
-		metaData.uniqueId.language = (Language)reader.GetInt32();
+		metaData.id = new(id, (Language)reader.GetInt32());
 
 		reader.Read();
 		if (reader.TokenType != JsonTokenType.Number)

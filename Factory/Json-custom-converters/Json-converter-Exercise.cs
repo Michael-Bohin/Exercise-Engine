@@ -35,9 +35,9 @@ class ExerciseConverter : JsonConverter<Exercise> {
     static void WriteExerciseProperties(Utf8JsonWriter writer, Exercise exercise, JsonSerializerOptions options) {
         writer.WritePropertyName("id");
         writer.WriteStartArray();
-        writer.WriteNumberValue(exercise.metaData.uniqueId.id);
-        writer.WriteNumberValue((int)exercise.metaData.uniqueId.language);
-        writer.WriteNumberValue(exercise.metaData.uniqueId.variant);
+        writer.WriteNumberValue(exercise.metaData.id.id);
+        writer.WriteNumberValue((int)exercise.metaData.id.language);
+        writer.WriteNumberValue(exercise.metaData.id.variant);
         writer.WriteEndArray();
         writer.WriteString("na", exercise.metaData.name);
         WriteEnumArray(writer, "cl", exercise.metaData.classes, options); // List<Classes> Classes

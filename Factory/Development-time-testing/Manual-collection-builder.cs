@@ -131,7 +131,8 @@ class ManualCollectionBuilderA : ManualCollectionBuilder{
 		List<Classes> classes = new() { Classes.Ninth };
 		List<Topic> topics = new() { Topic.Percentages, Topic.Arithmetic };
 
-		LocalizationMetaData metaData = new(locDef.uniqueId, locDef.name, topics, classes, ExerciseType.WordProblem);
+		LocalizationUniqueId id = new(locDef.uniqueId.id, locDef.uniqueId.lang);
+		LocalizationMetaData metaData = new(id, locDef.name, topics, classes, ExerciseType.WordProblem);
 
 		return new(metaData, assignment, questions, results, solutionSteps);
 	}

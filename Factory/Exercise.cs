@@ -19,7 +19,7 @@ abstract class Exercise {
 		this.solutionSteps = solutionSteps;
 	}
 
-	public void SerializerSetId(int exId, Language l, int varId) => metaData.uniqueId = (exId, l, varId);
+	public void SerializerSetId(int exId, Language l, int varId) => metaData.id = new(exId, l, varId);
 	public void SerializerSetName(string n) { metaData.name = n; }
 	public void SerializerSetExerciseType(ExerciseType et) { metaData.type = et; }
 	public void SerializerSetAssignment(string s) => assignment = s;
@@ -30,7 +30,7 @@ abstract class Exercise {
 		AppendDiscriminator(sb);
 		sb.Append($"{endl}    >>> Meta data of exercise <<<{endl}");
 		sb.Append($"Name: {metaData.name}{endl}");
-		sb.Append($"Id: {metaData.uniqueId.id}, Language: {metaData.uniqueId.language}, Variation id: {metaData.uniqueId.variant}{endl}");
+		sb.Append($"Id: {metaData.id.id}, Language: {metaData.id.language}, Variation id: {metaData.id.variant}{endl}");
 		sb.Append($"Classes: ");
 		foreach(var c in metaData.classes)
 			sb.Append($"{c} ");

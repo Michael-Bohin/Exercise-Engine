@@ -54,7 +54,7 @@ class UnitTestSerialization {
 	void RunList_Exercise(ExerciseCollection ec, Language lang) {
 		WriteLine($"   ... serializing List of exercises: {ec.uniqueId} in {lang} lang...");
 		// Get list of localized exercises:
-		List<Exercise> localizedExercises = ec.GetLocalizedCollection(lang);
+		List<Exercise> localizedExercises = ec.GetLocalizedExercises(lang);
 		SerializationManager unitTest = new();
 		Strings = unitTest.BuildStrings(localizedExercises);
 

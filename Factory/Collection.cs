@@ -1,12 +1,24 @@
-﻿namespace ExerciseEngine.Factory;
+﻿using static System.Environment;
+namespace ExerciseEngine.Factory;
 
-class ExerciseCollection {
+
+interface IExerciseCollection {
+	Exercise GetExercise(Language lang, int index);
+	Exercise GetRandomExercise(Language lang);
+	List<Exercise> GetLocalizedExercises(Language lang);
+}
+
+interface IExerciseLocalization {
+	ExerciseRepresentation ConstructVariant(Variant v);
+}
+
+class ExerciseCollection : IExerciseCollection {
 	public int uniqueId;
 	public List<Variant> variants;
 	public Dictionary<Language, ExerciseLocalization> localizations;
 
 	readonly Random rand = new();
-	static readonly string endl = Environment.NewLine;
+	static readonly string endl = NewLine;
 	static readonly string endl2x = endl + endl;
 
 	public ExerciseCollection(int uniqueId, List<Variant> variants, Dictionary<Language, ExerciseLocalization> localizations) {
@@ -15,7 +27,7 @@ class ExerciseCollection {
 
 	public Exercise GetExercise(Language lang, int index) {
 		ExerciseMetaData emd = new(localizations[lang].metaData, index);
-		ExerciseRepresentation exRepr = localizations[lang].ConstructVariation(variants[index]);
+		ExerciseRepresentation exRepr = localizations[lang].ConstructVariant(variants[index]);
 		return CreateExerciseInstance(emd, exRepr);
 	}
 
@@ -24,7 +36,7 @@ class ExerciseCollection {
 		return GetExercise(lang, pick);
 	}
 
-	public List<Exercise> GetLocalizedCollection(Language lang) {
+	public List<Exercise> GetLocalizedExercises(Language lang) {
 		List<Exercise> collection = new();
 		for (int i = 0; i < variants.Count; i++)
 			collection.Add(GetExercise(lang, i));
@@ -61,7 +73,7 @@ class ExerciseCollection {
 	public void SerializerSetVariations(List<Variant> vs) => variants = vs;
 }
 
-class ExerciseLocalization {
+class ExerciseLocalization : IExerciseLocalization {
 	[JsonPropertyName("meta")]
 	public LocalizationMetaData metaData;
 	[JsonPropertyName("a")]
@@ -88,8 +100,8 @@ class ExerciseLocalization {
 		solutionSteps = new();
 	}
 
-	public ExerciseRepresentation ConstructVariation(Variant v) {
-		Language l = metaData.uniqueId.language;
+	public ExerciseRepresentation ConstructVariant(Variant v) {
+		Language l = metaData.id.language;
 		string _assignment = assignment.ToString(l, v);
 		List<string> _questions = Construct2DText(questions, l, v);
 		List<string> _results = Construct2DText(results, l, v);
