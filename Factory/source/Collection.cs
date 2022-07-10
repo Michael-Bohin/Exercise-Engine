@@ -1,6 +1,11 @@
 ﻿using static System.Environment;
 namespace ExerciseEngine.source;
 
+interface IExerciseCollection1D {
+    Exercise GetExercise(int index);
+	Exercise GetRandomExercise();
+	List<Exercise> GetAllVariants();
+}
 
 interface IExerciseCollection2D
 {
@@ -14,8 +19,65 @@ interface IExerciseLocalization
     ExerciseRepresentation ConstructVariant(Variant v);
 }
 
-class ExerciseCollection2D : IExerciseCollection2D
-{
+abstract class ExerciseCollection {
+	protected static Exercise CreateExerciseInstance(ExerciseMetaData md, ExerciseRepresentation er) {
+		ExerciseType type = md.type;
+		if (type == ExerciseType.WordProblem) {
+			WordProblem wp = new(md, er.assignment, er.questions, er.results, er.solutionSteps);
+			return wp;
+		}
+
+		NumericalExercise ne = new(md, er.assignment, er.results[0], er.solutionSteps);
+		return ne;
+	}
+}
+
+class ExerciseCollection1D : ExerciseCollection, IExerciseCollection1D {
+	public int uniqueId;
+	public List<Variant> variants;
+	public ExerciseLocalization originalLanguage;
+
+	readonly Random rand = new();
+	static readonly string endl = NewLine;
+	static readonly string endl2x = endl + endl;
+
+	public ExerciseCollection1D(int uniqueId, List<Variant> variants, ExerciseLocalization originalLanguage) {
+		this.uniqueId = uniqueId; this.variants = variants; this.originalLanguage = originalLanguage;
+	}
+
+	public Exercise GetExercise(int index) {
+		ExerciseMetaData emd = new(originalLanguage.metaData, index);
+		ExerciseRepresentation exRepr = originalLanguage.ConstructVariant(variants[index]);
+		return CreateExerciseInstance(emd, exRepr);
+	}
+
+	public Exercise GetRandomExercise() {
+		int pick = rand.Next(0, variants.Count);
+		return GetExercise(pick);
+	}
+
+	public List<Exercise> GetAllVariants() {
+		List<Exercise> collection = new();
+		for (int i = 0; i < variants.Count; i++)
+			collection.Add(GetExercise(i));
+		return collection;
+	}
+
+	override public string ToString() {
+		StringBuilder sb = new();
+		sb.Append($"Unique id: {uniqueId}{endl2x}");
+		sb.Append($"Variations:{endl}");
+		foreach (var v in variants)
+			sb.Append(v.ToString());
+		sb.Append($"{endl2x}Original language:{endl}");
+		sb.Append($"{endl}   >>> Excercise localization: {originalLanguage.metaData.id.language} <<< {endl2x}");
+		sb.Append(originalLanguage.ToString());
+		sb.Append($"{endl2x}");
+		return sb.ToString();
+	}
+}
+
+class ExerciseCollection2D : ExerciseCollection, IExerciseCollection2D {
     public int uniqueId;
     public List<Variant> variants;
     public Dictionary<Language, ExerciseLocalization> localizations;
@@ -50,19 +112,6 @@ class ExerciseCollection2D : IExerciseCollection2D
         return collection;
     }
 
-    private static Exercise CreateExerciseInstance(ExerciseMetaData md, ExerciseRepresentation er)
-    {
-        ExerciseType type = md.type;
-        if (type == ExerciseType.WordProblem)
-        {
-            WordProblem wp = new(md, er.assignment, er.questions, er.results, er.solutionSteps);
-            return wp;
-        }
-
-        NumericalExercise ne = new(md, er.assignment, er.results[0], er.solutionSteps);
-        return ne;
-    }
-
     override public string ToString()
     {
         StringBuilder sb = new();
@@ -80,6 +129,7 @@ class ExerciseCollection2D : IExerciseCollection2D
         return sb.ToString();
     }
 
+    /// ?? Is this still nesecary with the new inbuilt json serializer option??
     public void SerializerSetId(int id) => uniqueId = id;
     public void SerializerSetVariations(List<Variant> vs) => variants = vs;
 }
