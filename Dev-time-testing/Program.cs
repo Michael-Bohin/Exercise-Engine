@@ -2,6 +2,8 @@
 using static System.Console;
 using System.Text.Json;
 
+// namespace DevTimeAccess;
+
 class Program {
 	static void Main() {
 		WriteLine("Hi!");

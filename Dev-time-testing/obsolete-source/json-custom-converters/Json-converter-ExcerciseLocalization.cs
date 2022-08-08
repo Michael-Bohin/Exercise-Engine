@@ -1,5 +1,9 @@
-﻿using ExerciseEngine;
+﻿global using System.Text;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
+using ExerciseEngine;
 using static System.Console;
+
 
 namespace ExerciseEngine.Factory;
 #pragma warning disable IDE0060 // Remove unused parameter

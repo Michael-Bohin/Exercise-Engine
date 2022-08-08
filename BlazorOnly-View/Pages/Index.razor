@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<h4>Index</h4>
+<br/>
+<button @onclick="DoStuff">Time Test</button>
+<br/><br/>
+<div>@Message</div>
+
+@code {
+    string  Message = "";
+    void DoStuff() {
+        var startTime = DateTime.Now;
+        int value = 0;
+        for (int i = 0; i < int.MaxValue; i++)
+            value = i;
+        var endTime = DateTime.Now;
+        Message = (endTime.Subtract(startTime).TotalMilliseconds).ToString() + " ms";
+    }
+}
+
+
+
