@@ -1,5 +1,9 @@
-﻿using static System.Environment;
+﻿global using System.Text;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
+
 namespace ExerciseEngine;
+using static System.Environment;
 
 interface IExerciseCollection1D {
     Exercise GetExercise(int index);
@@ -19,7 +23,7 @@ interface IExerciseLocalization
     ExerciseRepresentation ConstructVariant(Variant v);
 }
 
-abstract class ExerciseCollection {
+abstract public class ExerciseCollection {
 	protected static Exercise CreateExerciseInstance(ExerciseMetaData md, ExerciseRepresentation er) {
 		ExerciseType type = md.type;
 		if (type == ExerciseType.WordProblem) {
@@ -32,7 +36,7 @@ abstract class ExerciseCollection {
 	}
 }
 
-class ExerciseCollection1D : ExerciseCollection, IExerciseCollection1D {
+public class ExerciseCollection1D : ExerciseCollection, IExerciseCollection1D {
 	public int uniqueId;
 	public List<Variant> variants;
 	public ExerciseLocalization originalLanguage;
@@ -77,7 +81,7 @@ class ExerciseCollection1D : ExerciseCollection, IExerciseCollection1D {
 	}
 }
 
-class ExerciseCollection2D : ExerciseCollection, IExerciseCollection2D {
+public class ExerciseCollection2D : ExerciseCollection, IExerciseCollection2D {
     public int uniqueId;
     public List<Variant> variants;
     public Dictionary<Language, ExerciseLocalization> localizations;
@@ -134,7 +138,7 @@ class ExerciseCollection2D : ExerciseCollection, IExerciseCollection2D {
     public void SerializerSetVariations(List<Variant> vs) => variants = vs;
 }
 
-class ExerciseLocalization : IExerciseLocalization
+public class ExerciseLocalization : IExerciseLocalization
 {
     [JsonPropertyName("meta")]
     public LocalizationMetaData metaData;

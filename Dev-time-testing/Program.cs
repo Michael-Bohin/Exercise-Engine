@@ -1,17 +1,11 @@
-﻿global using static System.Console;
-global using static System.Math;
-global using System.Text;
-global using System.Text.Json;
-global using System.Text.Json.Serialization;
-
-namespace ExerciseEngine.Factory;
+﻿using ExerciseEngine;
+using static System.Console;
 using System.Text.Json;
-using ExerciseEngine;
 
 class Program {
 	static void Main() {
-		WriteLine("Hi!"); 
-	
+		WriteLine("Hi!");
+
 		JsonSerializerOptions options = new() {
 			WriteIndented = false,
 			IncludeFields = true
@@ -29,10 +23,10 @@ class Program {
 
 		string jsonB = JsonSerializer.Serialize(deserializedVersion, options);
 
-		using (StreamWriter sw = new("A-NET7.json")) 
+		using (StreamWriter sw = new("A-NET7.json"))
 			sw.WriteLine(jsonA);
 
-		using (StreamWriter sw = new("B-NET7.json")) 
+		using (StreamWriter sw = new("B-NET7.json"))
 			sw.WriteLine(jsonB);
 		WriteLine("Bye!");
 	}

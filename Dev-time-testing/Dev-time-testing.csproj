@@ -1,16 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>Dev_time_testing</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="source\interpreter\" />
-    <Folder Include="source\factory\" />
-    <Folder Include="storage\" />
+    <ProjectReference Include="..\Exercise-Engine\ExerciseEngine.csproj" />
   </ItemGroup>
 
 </Project>

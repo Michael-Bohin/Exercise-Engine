@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine;
 
-struct ExerciseUniqueId {
+public struct ExerciseUniqueId {
 	[JsonPropertyName("id")]
 	public int id;
 	[JsonPropertyName("lang")]
@@ -22,7 +22,7 @@ struct ExerciseUniqueId {
 	}
 }
 
-struct LocalizationUniqueId {
+public struct LocalizationUniqueId {
 	[JsonPropertyName("id")]
 	public int id;
 	[JsonPropertyName("lang")]
@@ -39,7 +39,7 @@ struct LocalizationUniqueId {
 [JsonDerivedType(typeof(DefinitionMetaData), typeDiscriminator: 1)]
 [JsonDerivedType(typeof(LocalizationMetaData), typeDiscriminator: 2)]
 [JsonDerivedType(typeof(ExerciseMetaData), typeDiscriminator: 3)]
-class MetaData {
+public class MetaData {
 	[JsonPropertyName("name")]
 	public string name;
 	[JsonPropertyName("topics")]
@@ -61,7 +61,7 @@ class MetaData {
 	}
 }
 
-class DefinitionMetaData : MetaData {
+public class DefinitionMetaData : MetaData {
 	[JsonPropertyName("originalLang")]
 	public Language originalLanguage;
 
@@ -73,7 +73,7 @@ class DefinitionMetaData : MetaData {
 	}
 }
 
-class LocalizationMetaData : MetaData {
+public class LocalizationMetaData : MetaData {
 	[JsonPropertyName("id")]
 	public LocalizationUniqueId id;
 
@@ -85,7 +85,7 @@ class LocalizationMetaData : MetaData {
 	}
 }
 
-class ExerciseMetaData : MetaData {
+public class ExerciseMetaData : MetaData {
 	[JsonPropertyName("id")]
 	public ExerciseUniqueId id;
 

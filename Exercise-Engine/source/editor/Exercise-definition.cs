@@ -5,7 +5,7 @@ using ExerciseEngine;
 namespace ExerciseEngine.Editor;
 
 
-abstract record ExerciseDefinition {
+abstract public record ExerciseDefinition {
 	public DefinitionMetaData metaData = new();
 
 	public List<Variable> Variables { get; set; } = new();
@@ -15,7 +15,7 @@ abstract record ExerciseDefinition {
 	// public ExerciseDefinition() { }
 }
 
-abstract record WordProblemDefinition : ExerciseDefinition {
+abstract public record WordProblemDefinition : ExerciseDefinition {
 	public MacroText Assignment { get; set; } = new();
 	public List<MacroText> Questions { get; set; } = new();
 	public List<string> Answers { get; set; } = new(); // once finnished consider types of answers..  how about having answers of concrete type? 
@@ -23,13 +23,13 @@ abstract record WordProblemDefinition : ExerciseDefinition {
 	// public WordProblemDefinition() { }
 }
 
-abstract record NumericalExerciseDefinition : ExerciseDefinition {
+abstract public record NumericalExerciseDefinition : ExerciseDefinition {
 	public MacroText Question { get; set; } = new(); // expression/equation to solve
 	public string Answer { get; set; } = "";
 	// public NumericalExerciseDefinition() : base() { }
 }
 
-abstract record GeometricExerciseDefinition : ExerciseDefinition {
+abstract public record GeometricExerciseDefinition : ExerciseDefinition {
 	public GeometricExerciseDefinition() : base() {
 		throw new NotImplementedException("Will be implemented only if people give enough attention to word problems and numerical exercises...");
 	}

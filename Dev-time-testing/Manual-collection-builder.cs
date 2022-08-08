@@ -1,14 +1,12 @@
 ﻿using ExerciseEngine;
 
-namespace ExerciseEngine.Factory;
-
-abstract class ManualCollection2DBuilder { 
+abstract public class ManualCollection2DBuilder { 
 	abstract public ExerciseCollection2D BuildCollection();
 }
 
 #region  BuilderA
 
-class ManualCollectionBuilderA : ManualCollection2DBuilder {
+public class ManualCollectionBuilderA : ManualCollection2DBuilder {
 	readonly List<List<int>> variations = new() {
 		new() { 5, 2, 35 },
 		new() { 5, 3, 55 },

@@ -1,9 +1,9 @@
 ﻿namespace ExerciseEngine.Editor;
 
-enum JsonVariable { IntRange, IntSet, OperatorSet, StringSet, DoubleSet/*, FractionSet*/ } // more types are likelly to come in future
-enum Operator { Add, Sub, Mul, Div }
+public enum JsonVariable { IntRange, IntSet, OperatorSet, StringSet, DoubleSet/*, FractionSet*/ } // more types are likelly to come in future
+public enum Operator { Add, Sub, Mul, Div }
 
-abstract class Variable {
+abstract public class Variable {
 	public string Id { get; } = default!;
 	protected Variable(string Id) { this.Id = Id; }
 
@@ -12,7 +12,7 @@ abstract class Variable {
 	abstract public string PrintForeachDef();
 }
 
-class IntRange : Variable {
+public class IntRange : Variable {
 	public int Min { get; }
 	public int Max { get; }
 	public int Increment { get; }
@@ -30,12 +30,12 @@ class IntRange : Variable {
 	}
 }
 
-abstract class SetVariable<T> : Variable {
+abstract public class SetVariable<T> : Variable {
 	public List<T> Elements { get; }
 	public SetVariable(string Id, List<T> Elements) : base(Id) { this.Elements = Elements; }
 }
 
-class IntSet : SetVariable<int> {
+public class IntSet : SetVariable<int> {
 	public IntSet(string Id, List<int> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.IntSet; }
@@ -45,7 +45,7 @@ class IntSet : SetVariable<int> {
 	}
 }
 
-class OperatorSet : SetVariable<Operator> {
+public class OperatorSet : SetVariable<Operator> {
 	public OperatorSet(string Id, List<Operator> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.OperatorSet; }
@@ -55,7 +55,7 @@ class OperatorSet : SetVariable<Operator> {
 	}
 }
 
-class StringSet : SetVariable<string> {
+public class StringSet : SetVariable<string> {
 	public StringSet(string Id, List<string> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.StringSet; }
@@ -65,7 +65,7 @@ class StringSet : SetVariable<string> {
 	}
 }
 
-class DoubleSet : SetVariable<double> {
+public class DoubleSet : SetVariable<double> {
 	public DoubleSet(string Id, List<double> Elements) : base(Id, Elements) { }
 
 	public static JsonVariable JsonId { get => JsonVariable.DoubleSet; }

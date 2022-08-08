@@ -1,4 +1,5 @@
 ﻿using ExerciseEngine;
+using static System.Console;
 
 namespace ExerciseEngine.Factory;
 #pragma warning disable IDE0060 // Remove unused parameter

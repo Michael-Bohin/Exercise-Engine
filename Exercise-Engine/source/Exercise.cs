@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine;
 
-abstract class Exercise
+abstract public class Exercise
 {
     public ExerciseMetaData metaData;
     public string assignment;
@@ -65,7 +65,7 @@ abstract class Exercise
     }
 }
 
-class WordProblem : Exercise
+public class WordProblem : Exercise
 {
     public List<string> questions;
     public List<string> results;
@@ -90,7 +90,7 @@ class WordProblem : Exercise
     }
 }
 
-class NumericalExercise : Exercise
+public class NumericalExercise : Exercise
 {
     public string result;
 
@@ -111,7 +111,7 @@ class NumericalExercise : Exercise
 }
 
 // reminder for future, geometric exercise also need to be developed..
-class GeometricExercise : Exercise
+public class GeometricExercise : Exercise
 {
     public GeometricExercise(ExerciseMetaData metaData, string Assignment, List<string> SolutionSteps) : base(metaData, Assignment, SolutionSteps)
     {

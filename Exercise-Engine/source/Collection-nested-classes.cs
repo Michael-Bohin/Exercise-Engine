@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine;
 
-class ExerciseRepresentation
+public class ExerciseRepresentation
 {
     public readonly string assignment;
     public readonly List<string> questions;
@@ -13,7 +13,7 @@ class ExerciseRepresentation
     }
 }
 
-class Variant
+public class Variant
 {
     [JsonPropertyName("inv")]
     public List<string> invariant; // invariant variables
@@ -46,7 +46,7 @@ class Variant
     }
 }
 
-class MacroText
+public class MacroText
 {
     public MacroText() { elements = new(); }
     [JsonPropertyName("elements")]
@@ -76,12 +76,12 @@ class MacroText
 [JsonDerivedType(typeof(TextElement), typeDiscriminator: 0)]
 [JsonDerivedType(typeof(Macro), typeDiscriminator: 1)]
 [JsonDerivedType(typeof(Text), typeDiscriminator: 2)]
-abstract class TextElement
+abstract public class TextElement
 {
     abstract public string GetValue(Language lang, Variant v);
 }
 
-sealed class Macro : TextElement
+sealed public class Macro : TextElement
 {
     [JsonPropertyName("pointer")]
     public int pointer;
@@ -109,7 +109,7 @@ sealed class Macro : TextElement
     override public string ToString() => $"Macro: [P:{pointer}, Type:{type}]";
 }
 
-sealed class Text : TextElement
+sealed public class Text : TextElement
 {
     [JsonPropertyName("text")]
     public string constText = default!;
