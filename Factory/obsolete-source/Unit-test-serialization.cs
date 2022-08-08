@@ -1,4 +1,4 @@
-﻿using ExerciseEngine.source;
+﻿using ExerciseEngine;
 
 namespace ExerciseEngine.Factory;
 

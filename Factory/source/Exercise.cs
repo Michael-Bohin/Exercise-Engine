@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.source;
+﻿namespace ExerciseEngine;
 
 abstract class Exercise
 {

@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="source\interpreter\" />
+    <Folder Include="source\factory\" />
     <Folder Include="storage\" />
   </ItemGroup>
 

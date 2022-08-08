@@ -6,7 +6,7 @@ global using System.Text.Json.Serialization;
 
 namespace ExerciseEngine.Factory;
 using System.Text.Json;
-using ExerciseEngine.source;
+using ExerciseEngine;
 
 class Program {
 	static void Main() {

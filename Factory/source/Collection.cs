@@ -1,5 +1,5 @@
 ﻿using static System.Environment;
-namespace ExerciseEngine.source;
+namespace ExerciseEngine;
 
 interface IExerciseCollection1D {
     Exercise GetExercise(int index);

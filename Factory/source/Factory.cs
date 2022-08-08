@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.source;
+﻿namespace ExerciseEngine;
 
 // ukol factories:
 // 1. vygenervat mnozinu vsech variant
