@@ -1,22 +1,17 @@
 ﻿@page "/"
 
-<h4>Index</h4>
-<br/>
-<button @onclick="DoStuff">Time Test</button>
-<br/><br/>
-<div>@Message</div>
-
-@code {
-    string  Message = "";
-    void DoStuff() {
-        var startTime = DateTime.Now;
-        int value = 0;
-        for (int i = 0; i < int.MaxValue; i++)
-            value = i;
-        var endTime = DateTime.Now;
-        Message = (endTime.Subtract(startTime).TotalMilliseconds).ToString() + " ms";
-    }
-}
-
-
-
+<div>
+    <h1>
+        Welcome to Exercise Engine
+    </h1>
+    <p>
+        What would you like to do? You can:
+    </p>
+    <ol>
+        <li>Create new exercise</li>
+        <li>Edit existing exercise</li>
+        <li>Fill exercise with deepL translation approximations</li>
+        <li>Correct translations</li>
+        <li>Manage exercise collestion</li>
+    </ol>
+</div>

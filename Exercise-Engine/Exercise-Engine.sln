@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExerciseEngine", "ExerciseE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dev-time-testing", "..\Dev-time-testing\Dev-time-testing.csproj", "{AD6FA0D0-8E66-4C58-B4C5-658F4AF91C5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor-Maui-View", "..\Blazor-Maui-View\Blazor-Maui-View.csproj", "{4BEA5187-1BC0-4EF6-AE18-3ADA526FFFE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor-Maui-View", "..\Blazor-Maui-View\Blazor-Maui-View.csproj", "{4BEA5187-1BC0-4EF6-AE18-3ADA526FFFE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorOnly-View", "..\BlazorOnly-View\BlazorOnly-View.csproj", "{8A7DFDA0-EF48-48DE-BFE5-3AD068E80CB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorOnly-View", "..\BlazorOnly-View\BlazorOnly-View.csproj", "{8A7DFDA0-EF48-48DE-BFE5-3AD068E80CB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

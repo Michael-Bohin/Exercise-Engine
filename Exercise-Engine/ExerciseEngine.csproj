@@ -13,4 +13,8 @@
     <Folder Include="storage\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="6.0.14" />
+  </ItemGroup>
+
 </Project>
