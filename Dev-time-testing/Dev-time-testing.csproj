@@ -9,7 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="obsolete-source\json-custom-converters\**" />
+    <EmbeddedResource Remove="obsolete-source\json-custom-converters\**" />
+    <None Remove="obsolete-source\json-custom-converters\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Exercise-Engine\ExerciseEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="obsolete-source\" />
   </ItemGroup>
 
 </Project>

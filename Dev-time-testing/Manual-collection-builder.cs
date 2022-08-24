@@ -1,7 +1,7 @@
 ﻿using ExerciseEngine;
 
 // namespace DevTimeAccess;
-
+/*
 abstract public class ManualCollection2DBuilder { 
 	abstract public ExerciseCollection2D BuildCollection();
 }
@@ -159,3 +159,4 @@ public class ManualCollectionBuilderA : ManualCollection2DBuilder {
 
 #endregion
 
+*/

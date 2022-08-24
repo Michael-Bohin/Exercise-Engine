@@ -3,7 +3,7 @@ using static System.Console;
 using System.Text.Json;
 
 // namespace DevTimeAccess;
-
+/*
 class Program {
 	static void Main() {
 		WriteLine("Hi!");
@@ -32,4 +32,4 @@ class Program {
 			sw.WriteLine(jsonB);
 		WriteLine("Bye!");
 	}
-}
+}*/

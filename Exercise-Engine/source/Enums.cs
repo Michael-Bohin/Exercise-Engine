@@ -1,13 +1,54 @@
 ﻿namespace ExerciseEngine;
 
-// Exercise collection:
-public enum Language { en, pl, ua, cs }
+internal enum Operator { 
+	Add,
+	Sub,
+	Mul,
+	Div
+}
 
-// Groups:
-public enum Classes { First = 1, Second = 2, Third = 3, Fourth, Fifth, Sixth, Seventh, Eight, Ninth }
-public enum Topic { Arithmetic, Addition, Subtraction, Multiplication, Division, Modulo, Fractions, Percentages, Combinatorics, BasicUnits } // and many more..
-public enum ExerciseType { WordProblem, Numerical, Geometric }
+internal enum Language { 
+	en, 
+	pl, 
+	ua, 
+	cs
+}
 
-// Json polymorphic serialization handlers:
-public enum VariableDiscriminator { Invariant, Cultural }
-public enum TextElementDiscriminator { Macro, Text }
+internal enum Classes { 
+	First = 1, 
+	Second = 2, 
+	Third = 3,
+	Fourth = 4,
+	Fifth = 5,
+	Sixth = 6,
+	Seventh = 7,
+	Eight = 8,
+	Ninth = 9
+}
+
+internal enum Topic { 
+	Arithmetic, 
+	Addition, 
+	Subtraction, 
+	Multiplication, 
+	Division, 
+	Modulo, 
+	Fractions, 
+	Percentages, 
+	Combinatorics, 
+	BasicUnits
+} // and many more..
+
+internal enum ExerciseType { 
+	WordProblem,
+	Numerical,
+	ADS,
+	Geometric 
+}
+
+internal enum ResultType {
+	Int, 
+	String, 
+	Double, 
+	Fraction
+}
