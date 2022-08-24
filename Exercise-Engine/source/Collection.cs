@@ -5,17 +5,84 @@ global using System.Text.Json.Serialization;
 namespace ExerciseEngine;
 using static System.Environment;
 
+// ! have variants loaded in RAM ! at http reachable service :) 
+// that service than constructs those serialized random variants calling them from RAM, not JSON
+// If there are going to be too many variants, it can periodically swap those loaded in memory in such count, that it is OK 
+// -> this evades the nessecity to recalculate variants over and over agian (for each call from 1 person) 
+// additionaly the server can call System.Random AOT, having the sequence ready before the request arrives at the server
+// upon recieving the request it simply dequeues next sequence members and after it serves the request with response 
+// it refills the sequence
+/*
+// 1 exercise, 1 language, X variants
 interface IExerciseCollection1D {
-    Exercise GetExercise(int index);
-	Exercise GetRandomExercise();
-	List<Exercise> GetAllVariants();
+    Exercise GetExercise(int index); // concrete exercise
+	Exercise GetExercise(); // random exercise
+	List<Exercise> GetAllVariants(); // all variants in order they sit in internal sequence
+    List<Exercise> GetSomeVariants(int count); // randomly chosen
+}*/
+
+
+// 1 exercise, 1 language, 1 variant
+// return types to be thought through later
+interface IExerciseRepresentation {
+	string GetType();
+	string GetAssignment();
+    List<string> GetQuestions();
+    List<string> GetResults();
+    List<string> GetSolutionSteps();
 }
 
-interface IExerciseCollection2D
+// 1 exercise, X languages, Y variants
+interface IExercise
 {
-    Exercise GetExercise(Language lang, int index);
-    Exercise GetRandomExercise(Language lang);
-    List<Exercise> GetLocalizedExercises(Language lang);
+	ExerciseRepresentation GetExercise(Language lang, int index);
+	ExerciseRepresentation GetExercise(Language lang); // gets random variant in given language
+    List<ExerciseRepresentation> GetAllVariants(Language lang);
+    List<ExerciseRepresentation> GetSomeVariants(Language lang, int count);
+
+
+}
+
+// X exercises, Y languages, Z variants
+interface IExerciseCollection {
+	Exercise GetExercise(int unigueId);
+}
+
+interface IExerciseEngineAPI { 
+    string GetAllTranslations(Language lang);
+    string GetVariants(int exerciseUniqueId, int count); 
+    string GetTopics();
+}
+// this interface serves the http request from web server 
+// Throws erros if:
+// 1. Language does not exist 
+// 2. Exercise unique id does not exist (negative number or greater than greatest id)
+// 3. Count is smaller than one (must return at least one exercise)
+// 4. Count is greater than count of all variants for given exercise (all exercise will have different number of variants)
+// 5. Count is greater than maximum number of exercise held in memory at one time. Say 1000 for begining. 
+// In all cases above the http request returns with code 5xx. 
+// 
+// Always returns serialized classes to JSON, because the webserver will run in node.js language 
+//
+// Always returns random sequence of variants such that all variants occur at most once.
+// That is variants do not repeat. 
+
+class ExerciseRepresentation {
+
+}
+
+class Translation {
+
+}
+
+class Variant {
+
+}
+
+class Exercise {
+    private Dictionary<Language, Translation> translations;
+    private List<Variant> variants;
+    private MetaData metaData;
 }
 
 interface IExerciseLocalization
@@ -23,6 +90,8 @@ interface IExerciseLocalization
     ExerciseRepresentation ConstructVariant(Variant v);
 }
 
+
+// why? 
 abstract public class ExerciseCollection {
 	protected static Exercise CreateExerciseInstance(ExerciseMetaData md, ExerciseRepresentation er) {
 		ExerciseType type = md.type;
