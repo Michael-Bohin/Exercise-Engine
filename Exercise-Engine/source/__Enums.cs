@@ -14,7 +14,7 @@ internal enum Language {
 	cs
 }
 
-internal enum Classes { 
+internal enum Grade { 
 	First = 1, 
 	Second = 2, 
 	Third = 3,

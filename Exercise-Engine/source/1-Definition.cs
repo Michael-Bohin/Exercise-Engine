@@ -1,12 +1,10 @@
-﻿using MudBlazor;
-
-namespace ExerciseEngine;
+﻿namespace ExerciseEngine;
 
 #region Definition
 
 internal class Definition
 {
-    public MetaData metaData = new();
+    public Exercise_MetaData metaData = new();
 	public Language initialLanguage;
     public List<Variable> Variables = new();
     public List<Constraint> Constraints = new();
@@ -95,19 +93,19 @@ internal class Result { }
 #endregion
 
 #region MetaData 
-
-internal class MetaData {
+/*
+internal class Exercise_MetaData {
 	public string name = default!;
 	public List<Topic> topics = new();
-	public List<Classes> classes = new();
+	public List<Grade> classes = new();
 	public ExerciseType type = ExerciseType.Numerical;
 
-	public MetaData() { }
+	public Exercise_MetaData() { }
 
-	public MetaData(string name, List<Topic> topics, List<Classes> classes, ExerciseType type) {
+	public Exercise_MetaData(string name, List<Topic> topics, List<Grade> classes, ExerciseType type) {
 		this.name = name; this.topics = topics; this.classes = classes; this.type = type;
 	}
-}
+}*/
 
 #endregion
 
