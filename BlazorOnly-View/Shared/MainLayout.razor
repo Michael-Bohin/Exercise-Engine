@@ -1,14 +1,18 @@
 ﻿@inherits LayoutComponentBase
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <PageTitle>BlazorOnly-View</PageTitle>
 
 <MudLayout>
+   
     <MudAppBar>
-        Blazor View
+        <MudGrid Justify=Justify.FlexEnd>
+            <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" />
+        </MudGrid>
     </MudAppBar>
+
     <MudDrawer Open="true">
         <NavMenu />
     </MudDrawer>
@@ -18,3 +22,8 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+@code{
+    private MudTheme _theme = new();
+    private bool _isDarkMode = false;
+}
