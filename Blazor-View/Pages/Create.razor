@@ -22,53 +22,30 @@
                     }
                 </MudSelect>
 
+                <!-- Title & description & topics & grades: -->
+                <MudTextField T="string" Label="Title" Required="true" RequiredError="Title of exercise is required!" />
+                <MudTextField T="string" Label="Description" Required="true" RequiredError="Description of exercise is required!"/>
+                <MudSelect  T="string" Label="Topics" MultiSelection="true" @bind-SelectedValues="topicOptions">
+                   @foreach (var topic in topics) { <MudSelectItem T="string" Value="@topic">@topic</MudSelectItem> }
+                </MudSelect>
+                <MudSelect  T="string" Label="Grades" MultiSelection="true" @bind-SelectedValues="gradeOptions">
+                   @foreach (var grade in grades) { <MudSelectItem T="string" Value="@grade">@grade</MudSelectItem> }
+                </MudSelect>
+
+                <MudSwitch T="bool" Label="Auto generate thumbnail" Disabled="true" />
+
+                <!-- Topices and grades: -->
+
                 <div class="d-flex mud-width-full align-center mt-8">
                     <MudText Typo="Typo.subtitle1" Class="mr-2">Selected values: </MudText>
                     <MudChip Color="Color.Tertiary">@dict[lang]</MudChip>
                     <MudChip Color="Color.Primary">@exerciseType</MudChip>
                 </div>
 
-                <!-- Title & description: -->
-                <MudTextField T="string" Label="Title" Required="true" RequiredError="Title of exercise is required!" />
-                <MudTextField T="string" Label="Description" Required="true" RequiredError="Description of exercise is required!"/>
-
-                <MudSelect T="string" Label="US States" MultiSelection="true"  @bind-SelectedValues="options">
-                    @foreach (var state in states)
-                    {
-                        <MudSelectItem T="string" Value="@state">@state</MudSelectItem>
-                    }
-                </MudSelect>
-
-                <MudSelect  T="Topic" Label="Topics" MultiSelection="true"  @bind-SelectedValues="topicOptions">
-                   @foreach (var topic in topics)
-                    {
-                        <MudSelectItem T="Topic" Value="@topic">@topic</MudSelectItem>
-                    }
-                </MudSelect>
-
                 <MudGrid Class="mt-6 px-4">
-                    
                     <MudItem xs="6">
-                        <MudText Typo="Typo.subtitle2">SelectedValues: HashSet&lt;string&gt;</MudText>
-                        <MudText Typo="Typo.subtitle2">{</MudText>
-                        <MudText Typo="Typo.body2" Class="pl-4">@(string.Join(", ", options.Select(x=>$"\"{x}\"")))</MudText>
-                        <MudText Typo="Typo.subtitle2">}</MudText>
-                    </MudItem>
-                </MudGrid>
-                <!-- Topices and grades: -->
-
-                <MudGrid Class="mt-6 px-4">
-                    <MudItem  xs="6">
-                        <MudText Typo="Typo.subtitle2">Value:</MudText>
-                        <MudText Typo="Typo.subtitle2">"</MudText>
-                        <MudText Typo="Typo.body2" Class="pl-4">@topicValue</MudText>
-                        <MudText Typo="Typo.subtitle2">"</MudText>
-                    </MudItem> 
-                    <MudItem xs="6">
-                        <MudText Typo="Typo.subtitle2">SelectedValues: HashSet&lt;string&gt;</MudText>
-                        <MudText Typo="Typo.subtitle2">{</MudText>
+                        <MudText Typo="Typo.subtitle2">Selected topics:</MudText>
                         <MudText Typo="Typo.body2" Class="pl-4">@(string.Join(", ", topicOptions.Select(x=>$"\"{x}\"")))</MudText>
-                        <MudText Typo="Typo.subtitle2">}</MudText>
                     </MudItem>
                 </MudGrid>
 
@@ -103,33 +80,19 @@
 </MudGrid>
 
 @code {
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        foreach(string topic in Enum.GetNames(typeof(Topic))) 
+            topics.Add(topic);
+        foreach(string grade in Enum.GetNames(typeof(Grade)))
+            grades.Add(grade);
+    }
 
-    private string value { get; set; } = "Nothing selected";
-    private IEnumerable<string> options { get; set; } = new HashSet<string>() { "California", "Iowa" };
+    private IEnumerable<string> topicOptions = new HashSet<string>();
+    private List<string> topics = new(); // filled on initialised override
 
-    private Topic topicValue { get; set; } = Topic.Percentages;
-    private IEnumerable<Topic> topicOptions = new HashSet<Topic>();
-
-    private string[] states =
-    {
-        "Alabama", "Alaska", "American Samoa", "Arizona",
-        "Arkansas", "California", "Colorado", "Connecticut",
-        "Delaware", "District of Columbia", "Federated States of Micronesia",
-        "Florida", "Georgia", "Guam", "Hawaii", "Idaho",
-        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Marshall Islands", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota", "Mississippi",
-        "Missouri", "Montana", "Nebraska", "Nevada",
-        "New Hampshire", "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio",
-        "Oklahoma", "Oregon", "Palau", "Pennsylvania", "Puerto Rico",
-        "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
-        "Texas", "Utah", "Vermont", "Virgin Island", "Virginia",
-        "Washington", "West Virginia", "Wisconsin", "Wyoming",
-    };
-
-    private Topic[] topics = { Topic.Addition, Topic.Arithmetic, Topic.Combinatorics, Topic.Percentages, Topic.Fractions };
-
+    private IEnumerable<string> gradeOptions = new HashSet<string>();
+    private List<string> grades = new(); // filled on initialised override
 
     bool success;
     string[] errors = { };
