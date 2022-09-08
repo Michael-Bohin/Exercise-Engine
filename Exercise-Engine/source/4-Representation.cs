@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine;
 
-internal class Representation {
+class Representation {
 	public ExerciseType EType { get; }
 	public ResultType RType { get; }
 	public string Assignment { get; }

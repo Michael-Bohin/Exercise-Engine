@@ -1,6 +1,6 @@
 ﻿namespace ExerciseEngine;
 
-abstract internal class Exercise {
+abstract class Exercise {
 	public Factory? Factory = null;
 	public Exercise_MetaData MetaData = new();
 	public Dictionary<Language, Translation> Translations = new();
@@ -8,7 +8,7 @@ abstract internal class Exercise {
 	// the tuple type and number of parameters will be different for all
 }
 
-abstract internal class Factory {
+abstract class Factory {
 
 }
 

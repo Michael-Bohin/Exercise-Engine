@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExerciseEngine", "ExerciseEngine.csproj", "{FAC7A9AD-94EC-4DF6-AEB7-9527C66493DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorOnly-View", "..\BlazorOnly-View\BlazorOnly-View.csproj", "{8A7DFDA0-EF48-48DE-BFE5-3AD068E80CB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorView", "..\BlazorOnly-View\BlazorView.csproj", "{8A7DFDA0-EF48-48DE-BFE5-3AD068E80CB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

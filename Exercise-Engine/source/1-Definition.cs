@@ -2,46 +2,41 @@
 
 #region Definition
 
-internal class Definition
-{
-    public Exercise_MetaData metaData = new();
-	public Language initialLanguage;
-    public List<Variable> Variables = new();
-    public List<Constraint> Constraints = new();
-	public MacroText Assignment = new();
-	public List<MacroText> SolutionSteps = new();
+class Definition_MetaData { 
+	public Language		initialLanguage;
+	public ExerciseType type;
+	public string		title = "";
+	public string		description = "";
+	public List<Topic>	topcis = new();
+	public List<Grade>	grades = new();
+	public bool			autoGenerateThumbnail = true;
+	public string		thumbnailPath = "";
 }
 
-internal class WordProblemDefinition : Definition
+class Definition
 {
-    public List<MacroText> Questions = new();
-    public List<Result> Results = new(); // once finnished consider types of answers..  how about having answers of concrete type?                        
-}
+    public Definition_MetaData metaData = new();
 
-internal class NumericalExerciseDefinition : Definition
-{
-    public MacroText Question = new();
-    public Result Result = new();
-}
-
-internal class GeometricExerciseDefinition : Definition
-{
-    public GeometricExerciseDefinition() : base()
-    {
-        throw new NotImplementedException("Will be implemented only if people give enough attention to word problems and numerical exercises...");
-    }
+    public List<Variable>			variables = new();
+	public List<MacroText>			assignment = new();
+	public List<MacroText>			questions = new();
+	public ResultType				resultType = new();
+	public List<ResultMethod>		results = new();
+    public List<ConstraintMethod>	constraints = new();
+	public List<MacroText>			solutionSteps = new();
+	public List<string>				imagePaths = new();
 }
 
 #endregion
 
 #region Variable
 
-abstract internal class Variable {
+abstract class Variable {
 	public string Id { get; } = default!;
 	public Variable(string Id) { this.Id = Id; }
 }
 
-internal class IntRange : Variable {
+class IntRange : Variable {
 	public int Min { get; }
 	public int Max { get; }
 	public int Increment { get; }
@@ -53,16 +48,16 @@ internal class IntRange : Variable {
 	}
 }
 
-abstract internal class SetVariable<T> : Variable {
+abstract class SetVariable<T> : Variable {
 	public List<T> Elements { get; } = new();
 	public SetVariable(string Id, List<T> Elements) : base(Id) { this.Elements = Elements; }
 }
 
-internal class IntSet : SetVariable<int> {
+class IntSet : SetVariable<int> {
 	public IntSet(string Id, List<int> Elements) : base(Id, Elements) { }
 }
 
-internal class OperatorSet : SetVariable<Operator> {
+class OperatorSet : SetVariable<Operator> {
 	public OperatorSet(string Id, List<Operator> Elements) : base(Id, Elements) { }
 }
 
@@ -73,63 +68,44 @@ internal class OperatorSet : SetVariable<Operator> {
 //	  public StringSet(string Id, List<string> Elements) : base(Id, Elements) { }
 // }
 
-internal class DoubleSet : SetVariable<double> {
+class DoubleSet : SetVariable<double> {
 	public DoubleSet(string Id, List<double> Elements) : base(Id, Elements) { }
 }
 
 #endregion
 
-// think about how to save lines of code for interpreter and roslyn analyzer...
-#region Constraint
-
-internal class Constraint { }
-
-#endregion
-
-#region Result 
-
-internal class Result { }
-
-#endregion
-
-#region MetaData 
-/*
-internal class Exercise_MetaData {
-	public string name = default!;
-	public List<Topic> topics = new();
-	public List<Grade> classes = new();
-	public ExerciseType type = ExerciseType.Numerical;
-
-	public Exercise_MetaData() { }
-
-	public Exercise_MetaData(string name, List<Topic> topics, List<Grade> classes, ExerciseType type) {
-		this.name = name; this.topics = topics; this.classes = classes; this.type = type;
-	}
-}*/
-
-#endregion
-
 #region MacroText
 
-internal class MacroText {
-	public MacroText() { elements = new(); }
-	public List<TextElement> elements;
-}
+abstract class MacroText { }
 
-abstract internal class TextElement { }
+sealed class Macro : MacroText {
+	public string pointer;
 
-sealed internal class Macro : TextElement {
-	public int pointer;
-	
-	public Macro(int pointer) {
+	public Macro(string pointer) {
 		this.pointer = pointer;
 	}
 }
 
-sealed internal class Text : TextElement {
+sealed class Text : MacroText {
 	public string constText = default!;
-	
+
 	public Text(string constText) => this.constText = constText;
+}
+
+#endregion
+
+#region Methods
+
+abstract class Method {
+	public bool codeDefined = new();
+	public List<string> code = new();
+	public List<string> comments = new();
+}
+
+class ConstraintMethod : Method { }
+
+class ResultMethod {
+	public ResultType resultType;
 }
 
 #endregion

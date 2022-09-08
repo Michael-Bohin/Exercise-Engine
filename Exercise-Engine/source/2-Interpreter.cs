@@ -1,4 +1,4 @@
 ﻿namespace ExerciseEngine;
 
-internal class Interpreter { }
+class Interpreter { }
 
