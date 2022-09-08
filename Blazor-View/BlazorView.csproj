@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>BlazorOnly_View</RootNamespace>
+    <UserSecretsId>9e96f14d-f1b7-4e69-af7d-e57773809d69</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
