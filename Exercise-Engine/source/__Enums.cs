@@ -1,20 +1,20 @@
 ﻿namespace ExerciseEngine;
 
-internal enum Operator { 
+public enum Operator { 
 	Add,
 	Sub,
 	Mul,
 	Div
 }
 
-internal enum Language { 
+public enum Language { 
 	en, 
 	pl, 
 	ua, 
 	cs
 }
 
-internal enum Grade { 
+public enum Grade { 
 	First = 1, 
 	Second = 2, 
 	Third = 3,
@@ -22,11 +22,11 @@ internal enum Grade {
 	Fifth = 5,
 	Sixth = 6,
 	Seventh = 7,
-	Eight = 8,
+	Eighth = 8,
 	Ninth = 9
 }
 
-internal enum Topic { 
+public enum Topic { 
 	Arithmetic, 
 	Addition, 
 	Subtraction, 
@@ -38,15 +38,15 @@ internal enum Topic {
 	Combinatorics, 
 	BasicUnits
 } // and many more..
-
-internal enum ExerciseType { 
+ 
+public enum ExerciseType { 
 	WordProblem,
 	Numerical,
 	ADS,
 	Geometric 
 }
 
-internal enum ResultType {
+public enum ResultType {
 	Int, 
 	String, 
 	Double, 

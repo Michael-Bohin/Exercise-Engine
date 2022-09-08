@@ -3,25 +3,25 @@
  <MudContainer Class="pt-3">
     <MudText Typo="Typo.h4">Welcome to Exercise Engine</MudText>
     <MudText Typo="Typo.body1"> What would you like to do?</MudText>
-
+    
     <MudPaper  Width="320px" Square="true" Class="align-center mt-3">
         <MudGrid Spacing="1" Justify="Justify.Center" Class="py-2">
             <MudItem xs="11" >
-                <MudButton  FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Create new exercise</MudButton>
+                <MudButton Href="create" FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Create new exercise</MudButton>
             </MudItem>
             <MudItem xs="11">
-                <MudButton FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Edit existing exercise</MudButton>
+                <MudButton Href="edit" FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Edit existing exercise</MudButton>
             </MudItem>
             <MudItem xs="11">
-                <MudButton FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Call deepL API</MudButton>
-            </MudItem>
-
-            <MudItem xs="11">
-                <MudButton FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Correct translations</MudButton>
+                <MudButton Href="approximate" FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Call deepL API</MudButton>
             </MudItem>
 
             <MudItem xs="11">
-                <MudButton FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Manage exercise collection</MudButton>
+                <MudButton Href="correct-translation" FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Correct translations</MudButton>
+            </MudItem>
+
+            <MudItem xs="11">
+                <MudButton Href="admin" FullWidth=true Variant="Variant.Filled" Color="Color.Primary">Manage exercise collection</MudButton>
             </MudItem>
         </MudGrid>
 
