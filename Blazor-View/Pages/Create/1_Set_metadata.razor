@@ -1,0 +1,126 @@
+﻿@page "/create/set-metadata"
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using ExerciseEngine;
+@inject StateContainer StateContainer
+
+<h3>Create new exercise</h3>
+
+<MudTextField T="string" Label="Try state container" @bind-Value="StateContainer.Property"/>
+
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper Class="pa-4">
+            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <!-- select initial language and exercise type : -->
+                <MudSelect @bind-Value="lang" Label="Initial language" OpenIcon="@Icons.Material.Filled.Language" AdornmentColor="Color.Tertiary" Class="mt-1">
+                    @foreach (Language language in Enum.GetValues(typeof(Language))) {
+                        <MudSelectItem Value="@language">@dict[language]</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect @bind-Value="exerciseType" Label="Exercise type" OpenIcon="@Icons.Material.Filled.CallSplit" AdornmentColor="Color.Primary" Class="mt-1">
+                    @foreach (ExerciseType eType in Enum.GetValues(typeof(ExerciseType))) {
+                        <MudSelectItem Value="@eType">@eType</MudSelectItem>
+                        // Debug.WriteLine($"Debug says: {exerciseType}");
+                    }
+                </MudSelect>
+
+                <!-- Title & description & topics & grades: -->
+                <MudTextField T="string" Label="Title" OpenIcon="@Icons.Filled.Title" Required="true" RequiredError="Title of exercise is required!" @bind-Text="title" Class="mt-1"/>
+                <MudTextField T="string" Label="Description" Required="true" RequiredError="Description of exercise is required!" @bind-Text="description" Class="mt-1"/>
+                <MudSelect  T="string" Label="Topics" MultiSelection="true" Required="true" RequiredError="At least one topic is required!" @bind-SelectedValues="topicOptions" Class="mt-1">
+                   @foreach (var topic in topics) { <MudSelectItem T="string" Value="@topic">@topic</MudSelectItem> }
+                </MudSelect>
+                <MudSelect  T="string" Label="Grades" MultiSelection="true" Required="true" RequiredError="At least one grade is required!" @bind-SelectedValues="gradeOptions" Class="mt-1">
+                   @foreach (var grade in grades) { <MudSelectItem T="string" Value="@grade" >@grade</MudSelectItem> }
+                </MudSelect>
+
+                <MudSwitch T="bool" Label="Auto generate thumbnail" Color="Color.Tertiary" @bind-Checked="@autoPictureGen" Class="mt-3"  />
+                <MudTextField T="string" Label="Thumbnail path" Disabled="@(autoPictureGen)" Margin="Margin.Dense" Required="@(!autoPictureGen)" RequiredError="On false autogen filename of thumbnail is required!" @bind-Text="thumbnailFileName"/>
+
+                <!-- Topices and grades: 
+
+                <div class="d-flex mud-width-full align-center mt-8">
+                    <MudText Typo="Typo.subtitle1" Class="mr-2">Selected values: </MudText>
+                    <MudChip Color="Color.Tertiary">@dict[lang]</MudChip>
+                    <MudChip Color="Color.Primary">@exerciseType</MudChip>
+                </div>
+
+                <MudGrid Class="mt-6 px-4">
+                    <MudItem xs="6">
+                        <MudText Typo="Typo.subtitle2">Selected topics:</MudText>
+                        <MudText Typo="Typo.body2" Class="pl-4">@(string.Join(", ", topicOptions.Select(x=>$"\"{x}\"")))</MudText>
+                    </MudItem>
+                </MudGrid>
+                
+                
+                <div class="d-flex">
+                    <MudRadioGroup T="string" Required="true" RequiredError="Account type is required!">
+                        <MudRadio Option="@("Personal")">Personal</MudRadio>
+                        <MudRadio Option="@("Professional")">Professional</MudRadio>
+                    </MudRadioGroup>
+                </div> -->
+                <!-- agree and register: -->
+                <div class="d-flex align-center justify-space-between mt-3">
+                   <!-- <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> -->
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" OnClick="@ProcessSomething">Continue</MudButton>
+                    <MudButton Href="create/confirm-metadata">Click me to get to next page</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(()=>form.Validate())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>form.Reset())" Class="mx-2">Reset fields</MudButton>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mud-height-full">
+            <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+            @foreach (var error in errors) {
+                <MudText Color="@Color.Error">@error</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    bool success;
+    string[] errors = { };
+    string title, description, thumbnailFileName = "";
+    MudForm? form; // makit it nullable decreases VS yelling
+
+    Language lang { get; set; } = Language.en;
+    Dictionary<Language, string> dict = new() { { Language.en, "English"}, { Language.pl, "Polish"}, {Language.ua, "Ukrainian"}, { Language.cs, "Czech"} };
+    ExerciseType exerciseType { get; set; } = ExerciseEngine.ExerciseType.Numerical;
+
+    IEnumerable<string> topicOptions = new HashSet<string>();
+    IEnumerable<string> gradeOptions = new HashSet<string>();
+    List<string> topics = new(); // filled on initialised override
+    List<string> grades = new(); // filled on initialised override
+
+
+    public bool autoPictureGen { get; set; } = true;
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        foreach(string topic in Enum.GetNames(typeof(Topic))) 
+            topics.Add(topic);
+        foreach(string grade in Enum.GetNames(typeof(Grade)))
+            grades.Add(grade);
+    }
+
+    void ProcessSomething() {
+        Console.WriteLine("Register void function says: 'Hello'!");
+    }
+
+    IEnumerable<string> PasswordStrength() {
+        int count = 0;
+        foreach (string o in topicOptions)
+            count++;
+        if (count > 0)
+            yield return "You need to choose at least one topic!";
+    }
+
+}

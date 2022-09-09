@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
+// custom state container:
+builder.Services.AddScoped<StateContainer>();
 
 
 var app = builder.Build();
