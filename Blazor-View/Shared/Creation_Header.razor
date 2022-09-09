@@ -1,0 +1,58 @@
+﻿@inject AppState appState
+
+<h3 class="mt-3">@creationStages[appState.CreationPhase]</h3>
+
+<MudTimeline TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Top">
+    <MudTimelineItem Color="@color(Phase.meta)" Variant="Variant.Filled">
+        <ItemContent>
+            <MudAlert Severity="@severity(Phase.meta)">Metadata</MudAlert>
+        </ItemContent>
+    </MudTimelineItem>
+    <MudTimelineItem Color="@color(Phase.variables)" Variant="Variant.Filled">
+        <ItemContent>
+            <MudAlert Severity="@severity(Phase.variables)">Variables</MudAlert>
+        </ItemContent>
+    </MudTimelineItem>
+    <MudTimelineItem Color="@color(Phase.exercise)" Variant="Variant.Filled">
+        <ItemContent>
+            <MudAlert Severity="@severity(Phase.exercise)">Define exercise & generate</MudAlert>
+        </ItemContent>
+    </MudTimelineItem>
+</MudTimeline>
+
+
+@code {
+    string[] creationStages = new string[] { 
+        "dummy", 
+        "Create new exercise",
+        "Confirm metadata",
+        "Set variables",
+        "Confirm variables",
+        "Define exercise",
+        "Confirm exercise"
+    };
+
+    enum Phase { meta = 0, variables = -2, exercise = -4 }; 
+
+    Color color(Phase p) {
+        int state = appState.CreationPhase + (int)p;
+        if (state > 2)
+            return Color.Success;
+
+        if (state == 2)
+            return Color.Info;
+
+        return Color.Dark;
+    }
+
+    Severity severity(Phase p) {
+        int state = appState.CreationPhase + (int)p;
+        if (state > 2)
+            return Severity.Success;
+
+        if (state == 2)
+            return Severity.Info;
+
+        return Severity.Normal;
+    }
+}

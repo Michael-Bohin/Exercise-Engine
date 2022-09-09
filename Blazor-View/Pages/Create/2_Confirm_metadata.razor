@@ -1,25 +1,7 @@
 ﻿@page "/create/confirm-metadata"
 @inject AppState appState
 
-<h3 class="mt-3">Confirm metadata</h3>
-
-<MudTimeline TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Top">
-    <MudTimelineItem Color="Color.Info" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Info">Metadata</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Variables</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Define exercise & generate</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-</MudTimeline>
+<Creation_Header/>
 
 <MudText Typo="Typo.subtitle1" Class="mt-4">Initial language & exercise type: </MudText>
 <div class="d-flex mud-width-full align-center">
@@ -49,6 +31,10 @@
 
 
 @code {
+    protected override void OnParametersSet() {
+        base.OnParametersSet();
+        appState.CreationPhase = 2; 
+    }
 
 
 

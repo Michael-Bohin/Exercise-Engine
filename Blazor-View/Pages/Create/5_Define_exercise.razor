@@ -1,28 +1,15 @@
 ﻿@page "/create/define-exercise"
+@using ExerciseEngine;
+@inject AppState appState
 
-<h3 class="mt-3">Define exercise</h3>
-
-<MudTimeline TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Top">
-    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Success">Metadata</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Success">Variables</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Define exercise & generate</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-</MudTimeline>
+<Creation_Header/>
 
 <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Filled.KeyboardReturn" Href="create/confirm-variables">Return to variables</MudButton>
 <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" Href="create/confirm-exercise">Continue</MudButton>
 
 @code {
-
+    protected override void OnParametersSet() {
+        base.OnParametersSet();
+        appState.CreationPhase = 5; 
+    }
 }

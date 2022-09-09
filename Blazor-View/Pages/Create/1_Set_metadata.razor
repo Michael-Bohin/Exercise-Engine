@@ -4,25 +4,7 @@
 @using ExerciseEngine;
 @inject AppState appState
 
-<h3 class="mt-3">Create new exercise</h3>
-
-<MudTimeline TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Top">
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Metadata</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Variables</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-    <MudTimelineItem Color="Color.Dark" Variant="Variant.Filled">
-        <ItemContent>
-            <MudAlert Severity="Severity.Normal">Define exercise & generate</MudAlert>
-        </ItemContent>
-    </MudTimelineItem>
-</MudTimeline>
+<Creation_Header/>
 
 <MudGrid Class="mt-4">
     <MudItem xs="12" sm="7">
@@ -96,5 +78,10 @@
             topics.Add(topic);
         foreach(string grade in Enum.GetNames(typeof(Grade)))
             grades.Add(grade);
+    }
+
+    protected override void OnParametersSet() {
+        base.OnParametersSet();
+        appState.CreationPhase = 1; 
     }
 }

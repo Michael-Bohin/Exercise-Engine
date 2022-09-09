@@ -2,6 +2,8 @@
 
 public class AppState {
 
+
+
     // initial lang:
     private Language _initialLangugage = Language.en;
     public Language InitialLanguage {
@@ -65,11 +67,11 @@ public class AppState {
     }
 
     // int your number behaviour:
-    private int _yourNumber = 38;
-    public int YourNumber {
-        get => _yourNumber;
+    private int _creationPhase = 1;
+    public int CreationPhase {
+        get => _creationPhase;
         set {
-            _yourNumber = value;
+            _creationPhase = value;
             NotifyStateChanged();
         }
     }
