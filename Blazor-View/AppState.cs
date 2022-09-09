@@ -1,9 +1,6 @@
 ﻿using ExerciseEngine;
 
 public class AppState {
-
-
-
     // initial lang:
     private Language _initialLangugage = Language.en;
     public Language InitialLanguage {
@@ -76,7 +73,10 @@ public class AppState {
         }
     }
 
+    public IEnumerable<string> topicOptions = new HashSet<string>();
+    public IEnumerable<string> gradeOptions = new HashSet<string>();
+
     public event Action? OnChange;
 
-    private void NotifyStateChanged() => OnChange?.Invoke();
+    public void NotifyStateChanged() => OnChange?.Invoke();
 }

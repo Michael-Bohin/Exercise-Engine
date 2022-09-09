@@ -22,16 +22,15 @@
                         <MudSelectItem Value="@eType">@eType</MudSelectItem>
                     }
                 </MudSelect>
-
                 <!-- Title & description: -->
                 <MudTextField T="string" Label="Title" OpenIcon="@Icons.Filled.Title" Required="true" RequiredError="Title of exercise is required!" @bind-Text="appState.Title" Class="mt-1"/>
                 <MudTextField T="string" Label="Description" Required="true" RequiredError="Description of exercise is required!" @bind-Text="appState.Description" Class="mt-1"/>
                 
                 <!-- Topices, grades & thumbnail generation: -->
-                <MudSelect  T="string" Label="Topics" MultiSelection="true" Required="true" RequiredError="At least one topic is required!" @bind-SelectedValues="topicOptions" Class="mt-1">
+                <MudSelect  T="string" Label="Topics" MultiSelection="true" Required="true" RequiredError="At least one topic is required!" @bind-SelectedValues="appState.topicOptions" Class="mt-1">
                    @foreach (var topic in topics) { <MudSelectItem T="string" Value="@topic">@topic</MudSelectItem> }
                 </MudSelect>
-                <MudSelect  T="string" Label="Grades" MultiSelection="true" Required="true" RequiredError="At least one grade is required!" @bind-SelectedValues="gradeOptions" Class="mt-1">
+                <MudSelect  T="string" Label="Grades" MultiSelection="true" Required="true" RequiredError="At least one grade is required!" @bind-SelectedValues="appState.gradeOptions" Class="mt-1">
                    @foreach (var grade in grades) { <MudSelectItem T="string" Value="@grade" >@grade</MudSelectItem> }
                 </MudSelect>
 
@@ -65,12 +64,15 @@
     string[] errors = { };
     MudForm? form; // making it nullable decreases VS yelling
 
-    IEnumerable<string> topicOptions = new HashSet<string>();
-    IEnumerable<string> gradeOptions = new HashSet<string>();
     List<string> topics = new(); // filled on initialised override
     List<string> grades = new(); // filled on initialised override
 
     public bool autoPictureGen { get; set; } = true;
+
+    /*bool Notify() {
+        appState.NotifyStateChanged();
+        return true;
+    }*/
 
     protected override void OnInitialized() {
         base.OnInitialized();
