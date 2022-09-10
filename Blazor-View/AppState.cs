@@ -1,6 +1,10 @@
 ﻿using ExerciseEngine;
 
 public class AppState {
+    public AppState() {
+        InitializeVariables();
+    }
+
     // initial lang:
     private Language _initialLangugage = Language.en;
     public Language InitialLanguage {
@@ -85,7 +89,30 @@ public class AppState {
     public IEnumerable<string> topicOptions = new HashSet<string>() { "Addition", "Multiplication", "Modulo"};
     public IEnumerable<string> gradeOptions = new HashSet<string>() { "Ninth"};
 
-    public event Action? OnChange;
+    private List<Variable> _variables = new();
+    
+    void InitializeVariables() {
+        _variables.Add(new Range<int>("A", 1, 11, 2));
+        _variables.Add(new Range<int>("B", 20, 50, 1));
+        _variables.Add(new Range<double>("C", 2.0, 8.2, 0.1));
+
+        List<Operator> ops1 = new() { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div };
+        _variables.Add(new Set<Operator>("op1", ops1));
+
+        List<Operator> ops2 = new() { Operator.Add, Operator.Sub };
+        _variables.Add(new Set<Operator>("op2", ops2));
+    }
+
+    // !! notify change will not get trigered on normal operations on accessed elements !!
+    public List<Variable> Variables {
+        get => _variables;
+        set {
+            _variables = value;
+            NotifyStateChanged();
+		}
+	}
+
+	public event Action? OnChange;
 
     public void NotifyStateChanged() => OnChange?.Invoke();
 }

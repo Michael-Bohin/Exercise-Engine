@@ -5,12 +5,30 @@
 <Creation_Header/>
 
 <MudGrid Class="mt-2 mb-2">
-    <MudItem xs="6">
-        <VariableComponent/>
-    </MudItem>
-    <MudItem xs="6">
-        <VariableComponent/>
-    </MudItem>
+    @{
+        foreach(Variable v in appState.Variables) {
+            <MudItem xs="6">
+            <!-- <MudItem xs="12"> -->
+                    <MudTextField T="string" Label="Name" @bind-Value="v.Name"/>
+            <!-- </MudItem> -->
+            <MudItem xs="12">
+                <MudRadioGroup T="SetRange" Required="true" SelectedOption="SetRange.Range" RequiredError="Choosing set or range is required!">
+                    <MudRadio Option="@SetRange.Range">Range</MudRadio>
+                    <MudRadio Option="@SetRange.Set">Set</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+            <MudItem xs="12"> 
+                <MudRadioGroup T="DataType" Required="true" SelectedOption="DataType.Int"  RequiredError="Choosing data type is required!">
+                    <MudRadio Option="@DataType.Int">Int</MudRadio>
+                    <MudRadio Option="@DataType.Double">Double</MudRadio>
+                    <MudRadio Option="@DataType.Operator">Operator</MudRadio>
+                    <MudRadio Option="@DataType.String" Disabled="true" onmouseover="DisplayStringDisabledReason">String</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+            </MudItem>
+        }
+    }
+    
 </MudGrid>
 
 
@@ -18,6 +36,9 @@
 <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" Href="create/confirm-variables">Continue</MudButton>
 
 @code {
+    public enum SetRange { Set, Range };
+    public enum DataType { Int, Double, Operator, String };
+
     protected override void OnParametersSet() {
         base.OnParametersSet();
         appState.CreationPhase = 3; 
