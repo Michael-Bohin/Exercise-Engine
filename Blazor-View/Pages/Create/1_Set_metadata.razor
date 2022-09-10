@@ -34,8 +34,8 @@
                    @foreach (var grade in grades) { <MudSelectItem T="string" Value="@grade" >@grade</MudSelectItem> }
                 </MudSelect>
 
-                <MudSwitch T="bool" Label="Auto generate thumbnail" Color="Color.Tertiary" @bind-Checked="@autoPictureGen" Class="mt-3"  />
-                <MudTextField T="string" Label="Thumbnail path" Disabled="@(autoPictureGen)" Margin="Margin.Dense" Required="@(!autoPictureGen)" RequiredError="On false autogen filename of thumbnail is required!" @bind-Text="appState.ThumbnailFileName"/>
+                <MudSwitch T="bool" Label="Auto generate thumbnail" Color="Color.Tertiary" @bind-Checked="@appState.AutoGenerateThumbnail" Class="mt-3"  />
+                <MudTextField T="string" Label="Thumbnail path" Disabled="@(appState.AutoGenerateThumbnail)" Margin="Margin.Dense" Required="@(!appState.AutoGenerateThumbnail)" RequiredError="On false autogen filename of thumbnail is required!" @bind-Text="appState.ThumbnailFileName"/>
 
                 <!-- continue: -->
                 <div class="d-flex align-center justify-space-between mt-3">
@@ -46,10 +46,12 @@
         <MudPaper Class="pa-4 mt-4">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(()=>form.Validate())">Validate</MudButton>
             <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>form.Reset())" Class="mx-2">Reset fields</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(()=>form.Reset())">Reset fields</MudButton>
         </MudPaper>
+       
     </MudItem>
     <MudItem xs="12" sm="5">
+         
         <MudPaper Class="pa-4 mud-height-full">
             <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
             @foreach (var error in errors) {
@@ -66,13 +68,6 @@
 
     List<string> topics = new(); // filled on initialised override
     List<string> grades = new(); // filled on initialised override
-
-    public bool autoPictureGen { get; set; } = true;
-
-    /*bool Notify() {
-        appState.NotifyStateChanged();
-        return true;
-    }*/
 
     protected override void OnInitialized() {
         base.OnInitialized();

@@ -25,9 +25,10 @@ public class AppState {
         }
     }
 
-    string _title = "";
-    string _description = "";
+    string _title = "Very nice math exercise";
+    string _description = "Lets children explore the depths of their imagination";
     string _thumbnailFileName = "";
+    bool _autoGenerateThumbnail = true;
 
     public string Title {
         get => _title;
@@ -53,6 +54,14 @@ public class AppState {
         }
     }
 
+    public bool AutoGenerateThumbnail {
+        get => _autoGenerateThumbnail;
+        set {
+            _autoGenerateThumbnail = value;
+            NotifyStateChanged();
+        }
+    }
+
     // string message behaviour:
     private string _message = "";
     public string Message {
@@ -73,8 +82,8 @@ public class AppState {
         }
     }
 
-    public IEnumerable<string> topicOptions = new HashSet<string>();
-    public IEnumerable<string> gradeOptions = new HashSet<string>();
+    public IEnumerable<string> topicOptions = new HashSet<string>() { "Addition", "Multiplication", "Modulo"};
+    public IEnumerable<string> gradeOptions = new HashSet<string>() { "Ninth"};
 
     public event Action? OnChange;
 

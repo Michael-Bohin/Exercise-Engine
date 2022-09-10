@@ -4,6 +4,16 @@
 
 <Creation_Header/>
 
+<MudGrid Class="mt-2 mb-2">
+    <MudItem xs="6">
+        <VariableComponent/>
+    </MudItem>
+    <MudItem xs="6">
+        <VariableComponent/>
+    </MudItem>
+</MudGrid>
+
+
 <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Filled.KeyboardReturn" Href="create/confirm-metadata">Return to metadata</MudButton>
 <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" Href="create/confirm-variables">Continue</MudButton>
 
@@ -12,5 +22,4 @@
         base.OnParametersSet();
         appState.CreationPhase = 3; 
     }
-
 }

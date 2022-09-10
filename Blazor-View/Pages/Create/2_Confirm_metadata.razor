@@ -3,44 +3,75 @@
 
 <Creation_Header/>
 
-<MudText Typo="Typo.subtitle1" Class="mt-4">Initial language & exercise type: </MudText>
-<div class="d-flex mud-width-full align-center">
-    <MudChip Color="Color.Tertiary">@appState.EnumToEnglish()</MudChip>
-    <MudChip Color="Color.Primary">@appState.ExerciseType</MudChip>
-</div>
+<MudGrid Justify="Justify.Center" Class="mt-4">
+<MudItem xs="8">
 
-<MudText Typo="Typo.subtitle1" Class="mt-2">Title & description: </MudText>
-<p>@appState.Title</p>
-<p>@appState.Description</p>
 
-<div class="d-flex mud-width-full align-center mt-8">
-    <MudText Typo="Typo.subtitle1" Class="mr-2">Topics: </MudText>
-    <MudText Typo="Typo.body2" Class="pl-4">@(string.Join(", ", appState.topicOptions.Select(x=>$"\"{x}\"")))</MudText>
-</div>
+<MudGrid Justify="Justify.SpaceBetween" >
 
-<div class="d-flex mud-width-full align-center mt-8">
-    <MudText Typo="Typo.subtitle1" Class="mr-2">Grades: </MudText>
-    <MudText Typo="Typo.body2" Class="pl-4">@(string.Join(", ", appState.gradeOptions.Select(x=>$"\"{x}\"")))</MudText>
-</div>
+<MudSimpleTable Hover="true" Striped="true" Style="width: 100%; overflow-x: auto;" Class="mb-4">
+    <thead>
+        <tr>
+            <th colspan="2"><MudText Typo="Typo.h6">Meta data</MudText></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Initial language & exercise type</td>
+            <td>
+                <MudChip Color="Color.Tertiary">@appState.EnumToEnglish()</MudChip>
+                <MudChip Color="Color.Primary">@appState.ExerciseType</MudChip>
+            </td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td>@appState.Title</td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td>@appState.Description</td>
+        </tr>
+        <tr>
+            <td>Topics</td>
+            <td>@(string.Join(", ", appState.topicOptions.Select(x=>$"\"{x}\"")))</td>
+        </tr>
+        <tr>
+            <td>Grades</td>
+            <td>@(string.Join(", ", appState.gradeOptions.Select(x=>$"\"{x}\"")))</td>
+        </tr>
+        <tr>
+            <td>Thumbnail</td>
+            @{
+                if(appState.AutoGenerateThumbnail) {
+                            <td>Thumbnail will be auto generated.</td>
+                } else {
+                    <td>Provided file name: "@(appState.ThumbnailFileName)"</td>
+                }
+            }
+        </tr>
+    </tbody>
+</MudSimpleTable>
 
-<p>Thumbnail file name:</p>
-<p>@appState.ThumbnailFileName</p>
+<MudGrid Justify="Justify.SpaceBetween">
 
-<MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Filled.KeyboardReturn" Href="create/set-metadata">Return to editing</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" Href="create/set-variables">Continue</MudButton>
+    <MudItem >
+    <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Filled.KeyboardReturn" Href="create/set-metadata">Return to editing</MudButton>
+    </MudItem>
 
+    <MudItem >
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary"  EndIcon="@Icons.Material.Filled.Send" Href="create/set-variables">Continue</MudButton>
+    </MudItem>
+
+</MudGrid>
+
+</MudGrid>
+</MudItem>
+
+</MudGrid>
 
 @code {
     protected override void OnParametersSet() {
         base.OnParametersSet();
         appState.CreationPhase = 2; 
     }
-
-/*<div class="d-flex">
-    <MudRadioGroup T="string" Required="true" RequiredError="Account type is required!">
-        <MudRadio Option="@("Personal")">Personal</MudRadio>
-        <MudRadio Option="@("Professional")">Professional</MudRadio>
-    </MudRadioGroup>
-</div> -->*/
-
 }
