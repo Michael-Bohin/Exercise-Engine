@@ -4,41 +4,127 @@
 
 <Creation_Header/>
 
-<MudGrid Class="mt-2 mb-2">
+<MudGrid Class="mt-2 mb-2" Justify="Justify.FlexStart">
     @{
-        foreach(Variable v in appState.Variables) {
-            <MudItem xs="6">
-            <!-- <MudItem xs="12"> -->
-                    <MudTextField T="string" Label="Name" @bind-Value="v.Name"/>
-            <!-- </MudItem> -->
-            <MudItem xs="12">
-                <MudRadioGroup T="SetRange" Required="true" SelectedOption="SetRange.Range" RequiredError="Choosing set or range is required!">
-                    <MudRadio Option="@SetRange.Range">Range</MudRadio>
-                    <MudRadio Option="@SetRange.Set">Set</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            <MudItem xs="12"> 
-                <MudRadioGroup T="DataType" Required="true" SelectedOption="DataType.Int"  RequiredError="Choosing data type is required!">
-                    <MudRadio Option="@DataType.Int">Int</MudRadio>
-                    <MudRadio Option="@DataType.Double">Double</MudRadio>
-                    <MudRadio Option="@DataType.Operator">Operator</MudRadio>
-                    <MudRadio Option="@DataType.String" Disabled="true" onmouseover="DisplayStringDisabledReason">String</MudRadio>
-                </MudRadioGroup>
-            </MudItem>
-            </MudItem>
-        }
+        index = -1;
+        foreach(Bindable_NotPolymorphic_Variable v in appState.Variables) {
+            index++;
+                <MudItem xs=6>
+                    <MudPaper >
+                        <MudItem xs=12 Class="pa-3">
+                            <MudGrid>
+                                <MudItem xs=8>
+                                    <MudTextField T="string" Label="Name" @bind-Value="v.name"/>
+                                </MudItem>
+                                <MudItem xs=2>
+                                    <MudButton Variant="Variant.Filled" @onclick="RemoveVariable" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">Delete</MudButton>
+                                </MudItem>
+                            </MudGrid>
+                        </MudItem>
+                        
+                        <MudRadioGroup T="SetRange" @bind-SelectedOption="v.setRange" Required="true" RequiredError="Choosing set or range is required!">
+                            <MudRadio Option="@SetRange.Range">Range</MudRadio>
+                            <MudRadio Option="@SetRange.Set">Set</MudRadio>
+                        </MudRadioGroup>
+                        <MudRadioGroup T="DataType" @bind-SelectedOption="v.dataType" Required="true" RequiredError="Choosing data type is required!">
+                            <MudRadio Option="@DataType.Int">int</MudRadio>
+                            <MudRadio Option="@DataType.Double">double</MudRadio>
+                            <MudRadio Option="@DataType.Operator">Operator</MudRadio>
+                            <MudRadio Option="@DataType.Int" Disabled="true" onmouseover="DisplayStringDisabledReason">string</MudRadio>
+                        </MudRadioGroup>
+
+                        <MudItem xs=12 Class="pa-4">
+                            <MudGrid>
+                                @if(v.setRange == SetRange.Set) {
+                                    <!-- this part will be tricky! How do I !efficiently! manage the corespondence betwen: "not split string as list" -- "List of T" where T is from { int, double, Operator }   -->
+                                    <MudItem xs="12">
+                                        <MudTextField T="string" Label="Elements to be parsed from string" @bind-Value="v.elements" />
+                                    </MudItem>
+                                } else if(v.setRange == SetRange.Range) {
+                                    if(v.dataType == DataType.Operator)
+                                        throw new Exception("Operator variable cannot be defined as range!");
+
+                                    if(v.dataType == DataType.Int) {
+                                        <MudItem xs="3">
+                                            <MudText>Min:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="int" Label="Min" @bind-Value="v.intMin"></MudInput>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudText>Max:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="int" Label="Max" @bind-Value="v.intMax"></MudInput>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudText>Increment:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="int" Label="Increment" @bind-Value="v.intIncrement"></MudInput>
+                                        </MudItem>
+                                    }
+
+                                    if(v.dataType == DataType.Double) {
+                                        <MudItem xs="3">
+                                            <MudText>Min:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="double" Label="Min" @bind-Value="v.doubleMin"></MudInput>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudText>Max:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="double" Label="Max" @bind-Value="v.doubleMax"></MudInput>
+                                        </MudItem>
+                                        <MudItem xs="3">
+                                            <MudText>Increment:</MudText>
+                                        </MudItem>
+                                        <MudItem xs="8">
+                                            <MudInput T="double" Label="Increment" @bind-Value="v.doubleIncrement"></MudInput>
+                                        </MudItem>
+                                    }
+                                } else {
+                                    throw new Exception("New set range enum has been defined and must be refelect in web UI!");
+                                }  
+                            </MudGrid>
+                        </MudItem>
+                    </MudPaper>
+                </MudItem>
     }
+
+    <MudItem xs=6>
+        <MudItem xs="8">
+        <MudButton FullWidth="true" @onclick="AddNewVariable" Variant="Variant.Filled" Color="Color.Tertiary" EndIcon="@Icons.Material.Filled.Send">Add new Variable</MudButton>
+        </MudItem>
+    </MudItem>
+}
     
 </MudGrid>
-
 
 <MudButton Variant="Variant.Filled" Color="Color.Warning" StartIcon="@Icons.Filled.KeyboardReturn" Href="create/confirm-metadata">Return to metadata</MudButton>
 <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto" EndIcon="@Icons.Material.Filled.Send" Href="create/confirm-variables">Continue</MudButton>
 
+
 @code {
+    int index = -1;
 
     protected override void OnParametersSet() {
         base.OnParametersSet();
         appState.CreationPhase = 3; 
+    }
+
+    void AddNewVariable() {
+        Console.WriteLine("new variable has been added");
+    }
+
+    void RemoveVariable() {
+        Console.WriteLine($"variable with index {index} is being removed!");
+    }
+
+    int counter = 0;
+    void DisplayStringDisabledReason() {
+        Debug.WriteLine($"Displaying debug display reason. {counter++}");
     }
 }

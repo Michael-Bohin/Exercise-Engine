@@ -9,7 +9,7 @@
 <MudGrid Class="mt-4">
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
-            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudForm @ref="form" @bind-IsValid="success" @bind-Errors="errors">
                 <!-- select initial language and exercise type : -->
                 <MudSelect @bind-Value="appState.InitialLanguage" Label="Initial language" OpenIcon="@Icons.Material.Filled.Language" AdornmentColor="Color.Tertiary" Class="mt-1">
                     @foreach (Language language in Enum.GetValues(typeof(Language))) {
@@ -34,7 +34,7 @@
                    @foreach (var grade in grades) { <MudSelectItem T="string" Value="@grade" >@grade</MudSelectItem> }
                 </MudSelect>
 
-                <MudSwitch T="bool" Label="Auto generate thumbnail" Color="Color.Tertiary" @bind-Checked="@appState.AutoGenerateThumbnail" Class="mt-3"  />
+                <MudSwitch T="bool" Label="Auto generate thumbnail" Color="Color.Tertiary" @bind-Checked="appState.AutoGenerateThumbnail" Class="mt-3"  />
                 <MudTextField T="string" Label="Thumbnail path" Disabled="@(appState.AutoGenerateThumbnail)" Margin="Margin.Dense" Required="@(!appState.AutoGenerateThumbnail)" RequiredError="On false autogen filename of thumbnail is required!" @bind-Text="appState.ThumbnailFileName"/>
 
                 <!-- continue: -->

@@ -100,8 +100,8 @@ public class AppState {
         _variables.Add(y);
         _variables.Add(z);
 
-        op1 = new() { name = "op1", setRange = SetRange.Set, dataType = DataType.Operator, opElements = new() { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div} };
-        op2 = new() { name = "op2", setRange = SetRange.Set, dataType = DataType.Operator, opElements = new() { Operator.Add, Operator.Sub } };
+        op1 = new() { name = "op1", setRange = SetRange.Set, dataType = DataType.Operator, elements = "Add, Sub, Mul, Div" };
+        op2 = new() { name = "op2", setRange = SetRange.Set, dataType = DataType.Operator, elements = "Add, Sub"  };
         _variables.Add(op1);
         _variables.Add(op2);
     }

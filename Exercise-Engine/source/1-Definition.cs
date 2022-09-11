@@ -99,9 +99,7 @@ public class Bindable_NotPolymorphic_Variable {
 	public DataType dataType;
 	public int intMax, intMin, intIncrement;
 	public double doubleMax, doubleMin, doubleIncrement;
-	public List<int> intElements = new();
-	public List<double> doubleElements = new();
-	public List<Operator> opElements = new();
+	public string elements = ""; // will be parsed from string for all three int, double, Operator types, so it doesnt make sense to make individual strings for all..
 
 	public Variable CastToPolymorphicVersion() {
 		if(setRange == SetRange.Range) 
@@ -132,10 +130,24 @@ public class Bindable_NotPolymorphic_Variable {
 
 		return CastToDoubleSet();
 	}
+	
+	Set<Operator> CastToOperatorSet() => new(name, ParseOperatorElements());
+	Set<int> CastToIntSet() => new(name, ParseIntElements());
+	Set<double> CastToDoubleSet() => new(name, ParseDoubleElements());
 
-	Set<Operator> CastToOperatorSet() => new(name, opElements);
-	Set<int> CastToIntSet() => new(name, intElements);
-	Set<double> CastToDoubleSet() => new(name, doubleElements);
+	// do both methods for each: validator reuturning bool and parser -> validator will be used repeatedly during UI process, parses once at the end. 
+
+	List<int> ParseIntElements() {
+		throw new NotImplementedException("implement parsing!");
+	}
+
+	List<double> ParseDoubleElements() {
+		throw new NotImplementedException("implement parsing!");
+	}
+
+	List<Operator> ParseOperatorElements() {
+		throw new NotImplementedException("implement parsing!");
+	}
 }
 
 #endregion
