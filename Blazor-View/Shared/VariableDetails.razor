@@ -1,0 +1,58 @@
+﻿@inject AppState appState
+@using ExerciseEngine;
+
+<MudItem xs=12 Class="pa-4">
+<MudGrid>
+@{
+    if(v.setRange == SetRange.Set) {
+        <!-- this part will be tricky! How do I !efficiently! manage the corespondence betwen: "not split string as list" -- "List of T" where T is from { int, double, Operator }   -->
+        <MudItem xs="12">
+            <MudTextField T="string" Label="Elements to be parsed from string" @bind-Value="v.elements" />
+        </MudItem>
+    } else if(v.setRange == SetRange.Range) {
+        if(v.dataType == DataType.Operator)
+            throw new Exception("Operator variable cannot be defined as range!");
+        <MudItem xs="3">
+            <MudText>Min:</MudText>
+        </MudItem>
+        <MudItem xs="8">
+                
+        @if(v.dataType == DataType.Int) { <MudInput T="int" Label="Min" @bind-Value="v.intMin"></MudInput> }                
+        @if(v.dataType == DataType.Double) { <MudInput T="double" Label="Min" @bind-Value="v.doubleMin"></MudInput> }
+                
+        </MudItem>
+        <MudItem xs="3">
+            <MudText>Max:</MudText>
+        </MudItem>
+        <MudItem xs="8">
+
+        @if(v.dataType == DataType.Int) {<MudInput T="int" Label="Max" @bind-Value="v.intMax"></MudInput>}           
+        @if(v.dataType == DataType.Double) {<MudInput T="double" Label="Max" @bind-Value="v.doubleMax"></MudInput>}
+
+        </MudItem>
+        <MudItem xs="3">
+            <MudText>Increment:</MudText>
+        </MudItem>
+        <MudItem xs="8">
+
+        @if(v.dataType == DataType.Int) { <MudInput T="double" Label="Increment" @bind-Value="v.doubleIncrement"></MudInput>}          
+        @if(v.dataType == DataType.Double) { <MudInput T="double" Label="Increment" @bind-Value="v.doubleIncrement"></MudInput> }
+                               
+        </MudItem>
+    } else {
+        throw new Exception("New set range enum has been defined and must be refelect in web UI!");
+    }  
+}
+</MudGrid>
+</MudItem>
+
+@code {
+    public VariableDetails() { }
+
+    public VariableDetails(Bindable_NotPolymorphic_Variable v) {
+        this.v = v;
+    }
+
+    [Parameter]
+    public Bindable_NotPolymorphic_Variable? v { get; set; }
+}
