@@ -52,3 +52,17 @@ public enum ResultType {
 	Double, 
 	Fraction
 }
+
+
+///
+
+public enum SetRange { 
+	Set, 
+	Range
+}
+
+public enum DataType {
+	Int, 
+	Double,
+	Operator
+}

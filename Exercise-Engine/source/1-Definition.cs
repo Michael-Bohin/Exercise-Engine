@@ -92,6 +92,52 @@ sealed public class Set<T> : Variable where T : struct, IComparable {
 	}
 }
 
+// definitelly longest class name:
+public class Bindable_NotPolymorphic_Variable {
+	public string name = default!;
+	public SetRange setRange;
+	public DataType dataType;
+	public int intMax, intMin, intIncrement;
+	public double doubleMax, doubleMin, doubleIncrement;
+	public List<int> intElements = new();
+	public List<double> doubleElements = new();
+	public List<Operator> opElements = new();
+
+	public Variable CastToPolymorphicVersion() {
+		if(setRange == SetRange.Range) 
+			return CastToRange();
+
+		return CastToSet();
+    }
+
+	Variable CastToRange() {
+		if(dataType == DataType.Operator)
+			throw new Exception("Blazor bindable not polymorphic variable atempted to instantiate range operator, which does not make much senese.");
+
+		if(dataType == DataType.Int)
+			return CastToIntRange();
+
+		return CastToDoubleRange();
+    }
+
+	Range<int> CastToIntRange() => new (name, intMin, intMax, intIncrement);
+	Range<double> CastToDoubleRange() => new(name, doubleMin, doubleMax, doubleIncrement);
+
+	Variable CastToSet() {
+		if (dataType == DataType.Operator)
+			return CastToOperatorSet();
+
+		if (dataType == DataType.Int)
+			return CastToIntSet();
+
+		return CastToDoubleSet();
+	}
+
+	Set<Operator> CastToOperatorSet() => new(name, opElements);
+	Set<int> CastToIntSet() => new(name, intElements);
+	Set<double> CastToDoubleSet() => new(name, doubleElements);
+}
+
 #endregion
 
 #region MacroText

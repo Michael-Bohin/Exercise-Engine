@@ -89,22 +89,25 @@ public class AppState {
     public IEnumerable<string> topicOptions = new HashSet<string>() { "Addition", "Multiplication", "Modulo"};
     public IEnumerable<string> gradeOptions = new HashSet<string>() { "Ninth"};
 
-    private List<Variable> _variables = new();
+    private List<Bindable_NotPolymorphic_Variable> _variables = new();
     
     void InitializeVariables() {
-        _variables.Add(new Range<int>("A", 1, 11, 2));
-        _variables.Add(new Range<int>("B", 20, 50, 1));
-        _variables.Add(new Range<double>("C", 2.0, 8.2, 0.1));
+        Bindable_NotPolymorphic_Variable x, y, z, op1, op2;
+        x = new() { name = "A", setRange = SetRange.Range, dataType = DataType.Int, intMin = 1, intMax = 11, intIncrement = 2 };
+        y = new() { name = "B", setRange = SetRange.Range, dataType = DataType.Int, intMin = 20, intMax = 50, intIncrement = 1 };
+        z = new() { name = "C", setRange = SetRange.Range, dataType = DataType.Double, doubleMin = 2.0, doubleMax = 8.2, doubleIncrement = 0.1 };
+        _variables.Add(x);
+        _variables.Add(y);
+        _variables.Add(z);
 
-        List<Operator> ops1 = new() { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div };
-        _variables.Add(new Set<Operator>("op1", ops1));
-
-        List<Operator> ops2 = new() { Operator.Add, Operator.Sub };
-        _variables.Add(new Set<Operator>("op2", ops2));
+        op1 = new() { name = "op1", setRange = SetRange.Set, dataType = DataType.Operator, opElements = new() { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div} };
+        op2 = new() { name = "op2", setRange = SetRange.Set, dataType = DataType.Operator, opElements = new() { Operator.Add, Operator.Sub } };
+        _variables.Add(op1);
+        _variables.Add(op2);
     }
 
     // !! notify change will not get trigered on normal operations on accessed elements !!
-    public List<Variable> Variables {
+    public List<Bindable_NotPolymorphic_Variable> Variables {
         get => _variables;
         set {
             _variables = value;
