@@ -1,4 +1,5 @@
 ﻿@using ExerciseEngine
+@inject AppState appState;
 
 <MudItem xs=12 Class="pa-3">
     <MudGrid>
@@ -29,6 +30,8 @@
         this.v = v;
         this.i = i;
     }
+
+    protected override void OnInitialized() { appState.OnChange += StateHasChanged; }
 
     [Parameter]
     public Bindable_NotPolymorphic_Variable? v { get; set; }
