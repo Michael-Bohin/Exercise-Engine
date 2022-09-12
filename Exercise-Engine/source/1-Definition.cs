@@ -50,13 +50,12 @@ public class Definition
 //		c.  For set:
 //			i.  Count of elements must be greater than 0
 
-
 [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
-[JsonDerivedType(typeof(RangeInt), "int_rng")]
-[JsonDerivedType(typeof(RangeDouble), "double_rng")]
-[JsonDerivedType(typeof(SetInt), "int_set")]
-[JsonDerivedType(typeof(SetDouble), "double_set")]
-[JsonDerivedType(typeof(SetOperator), "Operator_set")]
+[JsonDerivedType(typeof(Range<double>), "double_rng")]
+[JsonDerivedType(typeof(Range<int>), "int_rng")]
+[JsonDerivedType(typeof(Set<int>), "int_set")]
+[JsonDerivedType(typeof(Set<double>), "double_set")]
+[JsonDerivedType(typeof(Set<Operator>), "Operator_set")]
 abstract public class Variable {
 	public string Name { get; set; } = default!;
 	public Variable(string Name) {
@@ -66,7 +65,7 @@ abstract public class Variable {
 	}
 }
 
-abstract public class Range<T> : Variable where T : struct, IComparable {
+sealed public class Range<T> : Variable where T : struct, IComparable {
 	public Range(string Name, T Min, T Max, T Inc) : base(Name) {
 		if(Max.CompareTo(Min) < 0)
 			throw new ArgumentException($"Range variable must have maximum equal or greater to minimum. Recieved values: Max: {Max}, Min: {Min} ");
@@ -83,7 +82,7 @@ abstract public class Range<T> : Variable where T : struct, IComparable {
 }
 
 // once we will start using strings as variable, struct constraint will have to be removed 
-abstract public class Set<T> : Variable where T : struct, IComparable {
+sealed public class Set<T> : Variable where T : struct, IComparable {
 	public List<T> Elements { get; } = new();
 	public Set(string Name, List<T> Elements) : base(Name) { 
 		if(Elements.Count == 0)
@@ -92,7 +91,7 @@ abstract public class Set<T> : Variable where T : struct, IComparable {
 	}
 }
 
-sealed public class RangeInt : Range<int> {
+/*sealed public class RangeInt : Range<int> {
 	public RangeInt(string Name, int Min, int Max, int Inc) : base(Name, Min, Max, Inc) { }
 }
 
@@ -110,7 +109,7 @@ sealed public class SetDouble : Set<double> {
 
 sealed public class SetOperator : Set<Operator> {
 	public SetOperator(string Name, List<Operator> Elements) : base(Name, Elements) { }
-}
+}*/
 
 // definitelly longest class name:
 public class Bindable_NotPolymorphic_Variable {
@@ -138,8 +137,8 @@ public class Bindable_NotPolymorphic_Variable {
 		return CastToDoubleRange();
     }
 
-	RangeInt CastToIntRange() => new (name, intMin, intMax, intIncrement);
-	RangeDouble CastToDoubleRange() => new(name, doubleMin, doubleMax, doubleIncrement);
+	Range<int> CastToIntRange() => new (name, intMin, intMax, intIncrement);
+	Range<double> CastToDoubleRange() => new(name, doubleMin, doubleMax, doubleIncrement);
 
 	Variable CastToSet() {
 		if (dataType == DataType.Operator)
@@ -151,9 +150,9 @@ public class Bindable_NotPolymorphic_Variable {
 		return CastToDoubleSet();
 	}
 	
-	SetOperator CastToOperatorSet() => new(name, ParseOperatorElements());
-	SetInt CastToIntSet() => new(name, ParseIntElements());
-	SetDouble CastToDoubleSet() => new(name, ParseDoubleElements());
+	Set<Operator> CastToOperatorSet() => new(name, ParseOperatorElements());
+	Set<int> CastToIntSet() => new(name, ParseIntElements());
+	Set<double> CastToDoubleSet() => new(name, ParseDoubleElements());
 
 	// do both methods for each: validator reuturning bool and parser -> validator will be used repeatedly during UI process, parses once at the end. 
 
@@ -174,6 +173,9 @@ public class Bindable_NotPolymorphic_Variable {
 
 #region MacroText
 
+[JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
+[JsonDerivedType(typeof(Macro), "macro")]
+[JsonDerivedType(typeof(Text), "text")]
 abstract public class MacroText { }
 
 sealed public class Macro : MacroText {
@@ -194,6 +196,9 @@ sealed public class Text : MacroText {
 
 #region Methods
 
+[JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
+[JsonDerivedType(typeof(ConstraintMethod), "constraint_method")]
+[JsonDerivedType(typeof(ResultMethod), "result_method")]
 abstract public class Method {
 	public bool codeDefined = new();
 	public List<string> code = new();
