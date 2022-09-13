@@ -13,6 +13,16 @@ abstract class DefinitionFactory {
 		WriteTo(d, filePath);
 	}
 
+	protected char SwapAddSub(Operator o) {
+		if(o != Operator.Add && o != Operator.Sub)
+			throw new ArgumentException();
+
+		if(o == Operator.Sub)
+			return '+';
+
+		return '-';
+	}
+
 	public virtual Definition Define() {
 		Definition d = new();
 		d.metaData = GetMetaData();
@@ -65,7 +75,7 @@ class ManualDefinitionBuilderA : DefinitionFactory {
 		md.initialLanguage = Language.en;
 		md.type = ExerciseType.Numerical;
 		md.title = "Multiplication up to 100";
-		md.description = "121 multiplication operations with both factors ranging from 0 to 10. Since multiplication with 1 and 0 is trivial, and the probability of one of those factors occuring in the problem is 40/121 => each third time, which is too often for the trivial case, the probability of either zero or one occcuring in either factor has been decreased to 5% -> each twentieth exercise. See info image for all probabilites.";
+		md.description = "121 multiplication operations with both factors ranging from 0 to 10. Since multiplication with 1 and 0 is trivial, and the probability of one of those factors occuring in the problem is 40/121 => each third time, which is too often for the trivial case, the probability of either zero or one occcuring in either factor has been decreased to 5% -> each twentieth exercise. See info image to better understand how we modified the uniform event space.";
 		md.topics = new() { Topic.Multiplication };
 		md.grades = new() { Grade.Third };
 		return md;
@@ -224,31 +234,77 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 		Definition_MetaData md = new();
 		md.initialLanguage = Language.en;
 		md.type = ExerciseType.Numerical;
-		md.title = "";
-		md.description = "";
-		md.topics = new() { };
-		md.grades = new() { };
+		md.title = "Linear equation with one variable, with addition and subtraction only.";
+		md.description = "Solving linear equation with i) one variable only, b) on addition and subtraction, c) on real numbers with at most one digit after decimal dot. That is on real numbers that are multiples of 0.1. Real numbers are from range <0.1, 4.9>, excluding all real numbers which also belong to the set of whole numbers.";
+		md.topics = new() { Topic.Addition, Topic.Subtraction };
+		md.grades = new() { Grade.Ninth };
 		return md;
 	}
 
 	public override List<Variable> GetVariables() {
-		throw new NotImplementedException();
+		Range<double> A = new("A", 0.1, 4.9, 0.1);
+		Range<double> B = new("B", 0.1, 4.9, 0.1);
+		Range<double> C = new("C", 0.1, 4.9, 0.1);
+		Range<double> D = new("D", 0.1, 4.9, 0.1);
+		Range<double> E = new("E", 0.1, 4.9, 0.1);
+		Set<Operator> op1 = new("op1", new() {Operator.Add, Operator.Sub });
+		Set<Operator> op2 = new("op1", new() {Operator.Add, Operator.Sub });
+		Set<Operator> op3 = new("op1", new() {Operator.Add, Operator.Sub });
+		return new() { A, B, C, D, E, op1, op2, op3 };
 	}
 
 	public override List<MacroText> GetAssignment() {
-		throw new NotImplementedException();
+		Macro e1  = new("A");
+		Text  e2  = new(" ");
+		Macro e3  = new("op1");
+		Text  e4  = new(" ");
+		Macro e5  = new("B");
+		Text  e6  = new("x ");
+		Macro e7  = new("op2");
+		Text  e8  = new(" ");
+		Macro e9  = new("C");
+		Text  e10 = new(" = ");
+		Macro e11 = new("D");
+		Text  e12 = new(" ");
+		Macro e13 = new("op3");
+		Text  e14 = new(" ");
+		Macro e15 = new("E");
+		Text  e16 = new("x");
+		return new() {
+			e1,
+			e2,
+			e3,
+			e4,
+			e5,
+			e6,
+			e7,
+			e8,
+			e9,
+			e10,
+			e11,
+			e12,
+			e13,
+			e14,
+			e15,
+			e16
+		};
 	}
 
-	public override List<MacroText> GetQuestions() {
-		throw new NotImplementedException();
-	}
+	public override List<MacroText> GetQuestions() => new(); // numerical exercise -> empty 
 
-	public override ResultType GetResultType() {
-		throw new NotImplementedException();
-	}
+	public override ResultType GetResultType() => ResultType.Double;
 
 	public override List<ResultMethod> GetResults() {
-		throw new NotImplementedException();
+		ResultMethod md = new();
+		
+		string line1 = "char char_op2 = SwapAddSub(op2);";
+		string line2 = "string citatel = D - A + char_op2 C;"; // think this through again, there is an error like
+
+
+
+		// .... figure out after the code is written...
+
+
 	}
 
 	public override List<ConstraintMethod> GetConstraints() {
