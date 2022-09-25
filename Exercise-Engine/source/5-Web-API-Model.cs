@@ -1,7 +1,7 @@
 ﻿namespace ExerciseEngine;
 // these classes will be only used inside web api application, for now they are here
 
-internal class Exercise_MetaData {
+public class Exercise_MetaData {
 	public int							uniqueId;
 	public List<Language>				localizations = new();
 	public int							variantsCount;
@@ -14,11 +14,27 @@ internal class Exercise_MetaData {
 	public int							metaVersion;
 }
 
-internal class Exercise_Representation {
+public class Representation {
+	// exercise content:
 	public string			assignment = "";
-	public List<string>		questions = new();
-	public List<string>		results = new();
-	public ResultType		resultType;
-	public List<string>		solutionSteps = new();
-	public List<string>		imagePaths = new();
+	public List<Question>   questions = new();
+
+	public Representation(string assignment) {
+		this.assignment = assignment;
+	}
 }
+
+public class Question {
+	public string		question = ""; // for empty cases, shared assignment is enough.
+	public string		result = "";
+	public ResultType	resultType;
+	public List<string> solutionSteps = new();
+	public List<string> imagePaths = new();
+
+	public Question() { }
+	public Question(string result, ResultType resultType) {
+		this.result = result;
+		this.resultType = resultType;
+	}
+}
+

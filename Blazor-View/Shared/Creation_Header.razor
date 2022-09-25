@@ -36,10 +36,10 @@
 
     Color color(Phase p) {
         int state = appState.CreationPhase + (int)p;
-        if (state > 2)
+        if (state > 1)
             return Color.Success;
 
-        if (state == 2)
+        if (state == 1)
             return Color.Info;
 
         return Color.Dark;
@@ -47,10 +47,10 @@
 
     Severity severity(Phase p) {
         int state = appState.CreationPhase + (int)p;
-        if (state > 2)
+        if (state > 1)
             return Severity.Success;
 
-        if (state == 2)
+        if (state == 1)
             return Severity.Info;
 
         return Severity.Normal;

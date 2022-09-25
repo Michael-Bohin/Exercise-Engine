@@ -112,6 +112,7 @@ sealed public class SetOperator : Set<Operator> {
 }*/
 
 // definitelly longest class name:
+// this is required on blazor side as user changes types, this seems to be the only solution
 public class Bindable_NotPolymorphic_Variable {
 	public string name = default!;
 	public SetRange setRange;

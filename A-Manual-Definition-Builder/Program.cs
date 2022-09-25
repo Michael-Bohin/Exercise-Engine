@@ -163,15 +163,15 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 	public override List<ResultMethod> GetResults() {
 		List<string> localCode = new() {
 			"if(op1 == Operator.Add)",
-			"	return A + B;",
+			"	return left + right;",
 			"",
 			"if (op1 == Operator.Sub)",
-			"	return A - B;",
+			"	return left - right;",
 			"",
 			"if (op1 == Operator.Mul)",
-			"	return A * B;",
+			"	return left * right;",
 			"",
-			"return A / B;"
+			"return left / right;"
 		};
 
 		ResultMethod method = new() {
@@ -304,6 +304,7 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 
 		// .... figure out after the code is written...
 
+		return new() { md };
 
 	}
 
