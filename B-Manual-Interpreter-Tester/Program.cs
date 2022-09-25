@@ -10,7 +10,7 @@ WriteLine("Hello, World!");
 F_S02_AritmetikaDoStovky f1 = new();
 f1.FilterLegitVariants();
 
-List<string> result = new List<string>();
+List<string> result = new();
 
 foreach(var legitExercise in f1.legit) {
 	Representation r = legitExercise.GetRepresentation();

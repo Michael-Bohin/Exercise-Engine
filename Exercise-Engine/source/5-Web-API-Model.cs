@@ -14,6 +14,10 @@ public class Exercise_MetaData {
 	public int							metaVersion;
 }
 
+/// <summary>
+/// For complete translated exercises:
+/// </summary>
+
 public class Representation {
 	// exercise content:
 	public string			assignment = "";
@@ -38,3 +42,29 @@ public class Question {
 	}
 }
 
+
+/// <summary>
+/// For INcomplete NOT YET translated exercises:
+/// </summary>
+/// 
+
+// all strings are replaced by List<MacroText>
+
+public class MacroRepresentation {
+	public List<MacroText> assignment = new();
+	public List<MacroQuestion> questions = new();
+}
+
+public class MacroQuestion {
+	public List<MacroText> question = new(); // for empty cases, shared assignment is enough.
+	public List<MacroText> result = new();
+	public ResultType resultType;
+	public List<List<MacroText>> solutionSteps = new();
+	public List<List<MacroText>> imagePaths = new();
+
+	public MacroQuestion() { }
+	public MacroQuestion(List<MacroText> result, ResultType resultType) {
+		this.result = result;
+		this.resultType = resultType;
+	}
+}
