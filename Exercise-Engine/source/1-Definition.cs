@@ -21,12 +21,18 @@ public class Definition
 
     public List<Variable>			variables = new();
 	public List<MacroText>			assignment = new();
-	public List<MacroText>			questions = new();
-	public ResultType				resultType = new();
-	public List<ResultMethod>		results = new();
     public List<ConstraintMethod>	constraints = new();
-	public List<MacroText>			solutionSteps = new();
-	public List<string>				imagePaths = new();
+	public List<string> imagePaths = new();
+
+	public List<Definition_Question> questions = new();
+}
+
+public class Definition_Question {
+	public List<MacroText> question = new();
+	public ResultType resultType = new();
+	public ResultMethod result = new();
+	public List<MacroText> solutionSteps = new();
+	public List<string> imagePaths = new();
 }
 
 #endregion
@@ -90,26 +96,6 @@ sealed public class Set<T> : Variable where T : struct, IComparable {
 		this.Elements = Elements; 
 	}
 }
-
-/*sealed public class RangeInt : Range<int> {
-	public RangeInt(string Name, int Min, int Max, int Inc) : base(Name, Min, Max, Inc) { }
-}
-
-sealed public class RangeDouble : Range<double> {
-	public RangeDouble(string Name, double Min, double Max, double Inc) : base(Name, Min, Max, Inc) { }
-}
-
-sealed public class SetInt : Set<int> {
-	public SetInt(string Name, List<int> Elements) : base(Name, Elements) {	}
-}
-
-sealed public class SetDouble : Set<double> {
-	public SetDouble(string Name, List<double> Elements) : base(Name, Elements) { }
-}
-
-sealed public class SetOperator : Set<Operator> {
-	public SetOperator(string Name, List<Operator> Elements) : base(Name, Elements) { }
-}*/
 
 // definitelly longest class name:
 // this is required on blazor side as user changes types, this seems to be the only solution

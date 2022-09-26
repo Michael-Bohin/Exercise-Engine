@@ -141,14 +141,3 @@ public class Exercise<V> where V : Variant {
 		return sb.ToString();
 	}
 }
-
-/// <summary>
-/// //////////////////////////////////////////////////////////////////
-/// </summary>
-// -> macro text pointing at variables in variants for: 
-// ->	i.	 assignment
-// ->	ii.  questions
-//		iii. results
-//		iv.  resultTypes
-//		v.   solutionsSteps
-//		vi.	 imagePaths

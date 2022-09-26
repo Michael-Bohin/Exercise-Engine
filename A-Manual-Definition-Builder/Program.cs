@@ -28,10 +28,9 @@ abstract class DefinitionFactory {
 		d.metaData = GetMetaData();
 		d.variables = GetVariables();
 		d.assignment = GetAssignment();
-		d.questions = GetQuestions();
-		d.resultType = GetResultType();
-		d.results = GetResults();
 		d.constraints = GetConstraints();
+
+		d.questions = GetQuestions();
 		return d;
 	}
 
@@ -60,10 +59,9 @@ abstract class DefinitionFactory {
 	public abstract Definition_MetaData GetMetaData();
 	public abstract List<Variable> GetVariables();
 	public abstract List<MacroText> GetAssignment();
-	public abstract List<MacroText> GetQuestions();
-	public abstract ResultType GetResultType();
-	public abstract List<ResultMethod> GetResults();
 	public abstract List<ConstraintMethod> GetConstraints();
+
+	public abstract List<Definition_Question> GetQuestions();
 }
 
 class ManualDefinitionBuilderA : DefinitionFactory {
@@ -95,22 +93,24 @@ class ManualDefinitionBuilderA : DefinitionFactory {
  	}
 
 	// empty since numerical exercise don't qet to ask questions, the assignment is the question already.
-	public override List<MacroText> GetQuestions() => new();
-	public override ResultType GetResultType() => ResultType.Int;
-
-	/// <summary>
-	/// /////////////////// TO DO 
-	/// </summary>
-	/// <returns></returns>
-	public override List<ResultMethod> GetResults() {
+	public override List<Definition_Question> GetQuestions() {
+		List<Definition_Question> questions = new();
+		Definition_Question q = new();
+		q.question = new(); // empty for numeric exercise
+		
 		ResultMethod method = new() {
-			resultType = GetResultType(),
+			resultType = ResultType.Int,
 			codeDefined = true,
 			code = new() {
 				"return A * B;"
 			}
 		};
-		return new () { method };
+		q.result = method;
+		q.resultType = ResultType.Int;
+		q.imagePaths = new();
+
+		questions.Add(q);
+		return questions;
 	}
 
 	// empty since all combinations are legit 
@@ -156,11 +156,12 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		return new() { el1, el2, el3, el4, el5, el6 };
 	}
 
-	public override List<MacroText> GetQuestions() => new(); // empty
+	// empty since numerical exercise don't qet to ask questions, the assignment is the question already.
+	public override List<Definition_Question> GetQuestions() {
+		List<Definition_Question> questions = new();
+		Definition_Question q = new();
+		q.question = new(); // empty for numeric exercise
 
-	public override ResultType GetResultType() => ResultType.Int;
-
-	public override List<ResultMethod> GetResults() {
 		List<string> localCode = new() {
 			"if(op1 == Operator.Add)",
 			"	return left + right;",
@@ -175,12 +176,17 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		};
 
 		ResultMethod method = new() {
-			resultType = GetResultType(),
+			resultType = ResultType.Int,
 			codeDefined = true,
 			code = localCode
 		};
 
-		return new() { method };
+		q.result = method;
+		q.resultType = ResultType.Int;
+		q.imagePaths = new();
+
+		questions.Add(q);
+		return questions;
 	}
 
 	// constraint defines some condition, which if true, makes the variant not legit. 
@@ -290,23 +296,7 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 		};
 	}
 
-	public override List<MacroText> GetQuestions() => new(); // numerical exercise -> empty 
-
-	public override ResultType GetResultType() => ResultType.Double;
-
-	public override List<ResultMethod> GetResults() {
-		ResultMethod md = new();
-		
-		string line1 = "char char_op2 = SwapAddSub(op2);";
-		string line2 = "string citatel = D - A + char_op2 C;"; // think this through again, there is an error like
-
-
-
-		// .... figure out after the code is written...
-
-		return new() { md };
-
-	}
+	public override List<Definition_Question> GetQuestions() => new(); // numerical exercise -> empty 
 
 	public override List<ConstraintMethod> GetConstraints() {
 		throw new NotImplementedException();
@@ -320,32 +310,34 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
-		md.initialLanguage = Language.en;
+		md.initialLanguage = Language.cs;
 		md.type = ExerciseType.WordProblem;
-		md.title = "";
-		md.description = "";
-		md.topics = new() { };
-		md.grades = new() { };
+		md.title = "Vzorová slovní úloha pro vývoj - Kuba s batohem plným balonků";
+		md.description = "Slovní úloha na procvičení sčítání, pravděpodobnosti a maximum.";
+		md.topics = new() { Topic.Arithmetic };
+		md.grades = new() { Grade.First, Grade.Third, Grade.Seventh };
 		return md;
 	}
 
 	public override List<Variable> GetVariables() {
-		throw new NotImplementedException();
+		Range<int> pocetCervenych = new("cervene", 2, 20, 1);
+		Range<int> pocetZelenych = new("zelene", 2, 20, 1);
+		Range<int> pocetModrych = new("modre", 2, 20, 1);
+		return new() { pocetCervenych, pocetZelenych, pocetModrych };
 	}
 
 	public override List<MacroText> GetAssignment() {
-		throw new NotImplementedException();
+		Text e1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Zrovna dneska v nich si do batohu dal ");
+		Macro e2 = new("cervene");
+		Text e3 = new(" červených, ");
+		Macro e4 = new("zelene");
+		Text e5 = new(" zelených a ");
+		Macro e6 = new("modre");
+		Text e7 = new(" modrých balonků.");
+		return new() { e1, e2, e3, e4, e5, e6, e7 };
 	}
 
-	public override List<MacroText> GetQuestions() {
-		throw new NotImplementedException();
-	}
-
-	public override ResultType GetResultType() {
-		throw new NotImplementedException();
-	}
-
-	public override List<ResultMethod> GetResults() {
+	public override List<Definition_Question> GetQuestions() {
 		throw new NotImplementedException();
 	}
 
@@ -378,15 +370,7 @@ class ManualDefinitionBuilderE : DefinitionFactory {
 		throw new NotImplementedException();
 	}
 
-	public override List<MacroText> GetQuestions() {
-		throw new NotImplementedException();
-	}
-
-	public override ResultType GetResultType() {
-		throw new NotImplementedException();
-	}
-
-	public override List<ResultMethod> GetResults() {
+	public override List<Definition_Question> GetQuestions() {
 		throw new NotImplementedException();
 	}
 
@@ -419,15 +403,7 @@ class ManualDefinitionBuilderG : DefinitionFactory {
 		throw new NotImplementedException();
 	}
 
-	public override List<MacroText> GetQuestions() {
-		throw new NotImplementedException();
-	}
-
-	public override ResultType GetResultType() {
-		throw new NotImplementedException();
-	}
-
-	public override List<ResultMethod> GetResults() {
+	public override List<Definition_Question> GetQuestions() {
 		throw new NotImplementedException();
 	}
 
@@ -435,7 +411,3 @@ class ManualDefinitionBuilderG : DefinitionFactory {
 		throw new NotImplementedException();
 	}
 }
-
-
-
-

@@ -7,8 +7,8 @@ using static System.Console;
 
 WriteLine("Hello, World!");
 
-
 // instantiate one instance of exercise: (figure out how to generate following code: using interpreter or some automated builder? )
+// posble apporach, give required fields from definition to ctor... :) 
 Macro el1 = new("left");
 Text el2 = new(" ");
 Macro el3 = new("op1");
@@ -24,14 +24,13 @@ MacroQuestion mQ = new();
 mQ.resultType = ResultType.Int;
 mr.questions.Add(mQ);
 
-Exercise<S02_AritmetikaDoStovky> exercise = new(mr); // monolingual exercise instantiated
+Exercise<V_1_AritmetikaDoStovky> exercise = new(mr); // monolingual exercise instantiated
 
 // instantiate one instance of factory
-F_S02_AritmetikaDoStovky f1 = new();
+F_1_AritmetikaDoStovky f1 = new();
 
 // factory create n instances of variants
 f1.FilterLegitVariants();
-
 
 List<string> result = new();
 // foreach variant send instance of it to exercise to get concrete representation of it 
@@ -40,6 +39,7 @@ foreach (var variant in f1.legit) {
 	result.Add(r.assignment + "   " + r.questions[0].result);
 }
 
+// save the result"
 using (StreamWriter sw = new("log.txt")) {
 	foreach (var line in result)
 		sw.WriteLine(line);
@@ -50,11 +50,11 @@ using (StreamWriter sw = new("stats.txt")) {
 }
 
 // expected to be written by interpreter based on definition:
-class S02_AritmetikaDoStovky : Variant {
+class V_1_AritmetikaDoStovky : Variant {
 	public readonly int left;
 	public readonly int right;
 	public readonly Operator op1;
-	public S02_AritmetikaDoStovky(int left, int right, Operator op1) {
+	public V_1_AritmetikaDoStovky(int left, int right, Operator op1) {
 		this.left = left;
 		this.right = right;
 		this.op1 = op1;
@@ -113,7 +113,7 @@ class S02_AritmetikaDoStovky : Variant {
 	}
 }
 
-class F_S02_AritmetikaDoStovky : Factory<S02_AritmetikaDoStovky> {
+class F_1_AritmetikaDoStovky : Factory<V_1_AritmetikaDoStovky> {
 	// should provide method that loops over all options
 	// internaly
 	//	1. builds list of correct exercises
@@ -125,7 +125,7 @@ class F_S02_AritmetikaDoStovky : Factory<S02_AritmetikaDoStovky> {
 
 	// constraint count a expected bude psat interpreter jako vysledek vlastniho vypoctu
 	// 4 podminky na legit a ocekavame zkontrolovat 39 204 variant
-	public F_S02_AritmetikaDoStovky() : base(4, 39204) { }
+	public F_1_AritmetikaDoStovky() : base(4, 39204) { }
 
 	// figure out good way to measure time for first loop of the most outer loop and print that info:
 	// loop lasted: x ms, and there will be y many of them, estimated time:
@@ -136,8 +136,8 @@ class F_S02_AritmetikaDoStovky : Factory<S02_AritmetikaDoStovky> {
 			for(int right = 2; right <= 100; right++) {
 				foreach(Operator op1 in op1Set) {
 					// 0. increment actual, 1. make instance of exercise, 2. check if legit, 3. on legit add to legit, 4. on illegal, add to illegal of not 50 and increment coresponding ilegal log
-					S02_AritmetikaDoStovky ex = new(left, right, op1);
-					Consider(ex);
+					V_1_AritmetikaDoStovky variant = new(left, right, op1);
+					Consider(variant);
 				}
             }
         }
