@@ -57,14 +57,15 @@ public class MacroRepresentation {
 
 public class MacroQuestion {
 	public List<MacroText> question = new(); // for empty cases, shared assignment is enough.
-	public List<MacroText> result = new();
+	// result will never be saved in macro question, rather in variant class as C# code..
+	// public List<MacroText> result = new();
 	public ResultType resultType;
 	public List<List<MacroText>> solutionSteps = new();
-	public List<List<MacroText>> imagePaths = new();
+	public List<string> imagePaths = new();
 
 	public MacroQuestion() { }
-	public MacroQuestion(List<MacroText> result, ResultType resultType) {
-		this.result = result;
+	public MacroQuestion( ResultType resultType) {
+		//this.result = result;
 		this.resultType = resultType;
 	}
 }

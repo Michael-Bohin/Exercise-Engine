@@ -20,9 +20,10 @@ interface IExercise
 }
 
 // X exercises, Y languages, Z variants
+/*
 interface IExerciseCollection {
 	Exercise GetExercise(int unigueId);
-}
+}*/
 
 interface IExerciseEngineAPI { 
     string GetAllTranslations(Language lang);

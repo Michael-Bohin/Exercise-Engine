@@ -5,25 +5,20 @@ namespace ExerciseEngine;
 // zatim nemichat jazyky, udelat jen pro cestinu!
 // protected Dictionary<Language, Description> translations = new();
 
-abstract public class Exercise {
+abstract public class Variant {
 	// exercise shouldnt be aware of its metadata! but where do I put them??
-	protected Exercise_MetaData metaData = new();	
 	// variants will be written in children by interpreters: List<tuple> variants
 	// the tuple type and number of parameters will be different for all
-	public Representation GetRandom(Language lang) {
-		Representation repr = new("ahoj");
+	public abstract bool IsLegit(out int constraintId);
 
-		return repr;
-	}
+	public abstract string VariableRepresentation(string variableName);
 
-	public int Count { 
-		get => metaData.variantsCount;
-	}
-	
+	public abstract string GetResult(int questionIndex);
+
 	protected char OpToChar(Operator op) {
 		switch (op) {
-			case Operator.Add: 
-				return '+'; 
+			case Operator.Add:
+				return '+';
 			case Operator.Sub:
 				return '-';
 			case Operator.Mul:
@@ -34,23 +29,24 @@ abstract public class Exercise {
 				throw new ArgumentException("OperatorToChar");
 		}
 	}
-
-	public abstract bool IsLegit(out int constraintId);
-	public abstract Representation GetRepresentation();
 }
 
-abstract public class Factory {
+abstract public class Factory<V> where V : Variant {
 	protected int constraintCount, expected, actual;
 	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
-	// public List<List<Exercise>> illegal = new();
+
+	public List<V> legit = new();
+	public List<List<V>> illegal = new();
 
 	public Factory(int constraintCount, int expected) {
 		this.constraintCount = constraintCount;
 		this.expected = expected;
 		actual = 0;
-		for(int i = 0; i < constraintCount; i++) 
+		for(int i = 0; i < constraintCount; i++) {
 			constraintLog.Add(0);
-    }
+			illegal.Add(new());
+		}	
+	}
 
 	public abstract void FilterLegitVariants();
 
@@ -64,12 +60,87 @@ abstract public class Factory {
 				sr.Append($"{i}, occurences: {constraintLog[i]}\n");
 		return sr.ToString();
     }
+
+	public void Consider(V cv) {
+		actual++;
+		if (cv.IsLegit(out int constraintId)) {
+			legit.Add(cv);
+		} else {
+			constraintLog[constraintId]++;
+			if (illegal[constraintId].Count < 50)
+				illegal[constraintId].Add(cv);
+		}
+	}
 }
 
+// should I / how do I ensure that the macrorepresentation instance matches the generic variant?
+public class Exercise<V> where V : Variant { 
+	readonly Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
+	readonly bool monoLingual;
 
+	public Exercise(MacroRepresentation mr) { 
+		monoLingual = true;
+		// save mr to english, where monoLingual exercise always look
+		babylon[Language.en] = mr;
+	}
 
+	public Exercise(MacroRepresentation mr, Language language) { 
+		monoLingual = false; 
+		babylon[language] = mr;
+	}
 
+	public bool HasLanguage(Language language) {
+		return monoLingual || babylon.ContainsKey(language);
+	}
 
+	public bool SetLanguage(MacroRepresentation mr, Language lang) {
+		if(monoLingual)
+			return false;
+		babylon[lang] = mr;
+		return true;
+	}
+
+	// for monoLingual exercises (numeric at this point) -> return english
+	public Representation GetRepresentation(V cv) => GetRepresentation(cv, Language.en);
+
+	public Representation GetRepresentation(V cv, Language lang) {
+		MacroRepresentation macroR = babylon[lang];
+		string assignment = BuildMacroText(macroR.assignment, cv);
+
+		Representation r = new(assignment);
+		int counter = 0;
+		foreach (MacroQuestion mq in macroR.questions)
+			r.questions.Add(BuildQuestion(mq, cv, counter++) );
+		return r;
+	}
+
+	static Question BuildQuestion(MacroQuestion macroQuestion, V cv, int counter) {
+		Question q = new() {
+			resultType = macroQuestion.resultType,
+			result = cv.GetResult(counter),
+			imagePaths = macroQuestion.imagePaths,
+
+			question = BuildMacroText(macroQuestion.question, cv)
+		};
+
+		foreach (var mt in macroQuestion.solutionSteps) 
+			q.solutionSteps.Add(BuildMacroText(mt, cv));
+
+		return q;
+	}
+
+	static string BuildMacroText(List<MacroText> macroText, V cv) {
+		StringBuilder sb = new();
+		foreach(MacroText mt in macroText) {
+			if (mt is Macro macro) {
+				sb.Append(cv.VariableRepresentation(macro.pointer));
+			} else if (mt is Text text) {
+				sb.Append(text.constText);
+			}
+		}
+		return sb.ToString();
+	}
+}
 
 /// <summary>
 /// //////////////////////////////////////////////////////////////////
@@ -81,9 +152,3 @@ abstract public class Factory {
 //		iv.  resultTypes
 //		v.   solutionsSteps
 //		vi.	 imagePaths
-
-// notice: no constraints and no results mehtods..
-public class Description {
-
-	
-}
