@@ -5,13 +5,26 @@ using System.Text.Json.Serialization;
 
 WriteLine("Hello");
 
-new ManualDefinitionBuilderA("Exercise-A");
-new ManualDefinitionBuilderB("Exercise-B");
+ManualDefinitionBuilderA defBuilderA = new();
+ManualDefinitionBuilderB defBuilderB = new();
+ManualDefinitionBuilderD defBuilderD = new(); // 
+
+Definition defB = defBuilderB.Define("Exercise-B");
+Definition defD = defBuilderD.Define("Exercise-D");
+
+Interpreter interpreter = new();
+interpreter.LoadDefinition(defD, 381_199);
+interpreter.Translate();
+interpreter.ExecuteTheCode();
+
+interpreter.LoadDefinition(defB, 381_200);
+interpreter.Translate();
+interpreter.ExecuteTheCode();
+
+
+
 abstract class DefinitionFactory {
-	public DefinitionFactory(string filePath) {
-		Definition d = Define();
-		WriteTo(d, filePath);
-	}
+	public DefinitionFactory() { }
 
 	protected char SwapAddSub(Operator o) {
 		if(o != Operator.Add && o != Operator.Sub)
@@ -23,7 +36,7 @@ abstract class DefinitionFactory {
 		return '-';
 	}
 
-	public virtual Definition Define() {
+	public virtual Definition Define(string filePath) {
 		Definition d = new();
 		d.metaData = GetMetaData();
 		d.variables = GetVariables();
@@ -31,6 +44,8 @@ abstract class DefinitionFactory {
 		d.constraints = GetConstraints();
 
 		d.questions = GetQuestions();
+
+		WriteTo(d, filePath);
 		return d;
 	}
 
@@ -66,7 +81,7 @@ abstract class DefinitionFactory {
 
 class ManualDefinitionBuilderA : DefinitionFactory {
 
-	public ManualDefinitionBuilderA(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderA()  { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
@@ -119,7 +134,7 @@ class ManualDefinitionBuilderA : DefinitionFactory {
 
 class ManualDefinitionBuilderB : DefinitionFactory {
 
-	public ManualDefinitionBuilderB(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderB()  { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
@@ -234,7 +249,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 
 class ManualDefinitionBuilderC : DefinitionFactory {
 
-	public ManualDefinitionBuilderC(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderC()  { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
@@ -306,7 +321,7 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 
 class ManualDefinitionBuilderD : DefinitionFactory {
 
-	public ManualDefinitionBuilderD(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderD()  { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
@@ -320,14 +335,14 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 	}
 
 	public override List<Variable> GetVariables() {
-		Range<int> pocetCervenych = new("cervene", 2, 20, 1);
-		Range<int> pocetZelenych = new("zelene", 2, 20, 1);
-		Range<int> pocetModrych = new("modre", 2, 20, 1);
+		Range<int> pocetCervenych = new("cervene", 2, 30, 1);
+		Range<int> pocetZelenych = new("zelene", 2, 30, 1);
+		Range<int> pocetModrych = new("modre", 2, 30, 1);
 		return new() { pocetCervenych, pocetZelenych, pocetModrych };
 	}
 
 	public override List<MacroText> GetAssignment() {
-		Text e1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Zrovna dneska v nich si do batohu dal ");
+		Text e1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
 		Macro e2 = new("cervene");
 		Text e3 = new(" červených, ");
 		Macro e4 = new("zelene");
@@ -337,19 +352,129 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		return new() { e1, e2, e3, e4, e5, e6, e7 };
 	}
 
+	// empty since numerical exercise don't qet to ask questions, the assignment is the question already.
 	public override List<Definition_Question> GetQuestions() {
-		throw new NotImplementedException();
+		List<Definition_Question> questions = new() {
+			Question_1(), 
+			Question_2(), 
+			Question_3()
+		};
+
+		return questions;
+	}
+
+	public Definition_Question Question_1() {
+		// question 1 kolik si dal kuba balonku do batohu dohromady
+		Definition_Question q = new();
+		Text q1_1 = new("Kolik balónků si dal Kuba do batohu dohromady?"); // no constraint... 
+		q.question = new() { q1_1 };
+
+		List<string> localCode = new() {
+			"return cervene + zelene + modre;"
+		};
+
+		ResultMethod method = new() {
+			resultType = ResultType.Int,
+			codeDefined = true,
+			code = localCode
+		};
+
+		q.result = method;
+		q.resultType = ResultType.Int;
+		q.imagePaths = new();
+		return q;
+	}
+
+	public Definition_Question Question_2() {
+		// question 2 jake je pravdepodobnost, ze si pri nahodnem vyberu vytahne modry balonek? 
+		Definition_Question q = new();
+		// pravdepodobnost by mela vyjit rozumne, tj. desetine cislo obsahuje nanejvys 2 desetinna mista
+		Text q1_1 = new("Jaká je pravděpodobnost, že si Kuba při náhodném výběru vytáhne z batohu modrý balónek?"); 
+		q.question = new() { q1_1 };
+
+		List<string> localCode = new() {
+			"double total = (double)cervene + (double)zelene + (double)modre;", 
+			"double Px = (double)modre / total;", 
+			"return Px;"
+		};
+
+		ResultMethod method = new() {
+			resultType = ResultType.Double,
+			codeDefined = true,
+			code = localCode
+		};
+
+		q.result = method;
+		q.resultType = ResultType.Double;
+		q.imagePaths = new();
+		return q;
+	}
+
+	public Definition_Question Question_3() {
+		// question 1 kolik si dal kuba balonku do batohu dohromady
+		Definition_Question q = new();
+		// pro jednoduchost chceme jednoznačně maximum -> maximum je prave jedno.
+		Text q1_1 = new("Kterých balonků má Kuba v batohu nejvíce? a) červených, b) modrých nebo c) zelených?");
+		q.question = new() { q1_1 };
+
+		List<string> localCode = new() {
+			"int max = Math.Max(cervene, zelene);",
+			"max = Math.Max(max, modre);", 
+			"string result = " + '"' + '"' + ';',
+			"if(max == modre) result = " + '"' + 'b' + '"' + ';',
+			"if(max == cervene) result = " + '"' + 'a' + '"' + ';',
+			"if(max == zelene) result = " + '"' + 'c' + '"' + ';',
+			"return result;"
+		};
+
+		ResultMethod method = new() {
+			resultType = ResultType.Select,
+			codeDefined = true,
+			code = localCode
+		};
+
+		q.result = method;
+		q.resultType = ResultType.Select;
+		q.imagePaths = new();
+		return q;
 	}
 
 	public override List<ConstraintMethod> GetConstraints() {
-		throw new NotImplementedException();
+		ConstraintMethod constraintOtazkaB = new();
+		constraintOtazkaB.comments = new() {
+			"vysledek otazky B ma nanejvys 2 desetinna mista"
+		};
+		constraintOtazkaB.codeDefined = false;
+		constraintOtazkaB.code = new() {
+			"double result = GetResult(2);", 
+			"string strResult = result.ToString();", 
+			"int digits = strResult" /// just skip for this moment..
+		};
+
+		ConstraintMethod constraintJednoMaximum = new();
+		constraintJednoMaximum.comments = new() {
+			"maximum je prave jedno"
+		};
+		constraintJednoMaximum.codeDefined = true;
+		constraintJednoMaximum.code = new() {
+			"int max = Math.Max(cervene, zelene);",
+			"max = Math.Max(max, modre);",
+			"int counter = 0;",
+			"if (max == modre) counter++;",
+			"if (max == zelene) counter++;",
+			"if (max == cervene) counter++;",
+			"return counter != 1;" // if counter is different from 1, that means that there is more than one maximum, which too bad for this variant
+		};
+
+		return new() { constraintOtazkaB , constraintJednoMaximum };
+
 	}
 }
 
 
 class ManualDefinitionBuilderE : DefinitionFactory {
 
-	public ManualDefinitionBuilderE(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderE() { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();
@@ -382,7 +507,7 @@ class ManualDefinitionBuilderE : DefinitionFactory {
 // F is visually too close to E
 class ManualDefinitionBuilderG : DefinitionFactory {
 
-	public ManualDefinitionBuilderG(string filePath) : base(filePath) { }
+	public ManualDefinitionBuilderG() { }
 
 	public override Definition_MetaData GetMetaData() {
 		Definition_MetaData md = new();

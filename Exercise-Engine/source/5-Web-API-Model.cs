@@ -14,10 +14,6 @@ public class Exercise_MetaData {
 	public int							metaVersion;
 }
 
-/// <summary>
-/// For complete translated exercises:
-/// </summary>
-
 public class Representation {
 	// exercise content:
 	public string			assignment = "";
@@ -41,12 +37,6 @@ public class Question {
 		this.resultType = resultType;
 	}
 }
-
-
-/// <summary>
-/// For INcomplete NOT YET translated exercises:
-/// </summary>
-/// 
 
 // all strings are replaced by List<MacroText>
 

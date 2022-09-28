@@ -17,33 +17,30 @@ public class Definition_MetaData {
 
 public class Definition
 {
-    public Definition_MetaData metaData = new();
+    public Definition_MetaData			metaData = new();
 
-    public List<Variable>			variables = new();
-	public List<MacroText>			assignment = new();
-    public List<ConstraintMethod>	constraints = new();
-	public List<string> imagePaths = new();
+    public List<Variable>				variables = new();
+	public List<MacroText>				assignment = new();
+    public List<ConstraintMethod>		constraints = new();
+	public List<string>					imagePaths = new();
 
-	public List<Definition_Question> questions = new();
+	public List<Definition_Question>	questions = new();
 }
 
 public class Definition_Question {
-	public List<MacroText> question = new();
-	public ResultType resultType = new();
-	public ResultMethod result = new();
-	public List<MacroText> solutionSteps = new();
-	public List<string> imagePaths = new();
+	public List<MacroText>				question = new();
+	public ResultType					resultType = new();
+	public ResultMethod					result = new();
+	public List<MacroText>				solutionSteps = new();
+	public List<string>					imagePaths = new();
 }
 
 #endregion
 
 #region Variable
 
-// Major question: Will System.Text.Json be able to handle polymorphic generic classes? 
-
 // Variables:
-// 1. Their properties are get only. Assignable only inside constructor. 
-// 2. Three ways they can throw exceptions:
+// 1. Three ways they can throw exceptions:
 //		a. string id is in bad format:
 //			i.		must contain only alphanumeric characters or underscore: [a-zA-Z_0-9]
 //			ii.		first character can not be a digit
@@ -69,6 +66,8 @@ abstract public class Variable {
 			throw new ArgumentException($"Invalid Id name: '{Name}' ");
 		this.Name = Name; 
 	}
+
+	// abstract string GetTypeRepr(); // used by interpreter
 }
 
 sealed public class Range<T> : Variable where T : struct, IComparable {
@@ -192,6 +191,7 @@ abstract public class Method {
 	public List<string> comments = new();
 }
 
+// if constraint method returns true, the variant of exercise is not legit.
 public class ConstraintMethod : Method { }
 
 public class ResultMethod : Method {

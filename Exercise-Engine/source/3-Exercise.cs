@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿namespace ExerciseEngine;
 
-namespace ExerciseEngine;
+using System.Text;
 
 // zatim nemichat jazyky, udelat jen pro cestinu!
 // protected Dictionary<Language, Description> translations = new();
 
-abstract public class Variant {
+public abstract class Variant {
 	// exercise shouldnt be aware of its metadata! but where do I put them??
 	// variants will be written in children by interpreters: List<tuple> variants
 	// the tuple type and number of parameters will be different for all
@@ -31,7 +31,7 @@ abstract public class Variant {
 	}
 }
 
-abstract public class Factory<V> where V : Variant {
+public abstract class Factory<V> where V : Variant {
 	protected int constraintCount, expected, actual;
 	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
 
@@ -74,19 +74,12 @@ abstract public class Factory<V> where V : Variant {
 }
 
 // should I / how do I ensure that the macrorepresentation instance matches the generic variant?
-public class Exercise<V> where V : Variant { 
-	readonly Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
-	readonly bool monoLingual;
+public abstract class Exercise<V> where V : Variant { 
+	readonly protected Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
+	readonly protected bool monoLingual;
 
-	public Exercise(MacroRepresentation mr) { 
-		monoLingual = true;
-		// save mr to english, where monoLingual exercise always look
-		babylon[Language.en] = mr;
-	}
-
-	public Exercise(MacroRepresentation mr, Language language) { 
-		monoLingual = false; 
-		babylon[language] = mr;
+	protected Exercise(bool monoLingual) {
+		this.monoLingual = monoLingual;
 	}
 
 	public bool HasLanguage(Language language) {

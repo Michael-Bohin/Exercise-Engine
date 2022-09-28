@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_jsonMockUp", "WebAPI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_B-Manual-Interpreter-Tester", "B-Manual-Interpreter-Tester\_B-Manual-Interpreter-Tester.csproj", "{37142545-B418-4CB7-B40D-48F74639C30A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_B-Target-Interpreter-Code", "B-Manual-Interpreter-Tester\_B-Target-Interpreter-Code.csproj", "{37142545-B418-4CB7-B40D-48F74639C30A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

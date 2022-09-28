@@ -50,7 +50,8 @@ public enum ResultType {
 	Int, 
 	String, 
 	Double, 
-	Fraction
+	Fraction, 
+	Select // from options: a, b, c, -> always one answer from given options is correct
 }
 
 
