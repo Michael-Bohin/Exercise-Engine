@@ -212,7 +212,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		};
 		constraintAdd.codeDefined = true;
 		constraintAdd.code = new() {
-			"return (op1 == Operator.Add) && (A + B) > 100"
+			"return (op1 == Operator.Add) && (A + B) > 100;"
 		};
 
 		ConstraintMethod constraintSub = new();
@@ -221,7 +221,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		};
 		constraintSub.codeDefined = true;
 		constraintSub.code = new() {
-			"return (op1 == Operator.Sub) &&(A - B) < 0"
+			"return (op1 == Operator.Sub) && (A - B) < 0;"
 		};
 
 		ConstraintMethod constraintMul = new();
@@ -230,7 +230,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		};
 		constraintMul.codeDefined = true;
 		constraintMul.code = new() {
-			"return (op1 == Operator.Mul) && (A > 10 || B > 10)"
+			"return (op1 == Operator.Mul) && (A > 10 || B > 10);"
 		};
 
 		ConstraintMethod constraintDiv = new();
@@ -239,7 +239,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 		};
 		constraintDiv.codeDefined = true;
 		constraintDiv.code = new() {
-			"return (op1 == Operator.Div) && ((A % B) != 0) "
+			"return (op1 == Operator.Div) && ((A % B) != 0);"
 		};
 
 		return new() { constraintAdd, constraintSub, constraintMul, constraintDiv };
@@ -420,11 +420,9 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		List<string> localCode = new() {
 			"int max = Math.Max(cervene, zelene);",
 			"max = Math.Max(max, modre);", 
-			"string result = " + '"' + '"' + ';',
-			"if(max == modre) result = " + '"' + 'b' + '"' + ';',
-			"if(max == cervene) result = " + '"' + 'a' + '"' + ';',
-			"if(max == zelene) result = " + '"' + 'c' + '"' + ';',
-			"return result;"
+			"if(max == modre) return " + '"' + 'b' + '"' + ';',
+			"if(max == cervene) return " + '"' + 'a' + '"' + ';',
+			"return " + '"' + 'c' + '"' + ';' + " // must be zelene at this point"
 		};
 
 		ResultMethod method = new() {
