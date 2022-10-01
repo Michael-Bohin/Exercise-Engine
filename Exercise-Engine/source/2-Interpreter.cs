@@ -115,23 +115,9 @@ public class Interpreter {
 		StringBuilder sb = new();
 		sb.Append($"sealed class {variantName} : Variant {openCurly}\n");
 		foreach(Variable v in definition.variables) 
-			sb.Append($"\tpublic readonly {VariableTypeRepr(v)} {v.Name};\n");
+			sb.Append($"\tpublic readonly {v.TypeRepresentation()} {v.Name};\n");
 
 		return sb.ToString();
-	}
-
-	// ! move this to variable class (first figure out how it can be done syntactically..)
-	static string VariableTypeRepr(Variable v) {
-		if (v is IntRange || v is Set<int>) 
-			return "int";
-		
-		if (v is DoubleRange || v is Set<double>) 
-			return "double";
-		
-		if (v is Set<Operator>) 
-			return "Operator";
-
-		throw new InvalidOperationException($"Interpreter ran into unknown variable type: >>{v.Name}<<!");
 	}
 
 	string VariantCtor() {
@@ -143,7 +129,7 @@ public class Interpreter {
 		for (int i = 0; i < count; i++) {
 			if (i != 0)
 				sb.Append(' ');
-			sb.Append(VariableTypeRepr(definition.variables[i]));
+			sb.Append(definition.variables[i].TypeRepresentation());
 			sb.Append(' ');
 			sb.Append(definition.variables[i].Name);
 			if (i != last)
@@ -326,16 +312,18 @@ public class Interpreter {
 
 	static string InstantiateSetLists(List<Variable> variables) {
 		StringBuilder sb = new();
-		foreach(Variable variable in variables) {
-			sb.Append("\t\t");
-			sb.Append(variable.GetCodeSetInstantionLine());
-			sb.Append('\n');
-		}
+		foreach(Variable variable in variables) 
+			if(variable.IsSet()) {
+				sb.Append("\t\t");
+				sb.Append(variable.GetCodeSetInstantionLine());
+				sb.Append('\n');
+			}
 		return sb.ToString();
 	}
 
 	string BuildForLoop(List<Variable> variables) {
 		StringBuilder sb = new();
+		sb.Append('\n');
 		sb.Append(OpenForLoops(variables, out int indentCounter));
 		sb.Append(BuildForLoopBody(variables, indentCounter));
 		sb.Append(CloseForLoops(indentCounter));
@@ -352,7 +340,7 @@ public class Interpreter {
 			sb.Append('\n');
 			indentCounter++;
 		}
-	
+
 		return sb.ToString();
 	}
 
@@ -378,6 +366,7 @@ public class Interpreter {
 
 	static string CloseForLoops(int indentCounter) {
 		StringBuilder sb = new();
+		indentCounter--;
 		while (indentCounter > 1) {
 			for (int i = 0; i < indentCounter; i++)
 				sb.Append('\t');

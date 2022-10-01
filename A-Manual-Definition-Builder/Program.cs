@@ -148,7 +148,7 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 	}
 
 	public override List<Variable> GetVariables() {
-		Set<Operator> op1 = new(
+		OperatorSet op1 = new(
 			"op1",
 			new () { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div } 
 		);
@@ -268,9 +268,9 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 		DoubleRange C = new("C", 0.1, 4.9, 0.1);
 		DoubleRange D = new("D", 0.1, 4.9, 0.1);
 		DoubleRange E = new("E", 0.1, 4.9, 0.1);
-		Set<Operator> op1 = new("op1", new() {Operator.Add, Operator.Sub });
-		Set<Operator> op2 = new("op1", new() {Operator.Add, Operator.Sub });
-		Set<Operator> op3 = new("op1", new() {Operator.Add, Operator.Sub });
+		OperatorSet op1 = new("op1", new() {Operator.Add, Operator.Sub });
+		OperatorSet op2 = new("op1", new() {Operator.Add, Operator.Sub });
+		OperatorSet op3 = new("op1", new() {Operator.Add, Operator.Sub });
 		return new() { A, B, C, D, E, op1, op2, op3 };
 	}
 

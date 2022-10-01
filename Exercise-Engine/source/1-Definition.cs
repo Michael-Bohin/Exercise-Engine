@@ -57,9 +57,9 @@ public class Definition_Question {
 [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
 [JsonDerivedType(typeof(DoubleRange), "double_rng")]
 [JsonDerivedType(typeof(IntRange), "int_rng")]
-[JsonDerivedType(typeof(Set<int>), "int_set")]
-[JsonDerivedType(typeof(Set<double>), "double_set")]
-[JsonDerivedType(typeof(Set<Operator>), "Operator_set")]
+[JsonDerivedType(typeof(IntSet), "int_set")]
+[JsonDerivedType(typeof(DoubleSet), "double_set")]
+[JsonDerivedType(typeof(OperatorSet), "Operator_set")]
 abstract public class Variable {
 	public string Name { get; set; } = default!;
 	public Variable(string Name) {
@@ -75,6 +75,8 @@ abstract public class Variable {
 	abstract public string GetForLoopLine();
 
 	abstract public string TypeRepresentation();
+
+	abstract public bool IsSet();
 
 	// abstract string GetTypeRepr(); // used by interpreter
 }
@@ -107,6 +109,8 @@ public abstract class Range<T> : Variable where T : struct, IComparable {
 		sb.Append(") {");
 		return sb.ToString();
 	}
+
+	public override bool IsSet() => false;
 }
 
 sealed public class IntRange : Range<int> {
@@ -133,7 +137,7 @@ sealed public class DoubleRange: Range<double> {
 }
 
 // once we will start using strings as variable, struct constraint will have to be removed 
-sealed public class Set<T> : Variable where T : struct, IComparable {
+public abstract class Set<T> : Variable where T : struct, IComparable {
 	public List<T> Elements { get; } = new();
 	public Set(string Name, List<T> Elements) : base(Name) { 
 		if(Elements.Count == 0)
@@ -143,33 +147,50 @@ sealed public class Set<T> : Variable where T : struct, IComparable {
 
 	public override int GetCardinality() => Elements.Count;
 
-	public override string GetForLoopLine() {
-		StringBuilder sb = new();
-		sb.Append($"foreach({TypeRepresentation()} element_{Name} in Elements_{Name}) " + '{');
-		return sb.ToString();
-	}
-
-	public override string TypeRepresentation() {
-		// throw new NotImplementedException();
-		return "how the fuck should I implement this shit??";
-	}
+	public override string GetForLoopLine() => $"foreach({TypeRepresentation()} {Name} in Elements_{Name}) " + '{';
 
 	public override string GetCodeSetInstantionLine() {
 		StringBuilder sb  = new();
-		sb.Append($"List<{TypeRepresentation()}> Elements_{Name} = new() " + '{');
+		sb.Append($"List<{TypeRepresentation()}> Elements_{Name} = new() " + '{' + ' ');
 
 		for(int i = 0; i < Elements.Count; i++) {
 			if(i != 0)
 				sb.Append(", ");
-			sb.Append(Elements[i]);
+			sb.Append(GetElementRepr(Elements[i]));
 		}
-
-		// !!!! enum Operator to string will probably fail here (return numbers not strings..) !!!!
 
 		sb.Append("};");
 		sb.ToString();
 		return sb.ToString();
 	}
+
+	public abstract string GetElementRepr(T element);
+
+	public override bool IsSet() => true;
+}
+
+sealed public class IntSet : Set<int> {
+	public IntSet(string Name, List<int> Elements) : base(Name, Elements) { }
+
+	public override string TypeRepresentation() => "int";
+
+	public override string GetElementRepr(int element) => element.ToString();
+}
+
+sealed public class DoubleSet : Set<double> {
+	public DoubleSet(string Name, List<double> Elements) : base(Name, Elements) { }
+
+	public override string TypeRepresentation() => "double";
+
+	public override string GetElementRepr(double element) => element.ToString();
+}
+
+sealed public class OperatorSet : Set<Operator> {
+	public OperatorSet(string Name, List<Operator> Elements) : base(Name, Elements) { }
+
+	public override string TypeRepresentation() => "Operator";
+
+	public override string GetElementRepr(Operator element) => $"Operator.{element}";
 }
 
 // definitelly longest class name:
@@ -211,10 +232,10 @@ public class Bindable_NotPolymorphic_Variable {
 
 		return CastToDoubleSet();
 	}
-	
-	Set<Operator> CastToOperatorSet() => new(name, ParseOperatorElements());
-	Set<int> CastToIntSet() => new(name, ParseIntElements());
-	Set<double> CastToDoubleSet() => new(name, ParseDoubleElements());
+
+	OperatorSet CastToOperatorSet() => new(name, ParseOperatorElements());
+	IntSet CastToIntSet() => new(name, ParseIntElements());
+	DoubleSet CastToDoubleSet() => new(name, ParseDoubleElements());
 
 	// do both methods for each: validator reuturning bool and parser -> validator will be used repeatedly during UI process, parses once at the end. 
 
