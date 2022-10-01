@@ -95,8 +95,8 @@ class ManualDefinitionBuilderA : DefinitionFactory {
 	}
 
 	public override List<Variable> GetVariables() {
-		Range<int> x = new("A", 0, 10, 1);
-		Range<int> y = new("B", 0, 10, 1);
+		IntRange x = new("A", 0, 10, 1);
+		IntRange y = new("B", 0, 10, 1);
 		return new() { x, y };
 	}
 
@@ -153,8 +153,8 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 			new () { Operator.Add, Operator.Sub, Operator.Mul, Operator.Div } 
 		);
 
-		Range<int> leftOperand = new("left", 2, 100, 1);
-		Range<int> rightOperand = new("right", 2, 100, 1);
+		IntRange leftOperand = new("left", 2, 100, 1);
+		IntRange rightOperand = new("right", 2, 100, 1);
 
 		return new() { op1, leftOperand, rightOperand };
 	}
@@ -263,11 +263,11 @@ class ManualDefinitionBuilderC : DefinitionFactory {
 	}
 
 	public override List<Variable> GetVariables() {
-		Range<double> A = new("A", 0.1, 4.9, 0.1);
-		Range<double> B = new("B", 0.1, 4.9, 0.1);
-		Range<double> C = new("C", 0.1, 4.9, 0.1);
-		Range<double> D = new("D", 0.1, 4.9, 0.1);
-		Range<double> E = new("E", 0.1, 4.9, 0.1);
+		DoubleRange A = new("A", 0.1, 4.9, 0.1);
+		DoubleRange B = new("B", 0.1, 4.9, 0.1);
+		DoubleRange C = new("C", 0.1, 4.9, 0.1);
+		DoubleRange D = new("D", 0.1, 4.9, 0.1);
+		DoubleRange E = new("E", 0.1, 4.9, 0.1);
 		Set<Operator> op1 = new("op1", new() {Operator.Add, Operator.Sub });
 		Set<Operator> op2 = new("op1", new() {Operator.Add, Operator.Sub });
 		Set<Operator> op3 = new("op1", new() {Operator.Add, Operator.Sub });
@@ -335,9 +335,9 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 	}
 
 	public override List<Variable> GetVariables() {
-		Range<int> pocetCervenych = new("cervene", 2, 30, 1);
-		Range<int> pocetZelenych = new("zelene", 2, 30, 1);
-		Range<int> pocetModrych = new("modre", 2, 30, 1);
+		IntRange pocetCervenych = new("cervene", 2, 30, 1);
+		IntRange pocetZelenych = new("zelene", 2, 30, 1);
+		IntRange pocetModrych = new("modre", 2, 30, 1);
 		return new() { pocetCervenych, pocetZelenych, pocetModrych };
 	}
 

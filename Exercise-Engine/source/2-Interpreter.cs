@@ -14,7 +14,7 @@ public class Interpreter {
 
 	// const strings for simpler interpreter code:
 	const string openCurly = "{";
-	// const string closeCurly = "}"; turns out is not neseccary
+	const string closeCurly = "}";
 
 	public void LoadDefinition(Definition definition, int uniqueId) {
 		if(uniqueId < 0)
@@ -285,22 +285,83 @@ public class Interpreter {
 		return code.ToString();
 	}
 
+	
 	string FactoryCtor() {
-		return "";
+		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
+
+		StringBuilder sb = new();
+
+		string classDeclaration = $"sealed class {factoryName} : Factory<{variantName}> {openCurly}\n";
+		string ctorDeclaration = $"\tpublic {factoryName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}";
+
+
+
+
+		return sb.ToString();
+	}
+
+	static int CountEventSpaceCardinality(List<Variable> variables) {
+		// if is set variable: get List<T>.Count
+		// else, count occurences from min max inc
+		// finally, calculate product of count of all variables. 
+		int product = 1;
+		foreach(Variable variable in variables)
+			product *= variable.GetCardinality();
+		return product;
 	}
 
 	string FactoryFilterLegit() {
-		return "";
+		StringBuilder sb = new();
+
+
+
+		return sb.ToString();
 	}
 
 	string TranslateClassExercise() {
 		// think through the decomposition here...
-
-
+		string ctorDeclaration = DeclareClass_Ctor_MR();
+		string assignment = Build_Assign_Assignment();
+		List<string> questions = new();
+		for(int i = 0; i < definition.questions.Count; i++) 
+			questions.Add(Build_Add_Question(definition.questions[i], i));
+		
+		string closeClass = Assign_MR_Close_Declaration();
+			
 		StringBuilder code = new();
-		code.Append("");
+		code.Append(ctorDeclaration);
+		code.Append(assignment);
+		foreach(string question in questions) 
+			code.Append(question);
+		code.Append(closeClass);
 		return code.ToString();
 	}
+
+	string DeclareClass_Ctor_MR() {
+		StringBuilder sb = new();
+
+		return sb.ToString();
+	}
+
+	string Build_Assign_Assignment() {
+		StringBuilder sb = new();
+
+		return sb.ToString();
+	}
+
+	string Build_Add_Question(Definition_Question defQ, int qCounter) {
+		StringBuilder sb = new();
+
+		return sb.ToString();
+	}
+
+	string Assign_MR_Close_Declaration() {
+		StringBuilder sb = new();
+
+		return sb.ToString();
+	}
+
+
 
 #endregion
 

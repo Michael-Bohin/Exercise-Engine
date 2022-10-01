@@ -49,9 +49,7 @@ sealed class V_2_Balonky : Variant {
 		int length = result.Length;
 		length -= index;
 		length--;
-		if (length > 2)
-			return true;
-		return false;
+		return length > 2;
 	}
 
 	bool Constraint_02() {
@@ -131,6 +129,8 @@ sealed class F_2_Balonky : Factory<V_2_Balonky> {
 
 sealed class E_2_Balonky : Exercise<V_2_Balonky> {
 	public E_2_Balonky() : base(false) {
+		MacroRepresentation mr = new();
+
 		Text el1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
 		Macro el2 = new("cervene");
 		Text el3 = new(" červených, ");
@@ -139,32 +139,31 @@ sealed class E_2_Balonky : Exercise<V_2_Balonky> {
 		Macro el6 = new("modre");
 		Text el7 = new(" modrých balonků.");
 		List<MacroText> assignment = new() { el1, el2, el3, el4, el5, el6, el7 };
-
-		MacroRepresentation mr = new();
 		mr.assignment = assignment;
 
 		Text q1 = new("Kolik balónků si dal Kuba do batohu dohromady?");
-		Text q2 = new("Jaká je pravděpodobnost, že si Kuba při náhodném výběru vytáhne z batohu modrý balónek?");
-		Text q3 = new("Kterých balonků má Kuba v batohu nejvíce? a) červených, b) modrých nebo c) zelených?");
-
 		MacroQuestion mQ1 = new() {
 			resultType = ResultType.Int,
 			question = new() { q1 }
 		};
+		mr.questions.Add(mQ1);
 
+
+		Text q2 = new("Jaká je pravděpodobnost, že si Kuba při náhodném výběru vytáhne z batohu modrý balónek?");
 		MacroQuestion mQ2 = new() {
 			resultType = ResultType.Double,
 			question = new() { q2 }
 		};
+		mr.questions.Add(mQ2);
 
+
+		Text q3 = new("Kterých balonků má Kuba v batohu nejvíce? a) červených, b) modrých nebo c) zelených?");
 		MacroQuestion mQ3 = new() {
 			resultType = ResultType.Select,
 			question = new() { q3 }
 		};
-
-		mr.questions.Add(mQ1);
-		mr.questions.Add(mQ2);
 		mr.questions.Add(mQ3);
+
 
 		babylon[Language.cs] = mr;
 	}

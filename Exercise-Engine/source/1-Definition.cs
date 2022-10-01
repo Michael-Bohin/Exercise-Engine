@@ -54,8 +54,8 @@ public class Definition_Question {
 //			i.  Count of elements must be greater than 0
 
 [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
-[JsonDerivedType(typeof(Range<double>), "double_rng")]
-[JsonDerivedType(typeof(Range<int>), "int_rng")]
+[JsonDerivedType(typeof(DoubleRange), "double_rng")]
+[JsonDerivedType(typeof(IntRange), "int_rng")]
 [JsonDerivedType(typeof(Set<int>), "int_set")]
 [JsonDerivedType(typeof(Set<double>), "double_set")]
 [JsonDerivedType(typeof(Set<Operator>), "Operator_set")]
@@ -67,10 +67,12 @@ abstract public class Variable {
 		this.Name = Name; 
 	}
 
+	abstract public int GetCardinality();
+
 	// abstract string GetTypeRepr(); // used by interpreter
 }
 
-sealed public class Range<T> : Variable where T : struct, IComparable {
+public abstract class Range<T> : Variable where T : struct, IComparable {
 	public Range(string Name, T Min, T Max, T Inc) : base(Name) {
 		if(Max.CompareTo(Min) < 0)
 			throw new ArgumentException($"Range variable must have maximum equal or greater to minimum. Recieved values: Max: {Max}, Min: {Min} ");
@@ -83,7 +85,26 @@ sealed public class Range<T> : Variable where T : struct, IComparable {
 
 	public T Min { get; }
 	public T Max { get; }
-	public T Increment { get; }	
+	public T Increment { get; }
+}
+
+sealed public class IntRange : Range<int> {
+	public IntRange(string Name, int Min, int Max, int Inc) : base(Name, Min, Max, Inc) {}
+
+	public override int GetCardinality() {
+		int rozsah = Max - Min;
+		return (rozsah / Increment) + 1;
+	}
+}
+
+sealed public class DoubleRange: Range<double> {
+	public DoubleRange (string Name, double Min, double Max, double Inc) : base(Name, Min, Max, Inc) { }
+
+	public override int GetCardinality() {
+		double rozsah = Max - Min;
+		double exclusiveCardinality = rozsah / Increment;
+		return (int)exclusiveCardinality + 1;
+	}
 }
 
 // once we will start using strings as variable, struct constraint will have to be removed 
@@ -94,6 +115,8 @@ sealed public class Set<T> : Variable where T : struct, IComparable {
 			throw new ArgumentException("Set variable must have at least one element in its set. Why consider variable as empty set??? ");
 		this.Elements = Elements; 
 	}
+
+	public override int GetCardinality() => Elements.Count;
 }
 
 // definitelly longest class name:
@@ -123,8 +146,8 @@ public class Bindable_NotPolymorphic_Variable {
 		return CastToDoubleRange();
     }
 
-	Range<int> CastToIntRange() => new (name, intMin, intMax, intIncrement);
-	Range<double> CastToDoubleRange() => new(name, doubleMin, doubleMax, doubleIncrement);
+	IntRange CastToIntRange() => new (name, intMin, intMax, intIncrement);
+	DoubleRange CastToDoubleRange() => new(name, doubleMin, doubleMax, doubleIncrement);
 
 	Variable CastToSet() {
 		if (dataType == DataType.Operator)
