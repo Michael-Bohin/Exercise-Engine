@@ -50,9 +50,9 @@ public class Interpreter {
 #region Translate Helper methods
 
 	void ValidateDefinition() {
-		// 1. check that at least one variable is present 
-		// 2. check that all variable names are unique 
-		// 3. check validity of all variable names: they only contain [a-zA-Z0-9_] and dont begin with digit
+		// 1. check: that at least one variable is present 
+		// 2. check: that all variable names are unique 
+		// 3. check: validity of all variable names: they only contain [a-zA-Z0-9_] and dont begin with digit
 		// 4. check: the list of questions contains at least one question ... whats the point of solving a problem without a question, right?
 
 		if(definition.variables.Count == 0)
@@ -121,11 +121,11 @@ public class Interpreter {
 	}
 
 	// ! move this to variable class (first figure out how it can be done syntactically..)
-	string VariableTypeRepr(Variable v) {
-		if (v is Range<int> || v is Set<int>) 
+	static string VariableTypeRepr(Variable v) {
+		if (v is IntRange || v is Set<int>) 
 			return "int";
 		
-		if (v is Range<double> || v is Set<double>) 
+		if (v is DoubleRange || v is Set<double>) 
 			return "double";
 		
 		if (v is Set<Operator>) 
@@ -279,24 +279,22 @@ public class Interpreter {
 		string ctor = FactoryCtor();
 		string filterLegit = FactoryFilterLegit();
 
-		StringBuilder code = new();
-		code.Append(ctor);
-		code.Append(filterLegit);
-		return code.ToString();
+		StringBuilder sb = new();
+		sb.Append(ctor);
+		sb.Append(filterLegit);
+		sb.Append("}\n\n"); // end class sealed factory
+		return sb.ToString();
 	}
 
 	
 	string FactoryCtor() {
 		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
+		string classDeclaration = $"sealed class {factoryName} : Factory<{variantName}> {openCurly}\n";
+		string ctorDeclaration = $"\tpublic {factoryName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
 
 		StringBuilder sb = new();
-
-		string classDeclaration = $"sealed class {factoryName} : Factory<{variantName}> {openCurly}\n";
-		string ctorDeclaration = $"\tpublic {factoryName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}";
-
-
-
-
+		sb.Append(classDeclaration);
+		sb.Append(ctorDeclaration);
 		return sb.ToString();
 	}
 
@@ -313,10 +311,82 @@ public class Interpreter {
 	string FactoryFilterLegit() {
 		StringBuilder sb = new();
 
-
-
+		string FilterMethodDeclaration = $"\tpublic override void FilterLegitVariants() {openCurly}\n";
+		string SetVariablesListInitialization = InstantiateSetLists(definition.variables);
+		string _WriteLine = "\t\tWriteLine($" + '"' + $"Initiating for loop, expecting to see {openCurly}expected{closeCurly} variants." + '"' + ");\n";
+		string forLoop = BuildForLoop(definition.variables);
+		
+		sb.Append(FilterMethodDeclaration);
+		sb.Append(SetVariablesListInitialization);
+		sb.Append(_WriteLine);
+		sb.Append(forLoop);
+		sb.Append("\t}\n");
 		return sb.ToString();
 	}
+
+	static string InstantiateSetLists(List<Variable> variables) {
+		StringBuilder sb = new();
+		foreach(Variable variable in variables) {
+			sb.Append("\t\t");
+			sb.Append(variable.GetCodeSetInstantionLine());
+			sb.Append('\n');
+		}
+		return sb.ToString();
+	}
+
+	string BuildForLoop(List<Variable> variables) {
+		StringBuilder sb = new();
+		sb.Append(OpenForLoops(variables, out int indentCounter));
+		sb.Append(BuildForLoopBody(variables, indentCounter));
+		sb.Append(CloseForLoops(indentCounter));
+		return sb.ToString();
+	}
+
+	static string OpenForLoops(List<Variable> variables, out int indentCounter) {
+		indentCounter = 2;
+		StringBuilder sb = new();
+		foreach (Variable variable in variables) {
+			for (int i = 0; i < indentCounter; i++)
+				sb.Append('\t');
+			sb.Append(variable.GetForLoopLine());
+			sb.Append('\n');
+			indentCounter++;
+		}
+	
+		return sb.ToString();
+	}
+
+	string BuildForLoopBody(List<Variable> variables, int indentCounter) {
+		StringBuilder sb = new();
+		for (int i = 0; i < indentCounter; i++)
+			sb.Append('\t');
+
+		sb.Append($"{variantName} variant = new(");
+		for (int i = 0; i < variables.Count; i++) {
+			if (i != 0)
+				sb.Append(", ");
+			sb.Append(variables[i].Name);
+		}
+
+		sb.Append(");\n");
+		for (int i = 0; i < indentCounter; i++)
+			sb.Append('\t');
+
+		sb.Append("Consider(variant);\n");
+		return sb.ToString();
+	}
+
+	static string CloseForLoops(int indentCounter) {
+		StringBuilder sb = new();
+		while (indentCounter > 1) {
+			for (int i = 0; i < indentCounter; i++)
+				sb.Append('\t');
+			sb.Append("}\n");
+			indentCounter--;
+		}
+		return sb.ToString();
+	}
+
 
 	string TranslateClassExercise() {
 		// think through the decomposition here...

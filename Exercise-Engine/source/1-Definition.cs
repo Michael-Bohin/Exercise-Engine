@@ -1,6 +1,7 @@
 ﻿namespace ExerciseEngine;
 using System.Text.RegularExpressions;
 using System.Text.Json.Serialization;
+using System.Text;
 
 #region Definition
 
@@ -69,6 +70,12 @@ abstract public class Variable {
 
 	abstract public int GetCardinality();
 
+	abstract public string GetCodeSetInstantionLine();
+
+	abstract public string GetForLoopLine();
+
+	abstract public string TypeRepresentation();
+
 	// abstract string GetTypeRepr(); // used by interpreter
 }
 
@@ -86,6 +93,20 @@ public abstract class Range<T> : Variable where T : struct, IComparable {
 	public T Min { get; }
 	public T Max { get; }
 	public T Increment { get; }
+
+	public override string GetCodeSetInstantionLine() => ""; // ranges don't need this -> returning empty string make the code inside interpreter simpler, as interpreter just calls the method on all variables.
+
+	public override string GetForLoopLine() {
+		StringBuilder sb = new();
+		sb.Append($"for ({TypeRepresentation()} {Name} = {Min}; {Name} <= {Max}; ");
+		if(Increment.CompareTo(1) == 0) {
+			sb.Append($"{Name}++ ");
+		} else {
+			sb.Append($" {Name} = {Name} + {Increment} ");
+		}
+		sb.Append(") {");
+		return sb.ToString();
+	}
 }
 
 sealed public class IntRange : Range<int> {
@@ -95,6 +116,8 @@ sealed public class IntRange : Range<int> {
 		int rozsah = Max - Min;
 		return (rozsah / Increment) + 1;
 	}
+
+	public override string TypeRepresentation() => "int";
 }
 
 sealed public class DoubleRange: Range<double> {
@@ -105,6 +128,8 @@ sealed public class DoubleRange: Range<double> {
 		double exclusiveCardinality = rozsah / Increment;
 		return (int)exclusiveCardinality + 1;
 	}
+
+	public override string TypeRepresentation() => "double";
 }
 
 // once we will start using strings as variable, struct constraint will have to be removed 
@@ -117,6 +142,34 @@ sealed public class Set<T> : Variable where T : struct, IComparable {
 	}
 
 	public override int GetCardinality() => Elements.Count;
+
+	public override string GetForLoopLine() {
+		StringBuilder sb = new();
+		sb.Append($"foreach({TypeRepresentation()} element_{Name} in Elements_{Name}) " + '{');
+		return sb.ToString();
+	}
+
+	public override string TypeRepresentation() {
+		// throw new NotImplementedException();
+		return "how the fuck should I implement this shit??";
+	}
+
+	public override string GetCodeSetInstantionLine() {
+		StringBuilder sb  = new();
+		sb.Append($"List<{TypeRepresentation()}> Elements_{Name} = new() " + '{');
+
+		for(int i = 0; i < Elements.Count; i++) {
+			if(i != 0)
+				sb.Append(", ");
+			sb.Append(Elements[i]);
+		}
+
+		// !!!! enum Operator to string will probably fail here (return numbers not strings..) !!!!
+
+		sb.Append("};");
+		sb.ToString();
+		return sb.ToString();
+	}
 }
 
 // definitelly longest class name:
