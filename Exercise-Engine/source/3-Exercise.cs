@@ -1,6 +1,8 @@
 ﻿namespace ExerciseEngine;
 
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 // zatim nemichat jazyky, udelat jen pro cestinu!
 // protected Dictionary<Language, Description> translations = new();
@@ -32,17 +34,18 @@ public abstract class Variant {
 // public abstract class Factory<V> where V : Variant { }
 
 public abstract class Exercise<V> where V : Variant {
+	public readonly string exerciseName;
 	// Factory method:
-	protected int expected, actual;
+	public int expected, actual;
 	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
 	public List<V> legit = new();
 	public List<List<V>> illegal = new();
-	
-	// Builder:
-	readonly protected Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
-	readonly protected bool monoLingual;
 
-	protected Exercise(bool monoLingual, int constraintCount, int expected) {
+	// Builder:
+	public readonly Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
+	public readonly bool monoLingual;
+
+	protected Exercise(bool monoLingual, int constraintCount, int expected, string exerciseName) {
 		this.monoLingual = monoLingual;
 		this.expected = expected;
 		actual = 0;
@@ -50,6 +53,7 @@ public abstract class Exercise<V> where V : Variant {
 			constraintLog.Add(0);
 			illegal.Add(new());
 		}
+		this.exerciseName = exerciseName;
 	}
 
 	/// <summary>
@@ -58,14 +62,17 @@ public abstract class Exercise<V> where V : Variant {
 	public abstract void FilterLegitVariants();
 
 	public string ReportStatistics() {
-		StringBuilder sr = new();
-		sr.Append($"Expected variants count: {expected}\n");
-		sr.Append($"Actual variants instantiated: {actual}\n");
-		sr.Append($"Number of constraints: {constraintLog.Count}\n");
+		StringBuilder sb = new();
+		sb.Append($"Statistics of class {exerciseName}\n");
+		sb.Append($"Expected number of variants: {expected}\n");
+		sb.Append($"Actual number of variants considered: {actual}\n");
+		sb.Append($"Number of constraints: {constraintLog.Count}\n\n");
+		sb.Append($"Legit variants found: {legit.Count}, {((double)(legit.Count * 100)/(double)expected):f2} %\n\n");
+		sb.Append("Constraints disallowed variants:\n");
 		if (constraintLog.Count > 0)
 			for (int i = 0; i < constraintLog.Count; i++)
-				sr.Append($"{i}, occurences: {constraintLog[i]}\n");
-		return sr.ToString();
+				sb.Append($"Constraint {i}: {constraintLog[i]}, {((double)(constraintLog[i] * 100) / (double)expected):f2} %\n");
+		return sb.ToString();
 	}
 
 	protected void Consider(V cv) {
@@ -134,5 +141,34 @@ public abstract class Exercise<V> where V : Variant {
 			}
 		}
 		return sb.ToString();
+	}
+
+	// serialize representations in bulk:
+	public List<Representation> LanguageRepresentation(Language lang) {
+		List<Representation> result = new();
+		foreach(V variant in legit) {
+			Representation r = GetRepresentation(variant, lang);
+			result.Add(r);
+		}
+		return result;
+	}
+
+	public string SerializedLanguageRepresentation(Language lang, bool indented) {
+		List<Representation> languageRepr = LanguageRepresentation(lang);
+		JsonSerializerOptions options = new() {	
+			WriteIndented = indented,
+			IncludeFields = true // important option -> serializes empty object if set to false..	
+		};
+		string json = JsonSerializer.Serialize<List<Representation>>(languageRepr, options);
+		return json;
+	}
+
+	public string SerializeSelf(bool indented) {
+		JsonSerializerOptions options = new() {
+			WriteIndented = indented,
+			IncludeFields = true // important option -> serializes empty object if set to false..	
+		};
+		string json = JsonSerializer.Serialize<Exercise<V>>(this, options);
+		return json;
 	}
 }

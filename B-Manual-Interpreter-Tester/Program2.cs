@@ -1,29 +1,33 @@
 ﻿using ExerciseEngine;
-using static System.Console;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 E_2_Balonky exercise_2 = new();
-F_2_Balonky factory_2 = new();
-factory_2.FilterLegitVariants();
+exercise_2.FilterLegitVariants();
+string json = exercise_2.SerializedLanguageRepresentation(Language.cs, true);
+string stats = exercise_2.ReportStatistics();
+string selfJson = exercise_2.SerializeSelf(true);
 
-List<string> result = new();
-foreach (var variant in factory_2.legit) {
-	Representation r = exercise_2.GetRepresentation(variant, Language.cs);
-	result.Add(r.assignment + "   " + r.questions[0].result + "  " + r.questions[1].result + "  " + r.questions[2].result);
-}
+using StreamWriter sw = new("serialized_B.json");
+sw.Write(json);
 
-// save the result:
-using (StreamWriter sw = new("logB.txt")) {
-	foreach (var line in result)
-		sw.WriteLine(line);
-}
+using StreamWriter sw2 = new("statsB.txt");
+sw2.Write(stats);
 
-using (StreamWriter sw = new("statsB.txt")) 
-	sw.WriteLine(factory_2.ReportStatistics());
+using StreamWriter sw3 = new("selfSerializedExercise.json");
+sw3.Write(selfJson);
+
+
+
+// next question to solve: how do we proceed with creating macro representions for all languages using deepL api and macroRep of initial language??
 
 // expected to be written by interpreter based on definition:
 sealed class V_2_Balonky : Variant {
+	[JsonPropertyName("R")]
 	public readonly int cervene;
+	[JsonPropertyName("G")]
 	public readonly int zelene;
+	[JsonPropertyName("B")]
 	public readonly int modre;
 	public V_2_Balonky(int cervene, int zelene, int modre) {
 		this.cervene = cervene;
@@ -97,38 +101,17 @@ sealed class V_2_Balonky : Variant {
 	}
 
 	public override string VariableRepresentation(string variableName) {
-		switch (variableName) {
-			case "cervene":
-				return cervene.ToString();
-			case "zelene":
-				return zelene.ToString();
-			case "modre":
-				return modre.ToString();
-
-			default:
-				throw new ArgumentException("Variable representation recieved invalid variable name: " + variableName + "\n");
-		}
-	}
-}
-
-sealed class F_2_Balonky : Factory<V_2_Balonky> {
-	public F_2_Balonky() : base(2, 24_389) { }
-
-	public override void FilterLegitVariants() {
-		WriteLine($"Initiating for loop, expecting to see {expected} variants.");
-		for (int cervene = 2; cervene <= 30; cervene++) {
-			for (int zelene = 2; zelene <= 30; zelene++) {
-				for (int modre = 2; modre <= 30; modre++) {
-					V_2_Balonky variant = new(cervene, zelene, modre);
-					Consider(variant);
-				}
-			}
-		}
+		return variableName switch {
+			"cervene" => cervene.ToString(),
+			"zelene" => zelene.ToString(),
+			"modre" => modre.ToString(),
+			_ => throw new ArgumentException("Variable representation recieved invalid variable name: " + variableName + "\n"),
+		};
 	}
 }
 
 sealed class E_2_Balonky : Exercise<V_2_Balonky> {
-	public E_2_Balonky() : base(false) {
+	public E_2_Balonky() : base(false, 2, 24_389, "E_2_Balonky") {
 		MacroRepresentation mr = new();
 
 		Text el1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
@@ -166,5 +149,17 @@ sealed class E_2_Balonky : Exercise<V_2_Balonky> {
 
 
 		babylon[Language.cs] = mr;
+	}
+
+	public override void FilterLegitVariants() {
+		Console.WriteLine($"Initiating nested for loops, expecting to see {expected} variants.");
+		for (int cervene = 2; cervene <= 30; cervene++) {
+			for (int zelene = 2; zelene <= 30; zelene++) {
+				for (int modre = 2; modre <= 30; modre++) {
+					V_2_Balonky variant = new(cervene, zelene, modre);
+					Consider(variant);
+				}
+			}
+		}
 	}
 }
