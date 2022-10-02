@@ -6,16 +6,13 @@ using System.Text;
 // protected Dictionary<Language, Description> translations = new();
 
 public abstract class Variant {
-	// exercise shouldnt be aware of its metadata! but where do I put them??
-	// variants will be written in children by interpreters: List<tuple> variants
-	// the tuple type and number of parameters will be different for all
 	public abstract bool IsLegit(out int constraintId);
 
 	public abstract string VariableRepresentation(string variableName);
 
 	public abstract string GetResult(int questionIndex);
 
-	protected char OpToChar(Operator op) {
+	static protected char OpToChar(Operator op) {
 		switch (op) {
 			case Operator.Add:
 				return '+';
@@ -31,23 +28,33 @@ public abstract class Variant {
 	}
 }
 
-public abstract class Factory<V> where V : Variant {
-	protected int constraintCount, expected, actual;
-	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
+// Factory class merged into Exercise class
+// public abstract class Factory<V> where V : Variant { }
 
+public abstract class Exercise<V> where V : Variant {
+	// Factory method:
+	protected int expected, actual;
+	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
 	public List<V> legit = new();
 	public List<List<V>> illegal = new();
+	
+	// Builder:
+	readonly protected Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
+	readonly protected bool monoLingual;
 
-	public Factory(int constraintCount, int expected) {
-		this.constraintCount = constraintCount;
+	protected Exercise(bool monoLingual, int constraintCount, int expected) {
+		this.monoLingual = monoLingual;
 		this.expected = expected;
 		actual = 0;
-		for(int i = 0; i < constraintCount; i++) {
+		for (int i = 0; i < constraintCount; i++) {
 			constraintLog.Add(0);
 			illegal.Add(new());
-		}	
+		}
 	}
 
+	/// <summary>
+	/// Factory Method -> Create n legit variants
+	/// </summary>
 	public abstract void FilterLegitVariants();
 
 	public string ReportStatistics() {
@@ -55,13 +62,13 @@ public abstract class Factory<V> where V : Variant {
 		sr.Append($"Expected variants count: {expected}\n");
 		sr.Append($"Actual variants instantiated: {actual}\n");
 		sr.Append($"Number of constraints: {constraintLog.Count}\n");
-		if(constraintLog.Count > 0) 
-			for(int i =0 ; i < constraintLog.Count; i++) 
+		if (constraintLog.Count > 0)
+			for (int i = 0; i < constraintLog.Count; i++)
 				sr.Append($"{i}, occurences: {constraintLog[i]}\n");
 		return sr.ToString();
-    }
+	}
 
-	public void Consider(V cv) {
+	protected void Consider(V cv) {
 		actual++;
 		if (cv.IsLegit(out int constraintId)) {
 			legit.Add(cv);
@@ -71,17 +78,12 @@ public abstract class Factory<V> where V : Variant {
 				illegal[constraintId].Add(cv);
 		}
 	}
-}
 
-// should I / how do I ensure that the macrorepresentation instance matches the generic variant?
-public abstract class Exercise<V> where V : Variant { 
-	readonly protected Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
-	readonly protected bool monoLingual;
-
-	protected Exercise(bool monoLingual) {
-		this.monoLingual = monoLingual;
-	}
-
+	/// <summary>
+	/// Builder: 
+	///		1. Set MacroRepresentation of Language l 
+	///		2. Build Representation of exercise given Variant v and Language l 
+	/// </summary>
 	public bool HasLanguage(Language language) {
 		return monoLingual || babylon.ContainsKey(language);
 	}

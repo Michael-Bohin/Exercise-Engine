@@ -38,10 +38,8 @@ public class Interpreter {
 		string exerciseCode = TranslateClassExercise();
 		
 		StringBuilder code = new();
-		code.Append(variantCode);
-		code.Append('\n');
-		code.Append(factoryCode);
-		code.Append('\n');
+		code.Append(variantCode + '\n');
+		code.Append(factoryCode + '\n');
 		code.Append(exerciseCode);
 		translatedCode = code.ToString();
 	}
@@ -423,6 +421,11 @@ public class Interpreter {
 
 
 #endregion
+
+	public void SaveAsCsFile() {
+		using StreamWriter sw = new($"{exerciseName}.cs");
+		sw.WriteLine(translatedCode);
+	}
 
 	public void ExecuteTheCode() {
 		// Load exercise engine classes required for the code be compilable 
