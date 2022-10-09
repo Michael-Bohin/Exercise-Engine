@@ -15,10 +15,6 @@ sw1.Write(stats);
 using StreamWriter sw2 = new("json_Exercise_381200_Balonky.json");
 sw2.Write(json);
 
-string StringRepresentation = ex.SerializedLanguageRepresentation(Language.cs, true); // dev time purposes only compiler shall not produce these 3 lines
-using StreamWriter sw3 = new("serialized_as_finnished_strings.json");
-sw3.Write(StringRepresentation);
-
 // >>> 2.: class ConcreteVariant <<<
 
 sealed class Variant_381200_Balonky : Variant {
@@ -109,43 +105,53 @@ sealed class Variant_381200_Balonky : Variant {
 // >>> 3.: class ConcreteExercise <<<
 
 sealed class Exercise_381200_Balonky : Exercise<Variant_381200_Balonky> {
-	public Exercise_381200_Balonky() : base(false, 2, 24_389, "Exercise_381200_Balonky") {
-		MacroRepresentation mr = new();
+	public Exercise_381200_Balonky() : base(false, 2, 24389, "Exercise_381200_Balonky", Language.cs) { }
 
-		Text el1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
-		Macro el2 = new("cervene");
-		Text el3 = new(" červených, ");
-		Macro el4 = new("zelene");
-		Text el5 = new(" zelených a ");
-		Macro el6 = new("modre");
-		Text el7 = new(" modrých balonků.");
-		List<MacroText> assignment = new() { el1, el2, el3, el4, el5, el6, el7 };
-		mr.assignment = assignment;
+	protected override List<MacroText> BuildAssignment() {
+		Text el0 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
+		Macro el1 = new("cervene");
+		Text el2 = new(" červených, ");
+		Macro el3 = new("zelene");
+		Text el4 = new(" zelených a ");
+		Macro el5 = new("modre");
+		Text el6 = new(" modrých balonků.");
+		List<MacroText> assignment = new() { el0, el1, el2, el3, el4, el5, el6 };
+		return assignment;
+	}
 
-		Text q1 = new("Kolik balónků si dal Kuba do batohu dohromady?");
-		MacroQuestion mQ1 = new() {
+	protected override List<MacroQuestion> BuildQuestions() {
+		return new() {
+			Question_0(),
+			Question_1(),
+			Question_2()
+		};
+	}
+
+	static MacroQuestion Question_0() {
+		Text el0 = new("Kolik balónků si dal Kuba do batohu dohromady?");
+		MacroQuestion question = new() {
 			resultType = ResultType.Int,
-			question = new() { q1 }
+			question = new() { el0 }
 		};
-		mr.questions.Add(mQ1);
+		return question;
+	}
 
-
-		Text q2 = new("Jaká je pravděpodobnost, že si Kuba při náhodném výběru vytáhne z batohu modrý balónek?");
-		MacroQuestion mQ2 = new() {
+	static MacroQuestion Question_1() {
+		Text el0 = new("Jaká je pravděpodobnost, že si Kuba při náhodném výběru vytáhne z batohu modrý balónek?");
+		MacroQuestion question = new() {
 			resultType = ResultType.Double,
-			question = new() { q2 }
+			question = new() { el0 }
 		};
-		mr.questions.Add(mQ2);
+		return question;
+	}
 
-
-		Text q3 = new("Kterých balonků má Kuba v batohu nejvíce? a) červených, b) modrých nebo c) zelených?");
-		MacroQuestion mQ3 = new() {
+	static MacroQuestion Question_2() {
+		Text el0 = new("Kterých balonků má Kuba v batohu nejvíce? a) červených, b) modrých nebo c) zelených?");
+		MacroQuestion question = new() {
 			resultType = ResultType.Select,
-			question = new() { q3 }
+			question = new() { el0 }
 		};
-		mr.questions.Add(mQ3);
-
-		babylon[Language.cs] = mr;
+		return question;
 	}
 
 	public override void FilterLegitVariants() {

@@ -7,6 +7,7 @@ using System.Text;
 
 public class Definition_MetaData { 
 	public Language		initialLanguage;
+	public bool			monolingual = false;
 	public ExerciseType type;
 	public string		title = "";
 	public string		description = "";
@@ -259,20 +260,32 @@ public class Bindable_NotPolymorphic_Variable {
 [JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
 [JsonDerivedType(typeof(Macro), "macro")]
 [JsonDerivedType(typeof(Text), "text")]
-abstract public class MacroText { }
+abstract public class MacroText {
+	const char openCurly = '{', closeCurly = '}', quotes = '"';
+
+	public string TranslateInstantiation(int order) {
+		return $"{ChildType()} el{order} = new({quotes}{Representation()}{quotes});";
+	}
+	
+	abstract protected string ChildType();
+	abstract protected string Representation();
+}
 
 sealed public class Macro : MacroText {
 	public string pointer;
+	public Macro(string pointer) =>	this.pointer = pointer;
 
-	public Macro(string pointer) {
-		this.pointer = pointer;
-	}
+	override protected string ChildType() => "Macro";
+	override protected string Representation() => pointer;
 }
 
 sealed public class Text : MacroText {
 	public string constText = default!;
 
 	public Text(string constText) => this.constText = constText;
+
+	override protected string ChildType() => "Text";
+	override protected string Representation() => constText;
 }
 
 #endregion

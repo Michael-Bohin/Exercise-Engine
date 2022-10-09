@@ -116,7 +116,7 @@ class UsageCompiler : CompilerHelper {
 		sb.Append("sw1.Write(stats);\n\n");
 
 		sb.Append($"using StreamWriter sw2 = new({quotes}json_{exerciseName}.json{quotes});\n");
-		sb.Append("sw2.Write(json);\n\n");
+		sb.Append("sw2.Write(json);\n");
 
 		return sb.ToString();
 	}
@@ -300,45 +300,96 @@ class ExerciseCompiler : CompilerHelper {
 
 	public string Translate() {
 		StringBuilder sb = new();
-		sb.Append(DeclareClass_Ctor());
+		sb.Append(DeclareClass_And_Ctor());
+		sb.Append(OverrideAssignment());
+		sb.Append(OverrideQuestions());
 		sb.Append(FactoryFilterLegit());
 		sb.Append('}'); // close class ConcreteExercise
 		return sb.ToString();
 	}
 
-	string DeclareClass_Ctor() {
-		string assignment = Build_Assign_Assignment();
-		List<string> questions = new();
-		for (int i = 0; i < definition.questions.Count; i++)
-			questions.Add(Build_Add_Question(definition.questions[i], i));
-		string closeClass = Assign_MR_Close_Declaration();
+	string DeclareClass_And_Ctor() {
+		int expected = CountEventSpaceCardinality(definition.variables);
+		string monoLingual = definition.metaData.monolingual.ToString().ToLower();
+		int constraints = definition.constraints.Count;
+		string language = $"Language.{definition.metaData.initialLanguage.ToString()}";
+		string name = $"{quotes}{exerciseName}{quotes}";
+		string baseParameters = $"{monoLingual}, {constraints}, {expected}, {name}, {language}";
 
 		StringBuilder sb = new();
 		sb.Append(exerciseHeadline + '\n' + '\n');
 		sb.Append($"sealed class {exerciseName} : Exercise<{variantName}> {openCurly}\n");
-		sb.Append(assignment);
-		foreach (string question in questions)
-			sb.Append(question);
-		sb.Append(closeClass);
+		sb.Append($"\tpublic {exerciseName}() : base({baseParameters}) {openCurly} {closeCurly}\n\n");
+		return sb.ToString();
+	}
+
+	static int CountEventSpaceCardinality(List<Variable> variables) {
+		// if is set variable: get List<T>.Count
+		// else, count occurences from min max inc
+		// finally, calculate product of count of all variables. 
+		int product = 1;
+		foreach (Variable variable in variables)
+			product *= variable.GetCardinality();
+		return product;
+	}
+
+	string OverrideAssignment() {
+		StringBuilder sb = new();
+		sb.Append($"\tprotected override List<MacroText> BuildAssignment() {openCurly}\n");
+		for(int i = 0; i < definition.assignment.Count; i++) {
+			string element = definition.assignment[i].TranslateInstantiation(i);
+			sb.Append($"\t\t{element}\n");
+		}
+
+		sb.Append($"\t\tList<MacroText> assignment = new() {openCurly} ");
+		for (int i = 0; i < definition.assignment.Count; i++) {
+			if(i != 0)
+				sb.Append(", ");
+			sb.Append($"el{i}");
+		}
+
+		sb.Append(" };\n\t\treturn assignment;\n\t}\n\n");
+		return sb.ToString();
+	}
+
+	string OverrideQuestions() {
+		StringBuilder sb = new();
+		sb.Append("\tprotected override List<MacroQuestion> BuildQuestions() {\n");
+		sb.Append("\t\treturn new() {\n");
+
+		for(int i = 0; i < definition.questions.Count; i++) {
+			sb.Append($"\t\t\tQuestion_{i}()");
+			if(i != definition.questions.Count - 1)
+				sb.Append(',');
+			sb.Append('\n');
+		}
+		sb.Append("\t\t};\n\t}\n\n");
+
+		for (int i = 0; i < definition.questions.Count; i++) 
+			sb.Append(BuildQuestion(definition.questions[i], i));
 
 		return sb.ToString();
 	}
 
-	string Build_Assign_Assignment() {
+	static string BuildQuestion(Definition_Question defQuestion, int order) {
 		StringBuilder sb = new();
+		sb.Append($"\tstatic MacroQuestion Question_{order}() {openCurly}\n");
+		for(int i = 0; i < defQuestion.question.Count; i++) {
+			string el = defQuestion.question[i].TranslateInstantiation(i);
+			sb.Append($"\t\t{el}\n");
+		}
 
-		return sb.ToString();
-	}
+		sb.Append("\t\tMacroQuestion question = new() {\n");
+		// result type and result should always be present.. !!! unfinnished -> treat image paths and solution steps !!!
+		sb.Append($"\t\t\tresultType = ResultType.{defQuestion.resultType.ToString()},\n");
+		sb.Append($"\t\t\tquestion = new() {openCurly} ");
+		for(int i = 0; i < defQuestion.question.Count; i++) {
+			if(i != 0)
+				sb.Append(", ");
+			sb.Append($"el{i}");
+		}
 
-	string Build_Add_Question(Definition_Question defQ, int qCounter) {
-		StringBuilder sb = new();
-
-		return sb.ToString();
-	}
-
-	string Assign_MR_Close_Declaration() {
-		StringBuilder sb = new();
-
+		sb.Append($" {closeCurly}\n\t\t{closeCurly};\n\t\treturn question;\n\t{closeCurly}\n\n");
 		return sb.ToString();
 	}
 
@@ -420,40 +471,4 @@ class ExerciseCompiler : CompilerHelper {
 		}
 		return sb.ToString();
 	}
-
-#region Translate - class ConcreteFactory
-	/*
-	string TranslateClassFactory() {
-		string ctor = FactoryCtor();
-		string filterLegit = FactoryFilterLegit();
-
-		StringBuilder sb = new();
-		sb.Append(ctor);
-		sb.Append(filterLegit);
-		sb.Append("}\n\n"); // end class sealed factory
-		return sb.ToString();
-	}
-
-	string FactoryCtor() {
-		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
-		string classDeclaration = $"sealed class {exerciseName} : Factory<{variantName}> {openCurly}\n";
-		string ctorDeclaration = $"\tpublic {exerciseName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
-
-		StringBuilder sb = new();
-		sb.Append(classDeclaration);
-		sb.Append(ctorDeclaration);
-		return sb.ToString();
-	}
-
-	static int CountEventSpaceCardinality(List<Variable> variables) {
-		// if is set variable: get List<T>.Count
-		// else, count occurences from min max inc
-		// finally, calculate product of count of all variables. 
-		int product = 1;
-		foreach(Variable variable in variables)
-			product *= variable.GetCardinality();
-		return product;
-	}*/
-#endregion
-
 }

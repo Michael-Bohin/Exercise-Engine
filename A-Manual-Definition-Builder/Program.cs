@@ -2,6 +2,7 @@
 using static System.Console;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text;
 
 WriteLine("Hello");
 
@@ -18,8 +19,10 @@ compiler.Translate();*/
 
 compiler.LoadDefinition(defD, 381_200);
 string code = compiler.Translate();
+// System.IO.FileStreamOptions fileStreamOptions = new System.IO.FileStreamOptions();
+// using StreamWriter sw = new($"{compiler.fileName}.cs", false, System.Text.Encoding.ASCII);
 
-using StreamWriter sw = new($"{compiler.fileName}.cs");
+using StreamWriter sw = new($"{compiler.fileName}.cs", false, Encoding.UTF8);
 sw.Write(code);
 
 

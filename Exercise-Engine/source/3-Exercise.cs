@@ -46,7 +46,7 @@ public abstract class Exercise<V> where V : Variant {
 	public readonly Dictionary<Language, MacroRepresentation> babylon = new(); // i am just running out of names I can image at this point tbh. once finnished,  think this one through again.
 	public readonly bool monoLingual;
 
-	protected Exercise(bool monoLingual, int constraintCount, int expected, string exerciseName) {
+	protected Exercise(bool monoLingual, int constraintCount, int expected, string exerciseName, Language initialLanguage) {
 		this.monoLingual = monoLingual;
 		this.expected = expected;
 		actual = 0;
@@ -55,12 +55,29 @@ public abstract class Exercise<V> where V : Variant {
 			illegal.Add(new());
 		}
 		this.exerciseName = exerciseName;
+
+		MacroRepresentation mr = new() {
+			assignment = BuildAssignment(),
+			questions = BuildQuestions()
+		};
+
+		babylon[initialLanguage] = mr;
 	}
 
 	/// <summary>
 	/// Factory Method -> Create n legit variants
 	/// </summary>
 	public abstract void FilterLegitVariants();
+
+	/// <summary>
+	/// Builder methods for Macro representation used in Exercise ctor.
+	/// </summary>
+	/// 
+	protected abstract List<MacroText> BuildAssignment();
+
+	protected abstract List<MacroQuestion> BuildQuestions();
+
+
 
 	public string ReportStatistics() {
 		StringBuilder sb = new();
