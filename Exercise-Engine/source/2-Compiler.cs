@@ -1,62 +1,47 @@
 ﻿namespace ExerciseEngine;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Console;
 
 public class Compiler { 
 	Definition definition = new();
-	int uniqueId = -1;
-	bool definitionLoaded = false;
-	string translatedCode = "";
-	string variantName = "";
-	string exerciseName = "";
+	public string fileName = "";
+	UsageCompiler usageCompiler = new();
+	VariantCompiler variantCompiler = new();
+	ExerciseCompiler exerciseCompiler = new();
+	bool definitionLoaded = false; 
 
-	const char quotes = '"';
-	const string usageHeadline = "// >>> 1.: Intended usage <<<";
-	const string variantHeadline = "// >>> 2.: class ConcreteVariant <<<";
-	const string exerciseHeadline = "// >>> 3.: class ConcreteExercise <<<";
-
-	// const strings for simpler interpreter code:
-	const string openCurly = "{";
-	const string closeCurly = "}";
-
+	// !throws erros!, calee should be catching them (especialy validate definition)
 	public void LoadDefinition(Definition definition, int uniqueId) {
 		if(uniqueId < 0)
 			throw new ArgumentException("\nId of exercise must be positive integers! recieved: " + uniqueId.ToString());
-
 		this.definition = definition;
-		this.uniqueId = uniqueId;
 		definitionLoaded = true;
-	}
-
-	// !throws erros!, calee should be catching them (especialy validate definition)
-
-	public void Translate() {
-		if (!definitionLoaded)
-			throw new InvalidOperationException("\nInstance of interpreter does not have an instance of Definition at this point. No definition to interpret.");
 
 		ValidateDefinition();
-		FigureOutClassNames();
-		string usageCode = TranslateRuntimeUsage();
-		string variantCode = TranslateClassVariant();
-		string exerciseCode = TranslateClassExercise();
-		
-		StringBuilder code = new();
-		code.Append(usageCode + '\n');
-		code.Append(variantCode + '\n');
-		code.Append(exerciseCode);
-		translatedCode = code.ToString();
+		(string variantName, string exerciseName) = FigureOutClassNames(uniqueId);
+
+		fileName = exerciseName;
+		usageCompiler = new(this.definition, exerciseName);
+		variantCompiler = new(this.definition, variantName);
+		exerciseCompiler = new(this.definition, variantName, exerciseName);
 	}
 
+	public string Translate() {
+		if (!definitionLoaded)
+			throw new InvalidOperationException("\nInstance of interpreter does not have an instance of Definition at this point. No definition to interpret.");
+		
+		StringBuilder code = new();
+		code.Append(usageCompiler.Translate() + '\n');
+		code.Append(variantCompiler.Translate() + '\n');
+		code.Append(exerciseCompiler.Translate());
+		return code.ToString();
+	}
 
-#region Translate Helper methods
-
+	// 1. check: that at least one variable is present 
+	// 2. check: that all variable names are unique 
+	// 3. check: validity of all variable names: they only contain [a-zA-Z0-9_] and dont begin with digit
+	// 4. check: the list of questions contains at least one question ... whats the point of solving a problem without a question, right?
 	void ValidateDefinition() {
-		// 1. check: that at least one variable is present 
-		// 2. check: that all variable names are unique 
-		// 3. check: validity of all variable names: they only contain [a-zA-Z0-9_] and dont begin with digit
-		// 4. check: the list of questions contains at least one question ... whats the point of solving a problem without a question, right?
-
 		if(definition.variables.Count == 0)
 			throw new InvalidOperationException("Interpreter cannot translate definition that does not have any variables.");
 
@@ -78,7 +63,7 @@ public class Compiler {
 	}
 
 #pragma warning disable IDE0057 // Use range operator
-	void FigureOutClassNames() {
+	(string variantName, string exerciseName) FigureOutClassNames(int uniqueId) {
 		string title = definition.metaData.title;
 		// 1. take only first 10 chars
 		// 2. substitute all whitespace characters in title with underscore
@@ -91,12 +76,30 @@ public class Compiler {
 		title = title.Replace(' ', '_');
 		title = Regex.Replace(title, @"[^0-9a-zA-Z_]", "");
 
-		variantName =  $"Variant_{uniqueId}_{title}";
-		exerciseName = $"Exercise_{uniqueId}_{title}";
+		string v = $"Variant_{uniqueId}_{title}";
+		string e = $"Exercise_{uniqueId}_{title}";
+		return (v , e);
 	}
 #pragma warning restore IDE0057 // Use range operator
+}
 
-	string TranslateRuntimeUsage() {
+abstract class CompilerHelper {
+	protected const char quotes = '"', openCurly = '{', closeCurly = '}';
+	protected Definition definition = new();
+	protected string variantName = "";
+	protected string exerciseName = "";
+}
+
+class UsageCompiler : CompilerHelper {
+	const string usageHeadline = "// >>> 1.: Intended usage <<<";
+	public UsageCompiler() { }
+
+	public UsageCompiler(Definition d, string exerciseName) {
+		definition = d;
+		this.exerciseName = exerciseName;
+	}
+
+	public string Translate() {
 		StringBuilder sb = new();
 		sb.Append("using ExerciseEngine;\n");
 		sb.Append("using System.Text.Json.Serialization; // incase json min size is needed\n\n");
@@ -117,8 +120,18 @@ public class Compiler {
 
 		return sb.ToString();
 	}
+}
 
-	string TranslateClassVariant() {
+class VariantCompiler : CompilerHelper {
+	const string variantHeadline = "// >>> 2.: class ConcreteVariant <<<";
+	public VariantCompiler() { }
+
+	public VariantCompiler(Definition d, string variantName) {
+		definition = d;
+		this.variantName = variantName;
+	}
+
+	public string Translate() {
 		string fields = VariantFields();
 		string ctor = VariantCtor();
 		string isLegit = VariantIsLegit();
@@ -131,6 +144,7 @@ public class Compiler {
 		code.Append(isLegit);
 		code.Append(getResults);
 		code.Append(varRepresentation);
+		code.Append("}\n"); // end the entire sealed class Variant
 		return code.ToString();
 	}
 
@@ -138,7 +152,7 @@ public class Compiler {
 		StringBuilder sb = new();
 		sb.Append($"{variantHeadline}\n\n");
 		sb.Append($"sealed class {variantName} : Variant {openCurly}\n");
-		foreach(Variable v in definition.variables) 
+		foreach (Variable v in definition.variables)
 			sb.Append($"\tpublic readonly {v.TypeRepresentation()} {v.Name};\n");
 
 		return sb.ToString();
@@ -161,13 +175,10 @@ public class Compiler {
 		}
 		sb.Append(") {\n");
 
-		// asign this.var = var lines:
-		foreach(Variable v in definition.variables) 
+		foreach (Variable v in definition.variables)
 			sb.Append($"\t\tthis.{v.Name} = {v.Name};\n");
 
-		// close ctor and add empty line:
-		sb.Append("\t}\n\n");
-
+		sb.Append("\t}\n\n"); // close ctor and add empty line:
 		return sb.ToString();
 	}
 
@@ -177,7 +188,7 @@ public class Compiler {
 		sb.Append("\t\tconstraintId = 0;\n");
 
 		for (int i = 0; i < definition.constraints.Count; i++) {
-			if(i != 0) 
+			if (i != 0)
 				sb.Append("\t\tconstraintId++;\n");
 			sb.Append($"\t\tif (Constraint_{i}())\n");
 			sb.Append("\t\t\treturn false;\n");
@@ -187,19 +198,19 @@ public class Compiler {
 		sb.Append("\t\treturn true;\n");
 		sb.Append("\t}\n\n");
 
-		for(int i = 0; i < definition.constraints.Count; i++) 
+		for (int i = 0; i < definition.constraints.Count; i++)
 			sb.Append(WriteNthConstraintMethod(definition.constraints[i], i));
-		
+
 		return sb.ToString();
 	}
 
-	string WriteNthConstraintMethod(ConstraintMethod cm, int index) {
+	static string WriteNthConstraintMethod(ConstraintMethod cm, int index) {
 		StringBuilder sb = new();
-		foreach(string commentLine in cm.comments)
+		foreach (string commentLine in cm.comments)
 			sb.Append($"\t// {commentLine}\n");
 		sb.Append($"\tbool Constraint_{index}() ");
-		
-		if(cm.codeDefined) {
+
+		if (cm.codeDefined) {
 			sb.Append(MethodBody(cm.code));
 		} else {
 			sb.Append($"{openCurly}\n\t\t// code has not yet been defined\n\t{closeCurly}\n\n");
@@ -225,35 +236,29 @@ public class Compiler {
 
 	string VariantGetResults() {
 		StringBuilder sb = new();
-
 		sb.Append($"\tpublic override string GetResult(int questionIndex) {openCurly}\n");
-		if(definition.questions.Count != 1) { 
-			sb.Append($"\t\tif (questionIndex < 0 || questionIndex > {definition.questions.Count - 1})\n"); 
+		if (definition.questions.Count != 1) {
+			sb.Append($"\t\tif (questionIndex < 0 || questionIndex > {definition.questions.Count - 1})\n");
 		} else {
 			sb.Append($"\t\tif (questionIndex != 0)\n");
 		}
 
-		sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.questions.Count-1}, index entered: " +  '"' + " + questionIndex.ToString());\n\n");
-		
-		// i-2 since the last can be without if statement
-		for(int i = 0; i < definition.questions.Count-1; i++) {
+		sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.questions.Count - 1}, index entered: " + '"' + " + questionIndex.ToString());\n\n");
+
+		for (int i = 0; i < definition.questions.Count - 1; i++) {
 			sb.Append($"\t\tif (questionIndex == {i})\n");
 			sb.Append($"\t\t\treturn GetResult_{i}();\n\n");
 		}
-		
-		sb.Append($"\t\treturn GetResult_{definition.questions.Count - 1}();\n");
 
-		sb.Append("\t}\n\n");
-
+		sb.Append($"\t\treturn GetResult_{definition.questions.Count - 1}();\n\t{closeCurly}\n\n");
 		for (int i = 0; i < definition.questions.Count; i++)
 			sb.Append(WriteNthResultMethod(definition.questions[i], i));
 
 		return sb.ToString();
 	}
 
-	string WriteNthResultMethod(Definition_Question question, int index) {
+	static string WriteNthResultMethod(Definition_Question question, int index) {
 		StringBuilder sb = new();
-
 		foreach (string commentLine in question.result.comments)
 			sb.Append($"\t// {commentLine}\n");
 
@@ -270,67 +275,81 @@ public class Compiler {
 	// I need to find a fix how to handle 
 	string VariantVarRep() {
 		StringBuilder sb = new();
-
 		sb.Append($"\tpublic override string VariableRepresentation(string variableName) {openCurly}\n");
-		sb.Append($"\t\tswitch (variableName) {openCurly}\n");
-		foreach(Variable variable in definition.variables) {
-			sb.Append($"\t\t\tcase " + '"' + $"{variable.Name}" + '"' + ":\n");
-			sb.Append($"\t\t\t\treturn {variable.Name}.ToString();\n");	
-		}
+		sb.Append($"\t\treturn variableName switch {openCurly}\n");
 
-		sb.Append("\t\t\tdefault:\n");
-		sb.Append($"\t\t\t\tthrow new ArgumentException(" + '"' + "Variable representation recieved invalid variable name: " + '"' + " + variableName);\n");
-		sb.Append("\t\t}\n");
+		foreach (Variable variable in definition.variables)
+			sb.Append($"\t\t\t{quotes}{variable.Name}{quotes} => {variable.Name}.ToString(),\n");
+
+		sb.Append($"\t\t\t_ => throw new ArgumentException({quotes}Variable representation recieved invalid variable name: {quotes} + variableName + {quotes}\\n{quotes})\n");
+		sb.Append("\t\t};\n");
 		sb.Append("\t}\n");
-		sb.Append("}\n\n"); // end the entire sealed class Variant
+		return sb.ToString();
+	}
+}
 
+class ExerciseCompiler : CompilerHelper {
+	const string exerciseHeadline = "// >>> 3.: class ConcreteExercise <<<";
+	public ExerciseCompiler() { }
+
+	public ExerciseCompiler(Definition d, string variantName, string exerciseName) {
+		definition = d;
+		this.variantName = variantName;
+		this.exerciseName = exerciseName;
+	}
+
+	public string Translate() {
+		StringBuilder sb = new();
+		sb.Append(DeclareClass_Ctor());
+		sb.Append(FactoryFilterLegit());
+		sb.Append('}'); // close class ConcreteExercise
 		return sb.ToString();
 	}
 
-	string TranslateClassFactory() {
-		string ctor = FactoryCtor();
-		string filterLegit = FactoryFilterLegit();
+	string DeclareClass_Ctor() {
+		string assignment = Build_Assign_Assignment();
+		List<string> questions = new();
+		for (int i = 0; i < definition.questions.Count; i++)
+			questions.Add(Build_Add_Question(definition.questions[i], i));
+		string closeClass = Assign_MR_Close_Declaration();
 
 		StringBuilder sb = new();
-		sb.Append(ctor);
-		sb.Append(filterLegit);
-		sb.Append("}\n\n"); // end class sealed factory
+		sb.Append(exerciseHeadline + '\n' + '\n');
+		sb.Append($"sealed class {exerciseName} : Exercise<{variantName}> {openCurly}\n");
+		sb.Append(assignment);
+		foreach (string question in questions)
+			sb.Append(question);
+		sb.Append(closeClass);
+
 		return sb.ToString();
 	}
 
-	
-	string FactoryCtor() {
-		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
-		string classDeclaration = $"sealed class {exerciseName} : Factory<{variantName}> {openCurly}\n";
-		string ctorDeclaration = $"\tpublic {exerciseName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
-
+	string Build_Assign_Assignment() {
 		StringBuilder sb = new();
-		sb.Append(classDeclaration);
-		sb.Append(ctorDeclaration);
+
 		return sb.ToString();
 	}
 
-	static int CountEventSpaceCardinality(List<Variable> variables) {
-		// if is set variable: get List<T>.Count
-		// else, count occurences from min max inc
-		// finally, calculate product of count of all variables. 
-		int product = 1;
-		foreach(Variable variable in variables)
-			product *= variable.GetCardinality();
-		return product;
+	string Build_Add_Question(Definition_Question defQ, int qCounter) {
+		StringBuilder sb = new();
+
+		return sb.ToString();
+	}
+
+	string Assign_MR_Close_Declaration() {
+		StringBuilder sb = new();
+
+		return sb.ToString();
 	}
 
 	string FactoryFilterLegit() {
-		StringBuilder sb = new();
-
-		string FilterMethodDeclaration = $"\tpublic override void FilterLegitVariants() {openCurly}\n";
 		string SetVariablesListInitialization = InstantiateSetLists(definition.variables);
-		string _WriteLine = "\t\tWriteLine($" + '"' + $"Initiating for loop, expecting to see {openCurly}expected{closeCurly} variants." + '"' + ");\n";
 		string forLoop = BuildForLoop(definition.variables);
-		
-		sb.Append(FilterMethodDeclaration);
+
+		StringBuilder sb = new();
+		sb.Append($"\tpublic override void FilterLegitVariants() {openCurly}\n");
 		sb.Append(SetVariablesListInitialization);
-		sb.Append(_WriteLine);
+		sb.Append("\t\tConsole.WriteLine($" + '"' + $"Initiating nested forloops, expecting to see {openCurly}expected{closeCurly} variants." + '"' + ");\n");
 		sb.Append(forLoop);
 		sb.Append("\t}\n");
 		return sb.ToString();
@@ -338,8 +357,8 @@ public class Compiler {
 
 	static string InstantiateSetLists(List<Variable> variables) {
 		StringBuilder sb = new();
-		foreach(Variable variable in variables) 
-			if(variable.IsSet()) {
+		foreach (Variable variable in variables)
+			if (variable.IsSet()) {
 				sb.Append("\t\t");
 				sb.Append(variable.GetCodeSetInstantionLine());
 				sb.Append('\n');
@@ -402,72 +421,39 @@ public class Compiler {
 		return sb.ToString();
 	}
 
+#region Translate - class ConcreteFactory
+	/*
+	string TranslateClassFactory() {
+		string ctor = FactoryCtor();
+		string filterLegit = FactoryFilterLegit();
 
-	string TranslateClassExercise() {
-		// think through the decomposition here...
-		string ctorDeclaration = DeclareClass_Ctor_MR();
-		string assignment = Build_Assign_Assignment();
-		List<string> questions = new();
-		for(int i = 0; i < definition.questions.Count; i++) 
-			questions.Add(Build_Add_Question(definition.questions[i], i));
-		
-		string closeClass = Assign_MR_Close_Declaration();
-			
-		StringBuilder code = new();
-		code.Append(ctorDeclaration);
-		code.Append(assignment);
-		foreach(string question in questions) 
-			code.Append(question);
-		code.Append(closeClass);
-		return code.ToString();
-	}
-
-	string DeclareClass_Ctor_MR() {
 		StringBuilder sb = new();
-
+		sb.Append(ctor);
+		sb.Append(filterLegit);
+		sb.Append("}\n\n"); // end class sealed factory
 		return sb.ToString();
 	}
 
-	string Build_Assign_Assignment() {
-		StringBuilder sb = new();
+	string FactoryCtor() {
+		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
+		string classDeclaration = $"sealed class {exerciseName} : Factory<{variantName}> {openCurly}\n";
+		string ctorDeclaration = $"\tpublic {exerciseName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
 
+		StringBuilder sb = new();
+		sb.Append(classDeclaration);
+		sb.Append(ctorDeclaration);
 		return sb.ToString();
 	}
 
-	string Build_Add_Question(Definition_Question defQ, int qCounter) {
-		StringBuilder sb = new();
-
-		return sb.ToString();
-	}
-
-	string Assign_MR_Close_Declaration() {
-		StringBuilder sb = new();
-
-		return sb.ToString();
-	}
-
-#endregion
-
-	public void SaveAsCsFile() {
-		using StreamWriter sw = new($"{exerciseName}.cs");
-		sw.WriteLine(translatedCode);
-	}
-
-	public void ExecuteTheCode() {
-		// Load exercise engine classes required for the code be compilable 
-		// Load translated code 
-		// Load instructions what to do with the code:
-		//		1. generate variants
-		//		2. save log
-		//		3. save all legit variants 
-		//		4. save illgal variants 
-		//      5. save the translated code
-		WriteLine(translatedCode);
-	}
-
-#region Execute the code helper methods
-
+	static int CountEventSpaceCardinality(List<Variable> variables) {
+		// if is set variable: get List<T>.Count
+		// else, count occurences from min max inc
+		// finally, calculate product of count of all variables. 
+		int product = 1;
+		foreach(Variable variable in variables)
+			product *= variable.GetCardinality();
+		return product;
+	}*/
 #endregion
 
 }
-

@@ -101,7 +101,7 @@ sealed class Variant_381200_Balonky : Variant {
 			"cervene" => cervene.ToString(),
 			"zelene" => zelene.ToString(),
 			"modre" => modre.ToString(),
-			_ => throw new ArgumentException("Variable representation recieved invalid variable name: " + variableName + "\n"),
+			_ => throw new ArgumentException("Variable representation recieved invalid variable name: " + variableName + "\n")
 		};
 	}
 }
@@ -145,12 +145,12 @@ sealed class Exercise_381200_Balonky : Exercise<Variant_381200_Balonky> {
 		};
 		mr.questions.Add(mQ3);
 
-
 		babylon[Language.cs] = mr;
 	}
 
 	public override void FilterLegitVariants() {
-		Console.WriteLine($"Initiating nested for loops, expecting to see {expected} variants.");
+		Console.WriteLine($"Initiating nested forloops, expecting to see {expected} variants.");
+
 		for (int cervene = 2; cervene <= 30; cervene++) {
 			for (int zelene = 2; zelene <= 30; zelene++) {
 				for (int modre = 2; modre <= 30; modre++) {

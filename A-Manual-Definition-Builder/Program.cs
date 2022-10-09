@@ -14,15 +14,13 @@ Definition defD = defBuilderD.Define("Exercise-D");
 
 Compiler compiler = new();
 /*compiler.LoadDefinition(defB, 381_199);
-compiler.Translate();
-compiler.SaveAsCsFile();*/
-//compiler.ExecuteTheCode();
+compiler.Translate();*/
 
 compiler.LoadDefinition(defD, 381_200);
-compiler.Translate();
-compiler.SaveAsCsFile();
-//compiler.ExecuteTheCode();
+string code = compiler.Translate();
 
+using StreamWriter sw = new($"{compiler.fileName}.cs");
+sw.Write(code);
 
 
 abstract class DefinitionFactory {

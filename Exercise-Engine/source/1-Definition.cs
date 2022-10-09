@@ -102,7 +102,7 @@ public abstract class Range<T> : Variable where T : struct, IComparable {
 		StringBuilder sb = new();
 		sb.Append($"for ({TypeRepresentation()} {Name} = {Min}; {Name} <= {Max}; ");
 		if(Increment.CompareTo(1) == 0) {
-			sb.Append($"{Name}++ ");
+			sb.Append($"{Name}++");
 		} else {
 			sb.Append($" {Name} = {Name} + {Increment} ");
 		}
