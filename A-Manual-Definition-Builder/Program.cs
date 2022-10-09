@@ -12,14 +12,16 @@ ManualDefinitionBuilderD defBuilderD = new(); //
 Definition defB = defBuilderB.Define("Exercise-B");
 Definition defD = defBuilderD.Define("Exercise-D");
 
-Interpreter interpreter = new();
-interpreter.LoadDefinition(defD, 381_199);
-interpreter.Translate();
-interpreter.ExecuteTheCode();
+Compiler compiler = new();
+/*compiler.LoadDefinition(defB, 381_199);
+compiler.Translate();
+compiler.SaveAsCsFile();*/
+//compiler.ExecuteTheCode();
 
-interpreter.LoadDefinition(defB, 381_200);
-interpreter.Translate();
-interpreter.ExecuteTheCode();
+compiler.LoadDefinition(defD, 381_200);
+compiler.Translate();
+compiler.SaveAsCsFile();
+//compiler.ExecuteTheCode();
 
 
 
@@ -246,79 +248,6 @@ class ManualDefinitionBuilderB : DefinitionFactory {
 	}
 }
 
-
-class ManualDefinitionBuilderC : DefinitionFactory {
-
-	public ManualDefinitionBuilderC()  { }
-
-	public override Definition_MetaData GetMetaData() {
-		Definition_MetaData md = new();
-		md.initialLanguage = Language.en;
-		md.type = ExerciseType.Numerical;
-		md.title = "Linear equation with one variable, with addition and subtraction only.";
-		md.description = "Solving linear equation with i) one variable only, b) on addition and subtraction, c) on real numbers with at most one digit after decimal dot. That is on real numbers that are multiples of 0.1. Real numbers are from range <0.1, 4.9>, excluding all real numbers which also belong to the set of whole numbers.";
-		md.topics = new() { Topic.Addition, Topic.Subtraction };
-		md.grades = new() { Grade.Ninth };
-		return md;
-	}
-
-	public override List<Variable> GetVariables() {
-		DoubleRange A = new("A", 0.1, 4.9, 0.1);
-		DoubleRange B = new("B", 0.1, 4.9, 0.1);
-		DoubleRange C = new("C", 0.1, 4.9, 0.1);
-		DoubleRange D = new("D", 0.1, 4.9, 0.1);
-		DoubleRange E = new("E", 0.1, 4.9, 0.1);
-		OperatorSet op1 = new("op1", new() {Operator.Add, Operator.Sub });
-		OperatorSet op2 = new("op1", new() {Operator.Add, Operator.Sub });
-		OperatorSet op3 = new("op1", new() {Operator.Add, Operator.Sub });
-		return new() { A, B, C, D, E, op1, op2, op3 };
-	}
-
-	public override List<MacroText> GetAssignment() {
-		Macro e1  = new("A");
-		Text  e2  = new(" ");
-		Macro e3  = new("op1");
-		Text  e4  = new(" ");
-		Macro e5  = new("B");
-		Text  e6  = new("x ");
-		Macro e7  = new("op2");
-		Text  e8  = new(" ");
-		Macro e9  = new("C");
-		Text  e10 = new(" = ");
-		Macro e11 = new("D");
-		Text  e12 = new(" ");
-		Macro e13 = new("op3");
-		Text  e14 = new(" ");
-		Macro e15 = new("E");
-		Text  e16 = new("x");
-		return new() {
-			e1,
-			e2,
-			e3,
-			e4,
-			e5,
-			e6,
-			e7,
-			e8,
-			e9,
-			e10,
-			e11,
-			e12,
-			e13,
-			e14,
-			e15,
-			e16
-		};
-	}
-
-	public override List<Definition_Question> GetQuestions() => new(); // numerical exercise -> empty 
-
-	public override List<ConstraintMethod> GetConstraints() {
-		throw new NotImplementedException();
-	}
-}
-
-
 class ManualDefinitionBuilderD : DefinitionFactory {
 
 	public ManualDefinitionBuilderD()  { }
@@ -327,7 +256,7 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		Definition_MetaData md = new();
 		md.initialLanguage = Language.cs;
 		md.type = ExerciseType.WordProblem;
-		md.title = "Vzorová slovní úloha pro vývoj - Kuba s batohem plným balonků";
+		md.title = "Balonky";
 		md.description = "Slovní úloha na procvičení sčítání, pravděpodobnosti a maximum.";
 		md.topics = new() { Topic.Arithmetic };
 		md.grades = new() { Grade.First, Grade.Third, Grade.Seventh };
@@ -370,7 +299,7 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		q.question = new() { q1_1 };
 
 		List<string> localCode = new() {
-			"return cervene + zelene + modre;"
+			"(cervene + zelene + modre).ToString();"
 		};
 
 		ResultMethod method = new() {
@@ -393,9 +322,8 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		q.question = new() { q1_1 };
 
 		List<string> localCode = new() {
-			"double total = (double)cervene + (double)zelene + (double)modre;", 
-			"double Px = (double)modre / total;", 
-			"return Px;"
+			"double Px = modre / (double)(cervene + zelene + modre);",
+			"return Px.ToString();" 
 		};
 
 		ResultMethod method = new() {
@@ -420,9 +348,13 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		List<string> localCode = new() {
 			"int max = Math.Max(cervene, zelene);",
 			"max = Math.Max(max, modre);", 
-			"if(max == modre) return " + '"' + 'b' + '"' + ';',
-			"if(max == cervene) return " + '"' + 'a' + '"' + ';',
-			"return " + '"' + 'c' + '"' + ';' + " // must be zelene at this point"
+			"if (max == modre)", 
+			"\treturn " + '"' + 'b' + '"' + ';',
+			"",
+			"if (max == zelene)",
+			"\treturn " + '"' + 'c' + '"' + ';',
+			"",
+			"return " + '"' + 'a' + '"' + ';'
 		};
 
 		ResultMethod method = new() {
@@ -442,11 +374,14 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 		constraintOtazkaB.comments = new() {
 			"vysledek otazky B ma nanejvys 2 desetinna mista"
 		};
-		constraintOtazkaB.codeDefined = false;
+		constraintOtazkaB.codeDefined = true;
 		constraintOtazkaB.code = new() {
-			"double result = GetResult(2);", 
-			"string strResult = result.ToString();", 
-			"int digits = strResult" /// just skip for this moment..
+			"string result = GetResult(1);", 
+			"int index = result.IndexOf('.');", 
+			"int length = result.Length;",
+			"length -= index;",
+			"length--;",
+			"return length > 2;"
 		};
 
 		ConstraintMethod constraintJednoMaximum = new();
@@ -458,10 +393,10 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 			"int max = Math.Max(cervene, zelene);",
 			"max = Math.Max(max, modre);",
 			"int counter = 0;",
-			"if (max == modre) counter++;",
-			"if (max == zelene) counter++;",
 			"if (max == cervene) counter++;",
-			"return counter != 1;" // if counter is different from 1, that means that there is more than one maximum, which too bad for this variant
+			"if (max == zelene) counter++;",
+			"if (max == modre) counter++;",
+			"return counter > 1;" // if counter is different from 1, that means that there is more than one maximum, which too bad for this variant
 		};
 
 		return new() { constraintOtazkaB , constraintJednoMaximum };
@@ -470,7 +405,7 @@ class ManualDefinitionBuilderD : DefinitionFactory {
 }
 
 
-class ManualDefinitionBuilderE : DefinitionFactory {
+/*class ManualDefinitionBuilderE : DefinitionFactory {
 
 	public ManualDefinitionBuilderE() { }
 
@@ -500,37 +435,4 @@ class ManualDefinitionBuilderE : DefinitionFactory {
 	public override List<ConstraintMethod> GetConstraints() {
 		throw new NotImplementedException();
 	}
-}
-
-// F is visually too close to E
-class ManualDefinitionBuilderG : DefinitionFactory {
-
-	public ManualDefinitionBuilderG() { }
-
-	public override Definition_MetaData GetMetaData() {
-		Definition_MetaData md = new();
-		md.initialLanguage = Language.en;
-		md.type = ExerciseType.WordProblem;
-		md.title = "";
-		md.description = "";
-		md.topics = new() { };
-		md.grades = new() { };
-		return md;
-	}
-
-	public override List<Variable> GetVariables() {
-		throw new NotImplementedException();
-	}
-
-	public override List<MacroText> GetAssignment() {
-		throw new NotImplementedException();
-	}
-
-	public override List<Definition_Question> GetQuestions() {
-		throw new NotImplementedException();
-	}
-
-	public override List<ConstraintMethod> GetConstraints() {
-		throw new NotImplementedException();
-	}
-}
+}*/

@@ -36,8 +36,9 @@ public abstract class Variant {
 public abstract class Exercise<V> where V : Variant {
 	public readonly string exerciseName;
 	// Factory method:
-	public int expected, actual;
-	protected List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
+	public readonly int expected;
+	public int actual;
+	public List<int> constraintLog = new(); // stores number of times the constraint with specific id has been triggered
 	public List<V> legit = new();
 	public List<List<V>> illegal = new();
 
@@ -91,9 +92,7 @@ public abstract class Exercise<V> where V : Variant {
 	///		1. Set MacroRepresentation of Language l 
 	///		2. Build Representation of exercise given Variant v and Language l 
 	/// </summary>
-	public bool HasLanguage(Language language) {
-		return monoLingual || babylon.ContainsKey(language);
-	}
+	public bool HasLanguage(Language language) => monoLingual || babylon.ContainsKey(language);
 
 	public bool SetLanguage(MacroRepresentation mr, Language lang) {
 		if(monoLingual)
@@ -153,6 +152,7 @@ public abstract class Exercise<V> where V : Variant {
 		return result;
 	}
 
+	// this will hardly be an option -> for word problem with 20k variants and 30 languages it is ~ 0.5GB 
 	public string SerializedLanguageRepresentation(Language lang, bool indented) {
 		List<Representation> languageRepr = LanguageRepresentation(lang);
 		JsonSerializerOptions options = new() {	

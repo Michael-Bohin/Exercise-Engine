@@ -1,35 +1,31 @@
 ﻿using ExerciseEngine;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Serialization; // incase json min size is needed
 
-E_2_Balonky exercise_2 = new();
-exercise_2.FilterLegitVariants();
-string json = exercise_2.SerializedLanguageRepresentation(Language.cs, true);
-string stats = exercise_2.ReportStatistics();
-string selfJson = exercise_2.SerializeSelf(true);
+// >>> 1.: Intended usage <<<
 
-using StreamWriter sw = new("serialized_B.json");
-sw.Write(json);
+Exercise_381200_Balonky ex = new();
+ex.FilterLegitVariants();
 
-using StreamWriter sw2 = new("statsB.txt");
-sw2.Write(stats);
+string stats = ex.ReportStatistics();
+string json = ex.SerializeSelf(true);
 
-using StreamWriter sw3 = new("selfSerializedExercise.json");
-sw3.Write(selfJson);
+using StreamWriter sw1 = new("stats_Exercise_381200_Balonky.txt");
+sw1.Write(stats);
 
+using StreamWriter sw2 = new("json_Exercise_381200_Balonky.json");
+sw2.Write(json);
 
+string StringRepresentation = ex.SerializedLanguageRepresentation(Language.cs, true); // dev time purposes only compiler shall not produce these 3 lines
+using StreamWriter sw3 = new("serialized_as_finnished_strings.json");
+sw3.Write(StringRepresentation);
 
-// next question to solve: how do we proceed with creating macro representions for all languages using deepL api and macroRep of initial language??
+// >>> 2.: class ConcreteVariant <<<
 
-// expected to be written by interpreter based on definition:
-sealed class V_2_Balonky : Variant {
-	[JsonPropertyName("R")]
+sealed class Variant_381200_Balonky : Variant {
 	public readonly int cervene;
-	[JsonPropertyName("G")]
 	public readonly int zelene;
-	[JsonPropertyName("B")]
 	public readonly int modre;
-	public V_2_Balonky(int cervene, int zelene, int modre) {
+	public Variant_381200_Balonky(int cervene, int zelene, int modre) {
 		this.cervene = cervene;
 		this.zelene = zelene;
 		this.modre = modre;
@@ -37,17 +33,18 @@ sealed class V_2_Balonky : Variant {
 
 	public override bool IsLegit(out int constraintId) {
 		constraintId = 0;
-		if (Constraint_01())
+		if (Constraint_0())
 			return false;
 
 		constraintId++;
-		if (Constraint_02())
+		if (Constraint_1())
 			return false;
 
 		return true;
 	}
 
-	bool Constraint_01() {
+	// vysledek otazky B ma nanejvys 2 desetinna mista
+	bool Constraint_0() {
 		string result = GetResult(1);
 		int index = result.IndexOf('.');
 		int length = result.Length;
@@ -56,16 +53,15 @@ sealed class V_2_Balonky : Variant {
 		return length > 2;
 	}
 
-	bool Constraint_02() {
+	// maximum je prave jedno
+	bool Constraint_1() {
 		int max = Math.Max(cervene, zelene);
 		max = Math.Max(max, modre);
 		int counter = 0;
 		if (max == cervene) counter++;
 		if (max == zelene) counter++;
 		if (max == modre) counter++;
-		if (counter > 1)
-			return true;
-		return false;
+		return counter > 1;
 	}
 
 	public override string GetResult(int questionIndex) {
@@ -73,30 +69,30 @@ sealed class V_2_Balonky : Variant {
 			throw new ArgumentException("Index needs to be positive and at most 2, index entered: " + questionIndex.ToString());
 
 		if (questionIndex == 0)
-			return GetResult_1();
+			return GetResult_0();
 
 		if (questionIndex == 1)
-			return GetResult_2();
+			return GetResult_1();
 
-		return GetResult_3();
+		return GetResult_2();
 	}
 
-	string GetResult_1() => (cervene + zelene + modre).ToString();
+	string GetResult_0() => (cervene + zelene + modre).ToString();
 
-	string GetResult_2() {
+	string GetResult_1() {
 		double Px = modre / (double)(cervene + zelene + modre);
 		return Px.ToString();
 	}
 
-	string GetResult_3() {
+	string GetResult_2() {
 		int max = Math.Max(cervene, zelene);
 		max = Math.Max(max, modre);
 		if (max == modre)
 			return "b";
-
+		
 		if (max == zelene)
 			return "c";
-
+		
 		return "a";
 	}
 
@@ -110,8 +106,10 @@ sealed class V_2_Balonky : Variant {
 	}
 }
 
-sealed class E_2_Balonky : Exercise<V_2_Balonky> {
-	public E_2_Balonky() : base(false, 2, 24_389, "E_2_Balonky") {
+// >>> 3.: class ConcreteExercise <<<
+
+sealed class Exercise_381200_Balonky : Exercise<Variant_381200_Balonky> {
+	public Exercise_381200_Balonky() : base(false, 2, 24_389, "Exercise_381200_Balonky") {
 		MacroRepresentation mr = new();
 
 		Text el1 = new("Jakub nosí batoh a v něm má balónky s různými barvami. Dneska ráno si do batohu dal ");
@@ -156,7 +154,7 @@ sealed class E_2_Balonky : Exercise<V_2_Balonky> {
 		for (int cervene = 2; cervene <= 30; cervene++) {
 			for (int zelene = 2; zelene <= 30; zelene++) {
 				for (int modre = 2; modre <= 30; modre++) {
-					V_2_Balonky variant = new(cervene, zelene, modre);
+					Variant_381200_Balonky variant = new(cervene, zelene, modre);
 					Consider(variant);
 				}
 			}

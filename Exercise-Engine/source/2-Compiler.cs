@@ -3,14 +3,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using static System.Console;
 
-public class Interpreter { 
+public class Compiler { 
 	Definition definition = new();
 	int uniqueId = -1;
 	bool definitionLoaded = false;
 	string translatedCode = "";
 	string variantName = "";
-	string factoryName = "";
 	string exerciseName = "";
+
+	const char quotes = '"';
+	const string usageHeadline = "// >>> 1.: Intended usage <<<";
+	const string variantHeadline = "// >>> 2.: class ConcreteVariant <<<";
+	const string exerciseHeadline = "// >>> 3.: class ConcreteExercise <<<";
 
 	// const strings for simpler interpreter code:
 	const string openCurly = "{";
@@ -33,13 +37,13 @@ public class Interpreter {
 
 		ValidateDefinition();
 		FigureOutClassNames();
+		string usageCode = TranslateRuntimeUsage();
 		string variantCode = TranslateClassVariant();
-		string factoryCode = TranslateClassFactory();
 		string exerciseCode = TranslateClassExercise();
 		
 		StringBuilder code = new();
+		code.Append(usageCode + '\n');
 		code.Append(variantCode + '\n');
-		code.Append(factoryCode + '\n');
 		code.Append(exerciseCode);
 		translatedCode = code.ToString();
 	}
@@ -88,10 +92,31 @@ public class Interpreter {
 		title = Regex.Replace(title, @"[^0-9a-zA-Z_]", "");
 
 		variantName =  $"Variant_{uniqueId}_{title}";
-		factoryName = $"Factory_{uniqueId}_{title}";
 		exerciseName = $"Exercise_{uniqueId}_{title}";
 	}
 #pragma warning restore IDE0057 // Use range operator
+
+	string TranslateRuntimeUsage() {
+		StringBuilder sb = new();
+		sb.Append("using ExerciseEngine;\n");
+		sb.Append("using System.Text.Json.Serialization; // incase json min size is needed\n\n");
+
+		sb.Append($"{usageHeadline}\n\n");
+
+		sb.Append($"{exerciseName} ex = new();\n");
+		sb.Append("ex.FilterLegitVariants();\n\n");
+
+		sb.Append("string stats = ex.ReportStatistics();\n");
+		sb.Append("string json = ex.SerializeSelf(true);\n\n");
+
+		sb.Append($"using StreamWriter sw1 = new({quotes}stats_{exerciseName}.txt{quotes});\n");
+		sb.Append("sw1.Write(stats);\n\n");
+
+		sb.Append($"using StreamWriter sw2 = new({quotes}json_{exerciseName}.json{quotes});\n");
+		sb.Append("sw2.Write(json);\n\n");
+
+		return sb.ToString();
+	}
 
 	string TranslateClassVariant() {
 		string fields = VariantFields();
@@ -111,6 +136,7 @@ public class Interpreter {
 
 	string VariantFields() {
 		StringBuilder sb = new();
+		sb.Append($"{variantHeadline}\n\n");
 		sb.Append($"sealed class {variantName} : Variant {openCurly}\n");
 		foreach(Variable v in definition.variables) 
 			sb.Append($"\tpublic readonly {v.TypeRepresentation()} {v.Name};\n");
@@ -150,11 +176,10 @@ public class Interpreter {
 		sb.Append("\tpublic override bool IsLegit(out int constraintId) {\n");
 		sb.Append("\t\tconstraintId = 0;\n");
 
-
 		for (int i = 0; i < definition.constraints.Count; i++) {
 			if(i != 0) 
 				sb.Append("\t\tconstraintId++;\n");
-			sb.Append($"\t\tif (Constraint_{i}()) \n");
+			sb.Append($"\t\tif (Constraint_{i}())\n");
 			sb.Append("\t\t\treturn false;\n");
 			sb.Append('\n');
 		}
@@ -170,20 +195,31 @@ public class Interpreter {
 
 	string WriteNthConstraintMethod(ConstraintMethod cm, int index) {
 		StringBuilder sb = new();
-		
 		foreach(string commentLine in cm.comments)
 			sb.Append($"\t// {commentLine}\n");
-
-		sb.Append($"\tbool Constraint_{index}() {openCurly}\n");
+		sb.Append($"\tbool Constraint_{index}() ");
+		
 		if(cm.codeDefined) {
-			foreach (string codeLine in cm.code)
-				sb.Append($"\t\t{codeLine}\n");
+			sb.Append(MethodBody(cm.code));
 		} else {
-			sb.Append($"\t\t// code has not yet been defined\n");
+			sb.Append($"{openCurly}\n\t\t// code has not yet been defined\n\t{closeCurly}\n\n");
 		}
 
-		sb.Append("\t}\n\n");
+		return sb.ToString();
+	}
 
+	static string MethodBody(List<string> code) {
+		StringBuilder sb = new();
+		if (code.Count > 1) {
+			sb.Append($"{openCurly}\n");
+			foreach (string codeLine in code)
+				sb.Append($"\t\t{codeLine}\n");
+			sb.Append("\t}\n\n");
+		} else if (code.Count == 1) {
+			sb.Append($"=> {code[0]}\n\n");
+		} else {
+			throw new InvalidOperationException("Compiler and its MethodBody method ran into defined code containing 0 lines.");
+		}
 		return sb.ToString();
 	}
 
@@ -197,16 +233,14 @@ public class Interpreter {
 			sb.Append($"\t\tif (questionIndex != 0)\n");
 		}
 
+		sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.questions.Count-1}, index entered: " +  '"' + " + questionIndex.ToString());\n\n");
 		
-		sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.questions.Count-1}, index entered: " +  '"' + " + questionIndex.ToString());\n");
-		sb.Append("\t\t\n");
-
 		// i-2 since the last can be without if statement
 		for(int i = 0; i < definition.questions.Count-1; i++) {
 			sb.Append($"\t\tif (questionIndex == {i})\n");
-			sb.Append($"\t\t\treturn GetResult_{i}();\n");
+			sb.Append($"\t\t\treturn GetResult_{i}();\n\n");
 		}
-		sb.Append("\t\t\n");
+		
 		sb.Append($"\t\treturn GetResult_{definition.questions.Count - 1}();\n");
 
 		sb.Append("\t}\n\n");
@@ -223,19 +257,15 @@ public class Interpreter {
 		foreach (string commentLine in question.result.comments)
 			sb.Append($"\t// {commentLine}\n");
 
-		sb.Append($"\tbool GetResult_{index}() {openCurly}\n");
+		sb.Append($"\tstring GetResult_{index}() ");
 		if (question.result.codeDefined) {
-			foreach (string codeLine in question.result.code)
-				sb.Append($"\t\t{codeLine}\n");
+			sb.Append(MethodBody(question.result.code));
 		} else {
-			sb.Append($"\t\t// result code has not yet been defined\n");
+			sb.Append($"{openCurly}\n\t\t// result code has not yet been defined\n");
 		}
-
-		sb.Append("\t}\n\n");
 
 		return sb.ToString();
 	}
-
 
 	// I need to find a fix how to handle 
 	string VariantVarRep() {
@@ -257,8 +287,6 @@ public class Interpreter {
 		return sb.ToString();
 	}
 
-
-
 	string TranslateClassFactory() {
 		string ctor = FactoryCtor();
 		string filterLegit = FactoryFilterLegit();
@@ -273,8 +301,8 @@ public class Interpreter {
 	
 	string FactoryCtor() {
 		int expectedEventSpace = CountEventSpaceCardinality(definition.variables);
-		string classDeclaration = $"sealed class {factoryName} : Factory<{variantName}> {openCurly}\n";
-		string ctorDeclaration = $"\tpublic {factoryName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
+		string classDeclaration = $"sealed class {exerciseName} : Factory<{variantName}> {openCurly}\n";
+		string ctorDeclaration = $"\tpublic {exerciseName}() : base({definition.constraints.Count}, {expectedEventSpace}) {openCurly} {closeCurly}\n";
 
 		StringBuilder sb = new();
 		sb.Append(classDeclaration);
@@ -417,8 +445,6 @@ public class Interpreter {
 
 		return sb.ToString();
 	}
-
-
 
 #endregion
 
