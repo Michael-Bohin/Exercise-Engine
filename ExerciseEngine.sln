@@ -9,10 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorView", "Blazor-View\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_A-Manual-Definition-Builder", "A-Manual-Definition-Builder\_A-Manual-Definition-Builder.csproj", "{1410AD4D-9134-4B61-A334-6CA8425EBC96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_jsonMockUp", "WebAPI_jsonMockUp\WebAPI_jsonMockUp.csproj", "{5D59DDD4-C890-4CF4-BEB7-A03A9E1E0BAB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Target-Compiler-Code", "B-Manual-Interpreter-Tester\Target-Compiler-Code.csproj", "{37142545-B418-4CB7-B40D-48F74639C30A}"
 EndProject
 Global
@@ -33,14 +29,6 @@ Global
 		{1410AD4D-9134-4B61-A334-6CA8425EBC96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1410AD4D-9134-4B61-A334-6CA8425EBC96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1410AD4D-9134-4B61-A334-6CA8425EBC96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D59DDD4-C890-4CF4-BEB7-A03A9E1E0BAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D59DDD4-C890-4CF4-BEB7-A03A9E1E0BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D59DDD4-C890-4CF4-BEB7-A03A9E1E0BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D59DDD4-C890-4CF4-BEB7-A03A9E1E0BAB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FE4FCCA-6BA5-444C-8D0E-0FB3B7E42955}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
