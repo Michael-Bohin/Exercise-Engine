@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using System.Text;
 using ExerciseEngine.MacroExercise;
 
-namespace ExerciseEngine.Compiler;
+namespace ExerciseEngine.ExerciseCompiler;
 
 #region Definition
 

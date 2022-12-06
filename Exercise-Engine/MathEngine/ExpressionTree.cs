@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.MathRepresentation;
+﻿namespace ExerciseEngine.MathEngine;
 
 public abstract class Expression {
 	public override abstract string ToString(); // override object.ToString so that compiler forces own implementation 

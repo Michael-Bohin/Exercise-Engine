@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
-using ExerciseEngine.MathRepresentation;
+using ExerciseEngine.MathEngine;
 using ExerciseEngine.API;
 using System.Text.Json;
 using MudBlazor;

@@ -1,4 +1,4 @@
-﻿namespace ExerciseEngine.MathRepresentation;
+﻿namespace ExerciseEngine.MathEngine;
 
 using Q = Fraction;
 

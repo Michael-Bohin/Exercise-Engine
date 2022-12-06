@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ExerciseEngine.Compiler;
+namespace ExerciseEngine.ExerciseCompiler;
 
 public class Compiler
 {

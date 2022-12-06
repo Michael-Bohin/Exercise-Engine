@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
-using ExerciseEngine.MathRepresentation;
+using ExerciseEngine.MathEngine;
 
 namespace ExerciseEngine.API;
 
