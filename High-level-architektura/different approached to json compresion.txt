@@ -1,3 +1,0 @@
-"assignment":{"elements":[{"TypeDiscriminator":1,"text":"Obdélník má šířku "},{"TypeDiscriminator":0,"p": 0,"vD": 0},{"TypeDiscriminator":1,"text":" cm a obsah "},{"TypeDiscriminator":0,"p":1,"vD": 0},{"TypeDiscriminator":1,"text":"dm ^ 2."}]}
-"as":[[1,"Obdélník má šířku "],[0,0,0],[1," cm a obsah "],[0,1,0],[1,"dm ^ 2."]]
-"as":{"el":[{"TD":1,"t":"Obdélník má šířku "},{"TD":0,"p": 0,"vD": 0},{"TD":1,"t":" cm a obsah "},{"TD":0,"p":1,"vD": 0},{"TD":1,"t":"dm ^ 2."}]}
