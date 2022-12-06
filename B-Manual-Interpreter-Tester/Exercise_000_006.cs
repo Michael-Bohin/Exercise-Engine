@@ -73,13 +73,13 @@ sealed class Exercise_000_006_S01P05_Pocitani_se_zlomky : Exercise<Variant_000_0
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		// $"(0,{Citatel} / 0,0{Jmenovatel}) : {C}"
 		Text t1 = new("(0,");
 		Macro m1 = new("Citatel");
@@ -92,7 +92,7 @@ sealed class Exercise_000_006_S01P05_Pocitani_se_zlomky : Exercise<Variant_000_0
 
 		Macro resultMacro = new("result_0");
 
-		Macro_Question question = new Macro_IntQuestion(Question, resultMacro) {
+		MacroQuestion question = new MacroIntQuestion(Question, resultMacro) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

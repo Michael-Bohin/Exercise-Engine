@@ -66,13 +66,13 @@ sealed class Exercise_000_005_S01P04_O_kolik_se_lisi : Exercise<Variant_000_005_
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		// $"Vypočtěte, o kolik se liší druhá mocnina čísla {A}, a druhá odmocnina z čísla {B*B}."
 		Text t1 = new("Vypočtěte, o kolik se liší druhá mocnina čísla ");
 		Macro m1 = new("A");
@@ -84,7 +84,7 @@ sealed class Exercise_000_005_S01P04_O_kolik_se_lisi : Exercise<Variant_000_005_
 
 		Macro resultMacro = new("result_0");
 
-		Macro_Question question = new Macro_IntQuestion(Question, resultMacro) {
+		MacroQuestion question = new MacroIntQuestion(Question, resultMacro) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

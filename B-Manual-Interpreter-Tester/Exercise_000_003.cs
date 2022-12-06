@@ -71,13 +71,13 @@ sealed class Exercise_000_003_S01P02_Prevod_jednotek_casu : Exercise<Variant_000
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		// $"Určete, na kolik {C}minutových intervalů lze rozdělit {A},{B} hodiny.";
 		Text t1 = new("Určete, na kolik ");
 		Macro m1 = new("C");
@@ -91,7 +91,7 @@ sealed class Exercise_000_003_S01P02_Prevod_jednotek_casu : Exercise<Variant_000
 
 		Macro resultMacro = new("result_0");
 
-		Macro_Question question = new Macro_IntQuestion(Question, resultMacro) {
+		MacroQuestion question = new MacroIntQuestion(Question, resultMacro) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

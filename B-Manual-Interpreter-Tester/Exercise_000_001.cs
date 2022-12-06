@@ -59,13 +59,13 @@ sealed class Exercise_000_001_S01P01_Prevod_jednotek_plochy_objemu_prvni : Exerc
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		Text t1 = new("0,");
 		Macro m1 = new("A");
 		Text t2 = new(" m^2 – ");
@@ -76,7 +76,7 @@ sealed class Exercise_000_001_S01P01_Prevod_jednotek_plochy_objemu_prvni : Exerc
 
 		Macro resultMacro = new("result_0");
 		
-		Macro_Question question = new Macro_IntQuestion(Question, resultMacro) {
+		MacroQuestion question = new MacroIntQuestion(Question, resultMacro) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

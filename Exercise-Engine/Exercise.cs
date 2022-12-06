@@ -4,11 +4,10 @@ using ExerciseEngine.MacroExercise;
 
 namespace ExerciseEngine;
 
-// Factory class merged into Exercise class
-// public abstract class Factory<V> where V : Variant { }
 public interface IExercise { 
 	void FilterLegitVariants();
-	Macro_Exercise BuildMacroExercise();
+	MacroExercise.MacroExercise BuildMacroExercise();
+
 	string ReportStatistics();
 	string SerializeSelf(bool writeIndented);
 	string GetName();
@@ -19,7 +18,7 @@ public abstract class Exercise<V> : IExercise where V : Variant {
 	public MetaData metaData;
 
 	// Builder:
-	public readonly Dictionary<Language, Macro_Assignment> MacroAssignments = new(); // i am just running out of names I can come up with at this point tbh. once finnished,  think this one through again.
+	public readonly Dictionary<Language, MacroAssignment> MacroAssignments = new();
 
 	// Factory method:
 	public readonly int expected;
@@ -39,7 +38,7 @@ public abstract class Exercise<V> : IExercise where V : Variant {
 		}
 		this.exerciseName = exerciseName;
 		metaData = new(exerciseId, initialLanguage, exerciseType);
-		Macro_Assignment ma = new(exerciseId, initialLanguage, BuildDescription(), BuildQuestions());
+		MacroAssignment ma = new(exerciseId, initialLanguage, BuildDescription(), BuildQuestions());
 		MacroAssignments[initialLanguage] = ma;
 	}
 
@@ -49,7 +48,7 @@ public abstract class Exercise<V> : IExercise where V : Variant {
 
 	protected abstract MacroString BuildDescription();
 
-	protected abstract List<Macro_Question> BuildQuestions();
+	protected abstract List<MacroQuestion> BuildQuestions();
 
 	public string ReportStatistics() {
 		StringBuilder sb = new();
@@ -88,13 +87,13 @@ public abstract class Exercise<V> : IExercise where V : Variant {
 		return json;
 	}
 
-	public Macro_Exercise BuildMacroExercise() {
+	public MacroExercise.MacroExercise BuildMacroExercise() {
 		List<VariantRecord> variants = new();
 		foreach (V variant in legit)
 			variants.Add(variant.ToVariantRecord());
 
 		metaData.variantsCount = variants.Count;
-		Macro_Exercise me = new(metaData, variants, MacroAssignments);
+		MacroExercise.MacroExercise me = new(metaData, variants, MacroAssignments);
 		return me;
 	}
 }

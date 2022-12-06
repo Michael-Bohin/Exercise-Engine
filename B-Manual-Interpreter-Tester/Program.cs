@@ -37,7 +37,7 @@ class CompilerOutput {
 		string stats = ex.ReportStatistics();
 		string JsonExercise = ex.SerializeSelf(true);
 		
-		Macro_Exercise me = ex.BuildMacroExercise();
+		MacroExercise me = ex.BuildMacroExercise();
 		string JsonMacroExercise = me.SerializeSelf(true);
 		string JsonAssignments = me.SerializeAssignments(Language.cs, true);
 		string PrettyPrint = me.PrettyPrint(Language.cs, 1_000);

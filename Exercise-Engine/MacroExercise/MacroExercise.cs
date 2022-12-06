@@ -1,17 +1,15 @@
 ﻿using System.Text;
-using System.Text.Json.Serialization;
-using ExerciseEngine.MathEngine;
 using ExerciseEngine.API;
 using System.Text.Json;
 using MudBlazor;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ExerciseEngine.MacroExercise;
 
-
 // what about metadata? where is the optimal place for them? 
-public class Macro_Exercise
+public class MacroExercise
 {
-    public Macro_Exercise(MetaData metaData, List<VariantRecord> variants, Dictionary<Language, Macro_Assignment> macroAssignments)
+    public MacroExercise(MetaData metaData, List<VariantRecord> variants, Dictionary<Language, MacroAssignment> macroAssignments)
     {
         MetaData = metaData;
         Variants = variants;
@@ -19,29 +17,34 @@ public class Macro_Exercise
     }
 
     public MetaData MetaData { get; set; }
-	public Dictionary<Language, Macro_Assignment> MacroAssignments { get; init; } // Babylon
+	public Dictionary<Language, MacroAssignment> MacroAssignments { get; init; } // Babylon
 	public List<VariantRecord> Variants { get; init; }
 
-    public Assignment GetAssignment(VariantRecord variant) => GetAssignment(variant, Language.en);
+    public Assignment GetAssignment(VariantRecord variant, Language lang) => BuildAssignment(MacroAssignments[lang], variant);
 
-    public Assignment GetAssignment(VariantRecord variant, Language lang)
-    {
-        // Fetch macro assignment in requested language
-        Macro_Assignment macroA = MacroAssignments[lang];
+    public static Assignment BuildAssignment(MacroAssignment mass, VariantRecord variant) {
+		string descripton = mass.description.MergeWithVariant(variant);
+		List<ExerciseQuestion> questions = new();
+		int counter = 0;
+		foreach (MacroQuestion mq in mass.questions)
+			questions.Add(BuildQuestion(mq, variant, counter++));
+		return new(mass.exerciseId, mass.language, descripton, questions);
+	}
 
-        // Build variables for assignment ctor
-        int id = macroA.exerciseId;
-        string descripton = macroA.description.MergeWithVariant(variant);
-        List<ExerciseQuestion> questions = new();
-        int counter = 0;
-        foreach (Macro_Question mq in macroA.questions)
-            questions.Add(BuildQuestion(mq, variant, counter++));
+    // optimize later
+    public List<Assignment> GetAssignments(List<VariantRecord> variants, Language lang) {
+		List<Assignment> assignments = new();
+        MacroAssignment mass = MacroAssignments[lang];
 
-        // return built assignment:
-        return new(id, lang, descripton, questions);
+		foreach (VariantRecord variant in variants) {
+			Assignment assignment = BuildAssignment(mass, variant);
+            assignments.Add(assignment);
+        }
+
+        return assignments;
     }
 
-    static ExerciseQuestion BuildQuestion(Macro_Question macroQuestion, VariantRecord variant, int counter)
+    static ExerciseQuestion BuildQuestion(MacroQuestion macroQuestion, VariantRecord variant, int counter)
     {
         /// !!! this has changed in major way --> exercise question is now abstract root of many different seald children..
         ExerciseQuestion q = macroQuestion.MergeWithVariant(variant);
@@ -93,7 +96,7 @@ public class Macro_Exercise
 	}
 
     public string PrettyPrint(Language lang, int max) {
-		Macro_Assignment macroAss = MacroAssignments[lang];
+		MacroAssignment macroAss = MacroAssignments[lang];
         StringBuilder sb = new();
         int counter = 0;
         foreach(VariantRecord variant in Variants) {

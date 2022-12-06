@@ -66,13 +66,13 @@ sealed class Exercise_000_004_S01P03_Prevod_jednotek_uhlu : Exercise<Variant_000
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		// $"Vypočtěte, kolikrát je úhel o velikosti {A}° větší než úhel o vleikosti 0°{B}’."
 		Text t1 = new("Vypočtěte, kolikrát je úhel o velikosti ");
 		Macro m1 = new("A");
@@ -84,7 +84,7 @@ sealed class Exercise_000_004_S01P03_Prevod_jednotek_uhlu : Exercise<Variant_000
 
 		Macro resultMacro = new("result_0");
 
-		Macro_Question question = new Macro_IntQuestion(Question, resultMacro) {
+		MacroQuestion question = new MacroIntQuestion(Question, resultMacro) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

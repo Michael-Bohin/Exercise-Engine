@@ -61,13 +61,13 @@ sealed class Exercise_000_002_S01P01_Prevod_jednotek_plochy_objemu_druhy : Exerc
 		return new(assignment);
 	}
 
-	protected override List<Macro_Question> BuildQuestions() {
+	protected override List<MacroQuestion> BuildQuestions() {
 		return new() {
 			Question_0()
 		};
 	}
 
-	static Macro_Question Question_0() {
+	static MacroQuestion Question_0() {
 		Text t1 = new("x dm^3 – 0,0");
 		Macro m1 = new("A");
 		Text t2 = new(" m^3 = ");
@@ -78,7 +78,7 @@ sealed class Exercise_000_002_S01P01_Prevod_jednotek_plochy_objemu_druhy : Exerc
 
 		Macro resultMacro = new("result_0");
 
-		Macro_Question question = new Macro_DecimalQuestion(Question, resultMacro, 2) {
+		MacroQuestion question = new MacroDecimalQuestion(Question, resultMacro, 2) {
 			SolutionSteps = null,
 			ImagePaths = null
 		};

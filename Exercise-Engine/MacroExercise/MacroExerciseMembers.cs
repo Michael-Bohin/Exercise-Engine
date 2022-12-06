@@ -2,7 +2,6 @@
 using ExerciseEngine.MathEngine;
 using System.Text.Json.Serialization;
 
-
 namespace ExerciseEngine.MacroExercise;
 
 public class VariantRecord {
@@ -20,13 +19,13 @@ public class VariantRecord {
 	public string GetValueOfResult(string macroPointer) { return Results[macroPointer]; }
 }
 
-public class Macro_Assignment {
+public class MacroAssignment {
 	public int exerciseId;
 	public Language language;
 	public MacroString description;
-	public List<Macro_Question> questions = new();
+	public List<MacroQuestion> questions = new();
 
-	public Macro_Assignment(int exerciseId, Language language, MacroString description, List<Macro_Question> questions) {
+	public MacroAssignment(int exerciseId, Language language, MacroString description, List<MacroQuestion> questions) {
 		this.exerciseId = exerciseId;
 		this.language = language;
 		this.description = description;
@@ -36,7 +35,7 @@ public class Macro_Assignment {
 	public Assignment MergeWithVariant(VariantRecord variant) {
 		string _description = description.MergeWithVariant(variant);
 		List<ExerciseQuestion> _questions = new();
-		foreach(Macro_Question question in questions) { 
+		foreach(MacroQuestion question in questions) { 
 			ExerciseQuestion _question = question.MergeWithVariant(variant);
 			_questions.Add(_question);
 		}
@@ -46,17 +45,17 @@ public class Macro_Assignment {
 	// add some methods from other regions here MacroAssignment should be more clever!
 }
 
-[JsonDerivedType(typeof(Macro_IntQuestion), "Macro int Question")]
-[JsonDerivedType(typeof(Macro_DecimalQuestion), "Macro decimal Question")]
-[JsonDerivedType(typeof(Macro_FractionQuestion), "Macro Fraction Question")]
-[JsonDerivedType(typeof(Macro_SelectQuestion), "Macro Select Question")]
-[JsonDerivedType(typeof(Macro_MultiSelectQuestion), "Macro MultiSelect Question")]
-public abstract class Macro_Question {
-	public Macro_Question(MacroString question) { Question = question; }
+[JsonDerivedType(typeof(MacroIntQuestion), "Macro int Question")]
+[JsonDerivedType(typeof(MacroDecimalQuestion), "Macro decimal Question")]
+[JsonDerivedType(typeof(MacroFractionQuestion), "Macro Fraction Question")]
+[JsonDerivedType(typeof(MacroSelectQuestion), "Macro Select Question")]
+[JsonDerivedType(typeof(MacroMultiSelectQuestion), "Macro MultiSelect Question")]
+public abstract class MacroQuestion {
+	public MacroQuestion(MacroString question) { Question = question; }
 	public MacroString Question { get; }
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-	public List<Macro_SolutionStep>? SolutionSteps { get; set; }
+	public List<MacroSolutionStep>? SolutionSteps { get; set; }
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 	public List<string>? ImagePaths { get; set; }
@@ -78,7 +77,7 @@ public abstract class Macro_Question {
 			_solutionSteps = null;
 		} else {
 			_solutionSteps = new();
-			foreach (Macro_SolutionStep macroStep in SolutionSteps) {
+			foreach (MacroSolutionStep macroStep in SolutionSteps) {
 				SolutionStep ss = macroStep.MergeWithVariant(variant);
 				_solutionSteps.Add(ss);
 			}
@@ -90,8 +89,8 @@ public abstract class Macro_Question {
 	protected abstract ExerciseQuestion MergeWithVariant(string _question, VariantRecord variant, List<SolutionStep>? _solutionSteps, List<string>? _imagePaths);
 }
 
-public class Macro_SolutionStep {
-	public Macro_SolutionStep(MacroString step, MacroString? didacticComment = null) {
+public class MacroSolutionStep {
+	public MacroSolutionStep(MacroString step, MacroString? didacticComment = null) {
 		Step = step;
 		DidacticComment = didacticComment;
 	}
@@ -120,8 +119,8 @@ public class Macro_SolutionStep {
 	}
 }
 
-sealed public class Macro_IntQuestion : Macro_Question {
-	public Macro_IntQuestion(MacroString question, Macro result)
+sealed public class MacroIntQuestion : MacroQuestion {
+	public MacroIntQuestion(MacroString question, Macro result)
 		: base(question) {
 		Result = result;
 	}
@@ -139,8 +138,8 @@ sealed public class Macro_IntQuestion : Macro_Question {
 	}
 }
 
-public class Macro_DecimalQuestion : Macro_Question {
-	public Macro_DecimalQuestion(MacroString question, Macro result, int precision)
+public class MacroDecimalQuestion : MacroQuestion {
+	public MacroDecimalQuestion(MacroString question, Macro result, int precision)
 		: base(question) {
 		Result = result;
 		Precision = precision;
@@ -160,8 +159,8 @@ public class Macro_DecimalQuestion : Macro_Question {
 	public override ResultType ResultType { get => ResultType.Decimal; }
 }
 
-public class Macro_FractionQuestion : Macro_Question {
-	public Macro_FractionQuestion(MacroString question, Macro result)
+public class MacroFractionQuestion : MacroQuestion {
+	public MacroFractionQuestion(MacroString question, Macro result)
 		: base(question) {
 		Result = result;
 	}
@@ -180,8 +179,8 @@ public class Macro_FractionQuestion : Macro_Question {
 	public override ResultType ResultType { get => ResultType.Fraction; }
 }
 
-public class Macro_QuestionOption {
-	public Macro_QuestionOption(string value, MacroString text) {
+public class MacroQuestionOption {
+	public MacroQuestionOption(string value, MacroString text) {
 		Value = value;
 		Text = text;
 	}
@@ -193,17 +192,17 @@ public class Macro_QuestionOption {
 	}
 }
 
-abstract public class Macro_OptionsQuestion : Macro_Question {
-	public Macro_OptionsQuestion(MacroString question, List<Macro_QuestionOption> options)
+abstract public class MacroOptionsQuestion : MacroQuestion {
+	public MacroOptionsQuestion(MacroString question, List<MacroQuestionOption> options)
 		: base(question) {
 		Options = options;
 	}
 
-	public List<Macro_QuestionOption> Options { get; }
+	public List<MacroQuestionOption> Options { get; }
 }
 
-public class Macro_SelectQuestion : Macro_OptionsQuestion {
-	public Macro_SelectQuestion(MacroString question, List<Macro_QuestionOption> options, Macro result)
+public class MacroSelectQuestion : MacroOptionsQuestion {
+	public MacroSelectQuestion(MacroString question, List<MacroQuestionOption> options, Macro result)
 		: base(question, options) {
 		Result = result;
 	}
@@ -211,7 +210,7 @@ public class Macro_SelectQuestion : Macro_OptionsQuestion {
 	protected override SelectQuestion MergeWithVariant(string question, VariantRecord variant, List<SolutionStep>? solutionSteps, List<string>? imagePaths) {
 		string _result = variant.GetValueOfVariable(Result.pointer); // in case of fraction, we must pass both numerator and denoimnator so that webserver can compare that strictly to students answer..string[]stringstring[string[string[string[string[string[
 		List<ExerciseQuestionOption> _options = new();
-		foreach (Macro_QuestionOption option in Options) {
+		foreach (MacroQuestionOption option in Options) {
 			ExerciseQuestionOption _option = option.MergeWithVariant(variant);
 			_options.Add(_option);
 		}
@@ -226,10 +225,10 @@ public class Macro_SelectQuestion : Macro_OptionsQuestion {
 	public override ResultType ResultType { get => ResultType.Select; }
 }
 
-public class Macro_MultiSelectQuestion : Macro_OptionsQuestion {
+public class MacroMultiSelectQuestion : MacroOptionsQuestion {
 	public List<Macro> Results { get; }
 
-	public Macro_MultiSelectQuestion(MacroString question, List<Macro_QuestionOption> options, List<Macro> results)
+	public MacroMultiSelectQuestion(MacroString question, List<MacroQuestionOption> options, List<Macro> results)
 		: base(question, options) {
 		Results = results;
 	}
@@ -242,7 +241,7 @@ public class Macro_MultiSelectQuestion : Macro_OptionsQuestion {
 		}
 
 		List<ExerciseQuestionOption> _options = new();
-		foreach (Macro_QuestionOption option in Options) {
+		foreach (MacroQuestionOption option in Options) {
 			ExerciseQuestionOption _option = option.MergeWithVariant(variant);
 			_options.Add(_option);
 		}
