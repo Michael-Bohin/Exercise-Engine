@@ -1,4 +1,6 @@
-﻿namespace ExerciseEngine;
+﻿using System.Text.Json.Serialization;
+
+namespace ExerciseEngine;
 
 public enum Operator { 
 	Add,
@@ -46,16 +48,16 @@ public enum ExerciseType {
 	Geometric 
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ResultType {
-	Int, 
-	String, 
-	Double, 
-	Fraction, 
-	Select // from options: a, b, c, -> always one answer from given options is correct
+	Int,
+	String,
+	Double,
+	Fraction,
+	Decimal,
+	Select, // from options: a, b, c, -> always one answer from given options is correct
+	MultiSelect
 }
-
-
-///
 
 public enum SetRange { 
 	Set, 

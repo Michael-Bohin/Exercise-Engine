@@ -3,6 +3,7 @@ using static System.Console;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
+using ExerciseEngine.Compiler;
 
 WriteLine("Hello");
 

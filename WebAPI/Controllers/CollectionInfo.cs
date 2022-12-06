@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using ExerciseEngine;
+using ExerciseEngine.API;
 
-namespace WebAPI.Controllers {
-	[ApiController]
+namespace WebAPI.Controllers
+{
+    [ApiController]
 	[Route("[controller]")]
 	public class CollectionInfo : ControllerBase {
 		private static readonly string[] Summaries = new[]
