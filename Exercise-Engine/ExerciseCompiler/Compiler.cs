@@ -48,25 +48,25 @@ public class Compiler
     // 4. check: the list of questions contains at least one question ... whats the point of solving a problem without a question, right?
     void ValidateDefinition()
     {
-        if (definition.variables.Count == 0)
+        if (definition.Variables.Count == 0)
             throw new InvalidOperationException("Interpreter cannot translate definition that does not have any variables.");
 
         List<string> names = new();
-        foreach (Variable variable in definition.variables)
+        foreach (Variable variable in definition.Variables)
         {
             if (names.Contains(variable.Name))
                 throw new InvalidOperationException($"Interpreter detected at least one occurence of variables sharing the same name: >>{variable.Name}<<!");
             names.Add(variable.Name);
         }
 
-        foreach (Variable variable in definition.variables)
+        foreach (Variable variable in definition.Variables)
         {
             // notice the not operator before regex match --> all names must fall into the definition of the regex below 
             if (!Regex.Match(variable.Name, "^[a-zA-Z_][a-zA-Z_0-9]*$").Success)
                 throw new InvalidOperationException($"Invalid Id name: '{variable.Name}' ");
         }
 
-        if (definition.questions.Count == 0)
+        if (definition.Assignment.Questions.Count == 0)
             throw new InvalidOperationException("Create only exercises with at least one question. Provided definition of exercise contains 0 questions.");
     }
 
@@ -74,7 +74,7 @@ public class Compiler
     (string variantName, string exerciseName) FigureOutClassNames(int uniqueId)
     {
         string title = "";
-        foreach(var kvp in definition.metaData.titles)
+        foreach(var kvp in definition.MetaData.titles)
             title = kvp.Value; // at this point there is always one language..
 
         // 1. take only first 10 chars
@@ -172,7 +172,7 @@ class VariantCompiler : CompilerHelper
         StringBuilder sb = new();
         sb.Append($"{variantHeadline}\n\n");
         sb.Append($"sealed class {variantName} : Variant {openCurly}\n");
-        foreach (Variable v in definition.variables)
+        foreach (Variable v in definition.Variables)
             sb.Append($"\tpublic readonly {v.TypeRepresentation()} {v.Name};\n");
 
         return sb.ToString();
@@ -183,21 +183,21 @@ class VariantCompiler : CompilerHelper
         StringBuilder sb = new();
         // ctor declaration line:
         sb.Append($"\tpublic {variantName}(");
-        int count = definition.variables.Count;
+        int count = definition.Variables.Count;
         int last = count - 1;
         for (int i = 0; i < count; i++)
         {
             if (i != 0)
                 sb.Append(' ');
-            sb.Append(definition.variables[i].TypeRepresentation());
+            sb.Append(definition.Variables[i].TypeRepresentation());
             sb.Append(' ');
-            sb.Append(definition.variables[i].Name);
+            sb.Append(definition.Variables[i].Name);
             if (i != last)
                 sb.Append(',');
         }
         sb.Append(") {\n");
 
-        foreach (Variable v in definition.variables)
+        foreach (Variable v in definition.Variables)
             sb.Append($"\t\tthis.{v.Name} = {v.Name};\n");
 
         sb.Append("\t}\n\n"); // close ctor and add empty line:
@@ -210,7 +210,7 @@ class VariantCompiler : CompilerHelper
         sb.Append("\tpublic override bool IsLegit(out int constraintId) {\n");
         sb.Append("\t\tconstraintId = 0;\n");
 
-        for (int i = 0; i < definition.constraints.Count; i++)
+        for (int i = 0; i < definition.Constraints.Count; i++)
         {
             if (i != 0)
                 sb.Append("\t\tconstraintId++;\n");
@@ -222,8 +222,8 @@ class VariantCompiler : CompilerHelper
         sb.Append("\t\treturn true;\n");
         sb.Append("\t}\n\n");
 
-        for (int i = 0; i < definition.constraints.Count; i++)
-            sb.Append(WriteNthConstraintMethod(definition.constraints[i], i));
+        for (int i = 0; i < definition.Constraints.Count; i++)
+            sb.Append(WriteNthConstraintMethod(definition.Constraints[i], i));
 
         return sb.ToString();
     }
@@ -231,13 +231,12 @@ class VariantCompiler : CompilerHelper
     static string WriteNthConstraintMethod(ConstraintMethod cm, int index)
     {
         StringBuilder sb = new();
-        foreach (string commentLine in cm.comments)
-            sb.Append($"\t// {commentLine}\n");
+        sb.Append($"\t// {cm.Comment}\n");
         sb.Append($"\tbool Constraint_{index}() ");
 
-        if (cm.codeDefined)
+        if (cm.CodeDefined)
         {
-            sb.Append(MethodBody(cm.code));
+            sb.Append(MethodBody(cm.Code));
         }
         else
         {
@@ -247,24 +246,17 @@ class VariantCompiler : CompilerHelper
         return sb.ToString();
     }
 
-    static string MethodBody(List<string> code)
+	static string MethodBody(string code)
     {
         StringBuilder sb = new();
-        if (code.Count > 1)
-        {
-            sb.Append($"{openCurly}\n");
-            foreach (string codeLine in code)
-                sb.Append($"\t\t{codeLine}\n");
-            sb.Append("\t}\n\n");
-        }
-        else if (code.Count == 1)
-        {
-            sb.Append($"=> {code[0]}\n\n");
-        }
-        else
-        {
-            throw new InvalidOperationException("Compiler and its MethodBody method ran into defined code containing 0 lines.");
-        }
+        StringReader reader = new(code);
+
+        sb.Append($"{openCurly}\n");
+        while(reader.ReadLine() is string line) {
+			sb.Append($"\t\t{line}\n");
+		}
+        sb.Append("\t}\n\n");
+     
         return sb.ToString();
     }
 
@@ -272,45 +264,25 @@ class VariantCompiler : CompilerHelper
     {
         StringBuilder sb = new();
         sb.Append($"\tpublic override string GetResult(int questionIndex) {openCurly}\n");
-        if (definition.questions.Count != 1)
+        if (definition.Assignment.Questions.Count != 1)
         {
-            sb.Append($"\t\tif (questionIndex < 0 || questionIndex > {definition.questions.Count - 1})\n");
+            sb.Append($"\t\tif (questionIndex < 0 || questionIndex > {definition.Assignment.Questions.Count - 1})\n");
         }
         else
         {
             sb.Append($"\t\tif (questionIndex != 0)\n");
         }
 
-        sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.questions.Count - 1}, index entered: " + '"' + " + questionIndex.ToString());\n\n");
+        sb.Append($"\t\t\tthrow new ArgumentException(" + '"' + $"Index needs to be positive and at most {definition.Assignment.Questions.Count - 1}, index entered: " + '"' + " + questionIndex.ToString());\n\n");
 
-        for (int i = 0; i < definition.questions.Count - 1; i++)
+        for (int i = 0; i < definition.Assignment.Questions.Count - 1; i++)
         {
             sb.Append($"\t\tif (questionIndex == {i})\n");
             sb.Append($"\t\t\treturn GetResult_{i}();\n\n");
         }
 
-        sb.Append($"\t\treturn GetResult_{definition.questions.Count - 1}();\n\t{closeCurly}\n\n");
-        for (int i = 0; i < definition.questions.Count; i++)
-            sb.Append(WriteNthResultMethod(definition.questions[i], i));
-
-        return sb.ToString();
-    }
-
-    static string WriteNthResultMethod(Definition_Question question, int index)
-    {
-        StringBuilder sb = new();
-        foreach (string commentLine in question.result.comments)
-            sb.Append($"\t// {commentLine}\n");
-
-        sb.Append($"\tstring GetResult_{index}() ");
-        if (question.result.codeDefined)
-        {
-            sb.Append(MethodBody(question.result.code));
-        }
-        else
-        {
-            sb.Append($"{openCurly}\n\t\t// result code has not yet been defined\n");
-        }
+        sb.Append($"\t\treturn GetResult_{definition.Assignment.Questions.Count - 1}();\n\t{closeCurly}\n\n");
+        sb.Append(definition.Assignment.CompileResultMethods());
 
         return sb.ToString();
     }
@@ -322,7 +294,7 @@ class VariantCompiler : CompilerHelper
         sb.Append($"\tpublic override string VariableRepresentation(string variableName) {openCurly}\n");
         sb.Append($"\t\treturn variableName switch {openCurly}\n");
 
-        foreach (Variable variable in definition.variables)
+        foreach (Variable variable in definition.Variables)
             sb.Append($"\t\t\t{quotes}{variable.Name}{quotes} => {variable.Name}.ToString(),\n");
 
         sb.Append($"\t\t\t_ => throw new ArgumentException({quotes}Variable representation recieved invalid variable name: {quotes} + variableName + {quotes}\\n{quotes})\n");
@@ -357,8 +329,8 @@ class ExerciseCompiler : CompilerHelper
 
     string DeclareClass_And_Ctor()
     {
-        int expected = CountEventSpaceCardinality(definition.variables);
-        int constraints = definition.constraints.Count;
+        int expected = CountEventSpaceCardinality(definition.Variables);
+        int constraints = definition.Constraints.Count;
         // string language = $"Language.{definition.metaData.initialLanguage.ToString()}";
         string name = $"{quotes}{exerciseName}{quotes}";
         string baseParameters = $"{constraints}, {expected}, {name}";
@@ -385,7 +357,7 @@ class ExerciseCompiler : CompilerHelper
     {
         StringBuilder sb = new();
         sb.Append($"\tprotected override List<MacroText> BuildAssignment() {openCurly}\n");
-        List<MacroText> ass = definition.assignment.macroTexts;
+        List<MacroText> ass = definition.Assignment.Description.macroTexts;
 
 		for (int i = 0; i < ass.Count; i++)
         {
@@ -411,26 +383,28 @@ class ExerciseCompiler : CompilerHelper
         sb.Append("\tprotected override List<MacroQuestion> BuildQuestions() {\n");
         sb.Append("\t\treturn new() {\n");
 
-        for (int i = 0; i < definition.questions.Count; i++)
+        List<DefinitionQuestion> questions = definition.Assignment.Questions;
+
+        for (int i = 0; i < questions.Count; i++)
         {
             sb.Append($"\t\t\tQuestion_{i}()");
-            if (i != definition.questions.Count - 1)
+            if (i != questions.Count - 1)
                 sb.Append(',');
             sb.Append('\n');
         }
         sb.Append("\t\t};\n\t}\n\n");
 
-        for (int i = 0; i < definition.questions.Count; i++)
-            sb.Append(BuildQuestion(definition.questions[i], i));
+        for (int i = 0; i < questions.Count; i++)
+            sb.Append(BuildQuestion(questions[i], i));
 
         return sb.ToString();
     }
 
-    static string BuildQuestion(Definition_Question defQuestion, int order)
+    static string BuildQuestion(DefinitionQuestion defQuestion, int order)
     {
         StringBuilder sb = new();
         sb.Append($"\tstatic MacroQuestion Question_{order}() {openCurly}\n");
-        List<MacroText> question = defQuestion.question.macroTexts;
+        List<MacroText> question = defQuestion.Question.macroTexts;
         for (int i = 0; i < question.Count; i++)
         {
             string el = question[i].TranslateInstantiation(i);
@@ -439,7 +413,7 @@ class ExerciseCompiler : CompilerHelper
 
         sb.Append("\t\tMacroQuestion question = new() {\n");
         // result type and result should always be present.. !!! unfinnished -> treat image paths and solution steps !!!
-        sb.Append($"\t\t\tresultType = ResultType.{defQuestion.resultType.ToString()},\n");
+        sb.Append($"\t\t\tresultType = ResultType.{defQuestion.ResultType.ToString()},\n");
         sb.Append($"\t\t\tquestion = new() {openCurly} ");
         for (int i = 0; i < question.Count; i++)
         {
@@ -454,8 +428,8 @@ class ExerciseCompiler : CompilerHelper
 
     string FactoryFilterLegit()
     {
-        string SetVariablesListInitialization = InstantiateSetLists(definition.variables);
-        string forLoop = BuildForLoop(definition.variables);
+        string SetVariablesListInitialization = InstantiateSetLists(definition.Variables);
+        string forLoop = BuildForLoop(definition.Variables);
 
         StringBuilder sb = new();
         sb.Append($"\tpublic override void FilterLegitVariants() {openCurly}\n");

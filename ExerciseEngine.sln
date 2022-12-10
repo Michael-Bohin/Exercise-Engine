@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_A-Manual-Definition-Builde
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Target-Compiler-Code", "B-Manual-Interpreter-Tester\Target-Compiler-Code.csproj", "{37142545-B418-4CB7-B40D-48F74639C30A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExercisePreprocessor", "ExercisePreprocessor\ExercisePreprocessor.csproj", "{BF5282AC-E473-4158-B28A-F77A1219621E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37142545-B418-4CB7-B40D-48F74639C30A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5282AC-E473-4158-B28A-F77A1219621E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5282AC-E473-4158-B28A-F77A1219621E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5282AC-E473-4158-B28A-F77A1219621E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5282AC-E473-4158-B28A-F77A1219621E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

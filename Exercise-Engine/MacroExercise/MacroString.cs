@@ -46,7 +46,10 @@ public class MacroString {
 	}
 }
 
-[JsonPolymorphic(UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType)]
+[JsonPolymorphic(
+	TypeDiscriminatorPropertyName = "discriminator",
+	UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToBaseType
+)]
 [JsonDerivedType(typeof(Macro), "macro")]
 [JsonDerivedType(typeof(Text), "text")]
 abstract public class MacroText {

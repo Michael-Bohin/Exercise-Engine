@@ -13,6 +13,8 @@ public class MetaData
     public string thumbnailPath = "";
     public int metaVersion;
 
+    public MetaData() { }
+
     public MetaData(int exerciseId, Language initialLanguage, ExerciseType exerciseType) {
         this.exerciseId = exerciseId;
         localizations.Add(initialLanguage);
